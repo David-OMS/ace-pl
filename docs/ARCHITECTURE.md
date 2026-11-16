@@ -24,7 +24,9 @@ ace-pl/
 │  ├─ adr/                   architecture decision records
 │  ├─ ARCHITECTURE.md
 │  ├─ ENGINEERING_STANDARDS.md
+│  ├─ PRD.md                 original product definition
 │  └─ TECH_STACK.md
+├─ .env.example              every environment variable, documented
 ├─ mockups/                  approved design mockups (reference only)
 ├─ public/                   static assets, PWA manifest, icons
 ├─ supabase/

@@ -7,6 +7,7 @@ alwaysApply: true
 
 Before writing code, read the relevant parts of:
 - `DECISIONS.md` (product rules — do not invent rules that aren't there; ask)
+- `docs/PRD.md` (original product definition; `DECISIONS.md` overrides it)
 - `docs/ENGINEERING_STANDARDS.md` (full standards)
 - `docs/ARCHITECTURE.md` (layers, folders, data model)
 
