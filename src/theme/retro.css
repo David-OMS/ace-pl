@@ -1,0 +1,48 @@
+/* Retro Kit: used on the Fantasy screens. */
+
+[data-theme="retro"] {
+  --ace-canvas: #fdf0d5;
+  --ace-surface: #fff8e8;
+  --ace-surface-alt: #f6e3bd;
+  --ace-line: #14213d;
+  --ace-line-soft: #e2cfa5;
+  --ace-ink: #14213d;
+  --ace-muted: #5b6480;
+  --ace-accent: #c1121f;
+  --ace-on-accent: #fdf0d5;
+  --ace-hot: #c1121f;
+  --ace-on-hot: #fdf0d5;
+  --ace-hero: #14213d;
+  --ace-on-hero: #fdf0d5;
+  --ace-win: #2a6f3e;
+  --ace-draw: #8d8a7c;
+  --ace-loss: #c1121f;
+  --ace-hazard: #ffcc00;
+  --ace-hazard-alt: #111111;
+  --ace-pitch: #3c7a3f;
+  --ace-pitch-alt: #357039;
+  --ace-offset-shadow: #14213d;
+
+  --ace-font-display: var(--ace-font-archivo-black);
+  --ace-font-body: var(--ace-font-space-grotesk);
+  --ace-radius: 6px;
+  --ace-border-width: 2px;
+}
+
+[data-theme="retro"][data-mode="dark"] {
+  --ace-canvas: #0d1730;
+  --ace-surface: #15224a;
+  --ace-surface-alt: #1c2c5a;
+  --ace-line: #fdf0d5;
+  --ace-line-soft: #2a3a6a;
+  --ace-ink: #fdf0d5;
+  --ace-muted: #a9b0c7;
+  --ace-accent: #e63946;
+  --ace-hot: #e63946;
+  --ace-hero: #091124;
+  --ace-win: #5fc27a;
+  --ace-loss: #e63946;
+  --ace-pitch: #2f6a33;
+  --ace-pitch-alt: #295f2d;
+  --ace-offset-shadow: #fdf0d5;
+}

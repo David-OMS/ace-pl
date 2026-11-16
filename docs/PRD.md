@@ -36,6 +36,7 @@ A person can use ACE PL without participating in the actual football league.
 ### User categories
 
 **Administrator**
+
 - Manage players and user accounts.
 - Create and configure tournaments.
 - Create teams and assign players.
@@ -48,12 +49,14 @@ A person can use ACE PL without participating in the actual football league.
 There can be multiple administrators. An administrator can also be a registered football player.
 
 **Football Player**
+
 - Has a registered football profile.
 - Appears in tournament statistics.
 - Can participate in matches.
 - Can be selected for fantasy teams.
 
 **Fantasy User**
+
 - Can participate in fantasy football without being a registered football player.
 - Can create and manage fantasy squads.
 - Can compete on the fantasy leaderboard.
@@ -66,12 +69,12 @@ Every football player has a profile.
 
 ### Player profile fields
 
-| Field | Description |
-|---|---|
-| Name | Player's name |
-| Profile picture | Player photograph |
-| Primary position | Assigned by an administrator |
-| Account | Optional linked application account |
+| Field            | Description                         |
+| ---------------- | ----------------------------------- |
+| Name             | Player's name                       |
+| Profile picture  | Player photograph                   |
+| Primary position | Assigned by an administrator        |
+| Account          | Optional linked application account |
 
 Positions are assigned by administrators rather than selected freely by players.
 
@@ -96,6 +99,7 @@ Statistics should be accessible for individual tournaments and across all tourna
 Each month represents an independent tournament.
 
 Every tournament has its own:
+
 - Name.
 - Start and end dates.
 - Participating players.
@@ -149,6 +153,7 @@ Administrators should be able to configure the fixture generation process.
 Generated fixtures must be editable before publication.
 
 Administrators should be able to:
+
 - View all fixtures.
 - Rearrange fixtures.
 - Change match dates or game days.
@@ -187,6 +192,7 @@ Administrators should be able to correct previously entered information.
 ### Out of scope for initial statistics
 
 The application will not attempt to record:
+
 - Shots.
 - Shots on target.
 - Tackles.
@@ -202,20 +208,21 @@ Every tournament has its own league table.
 
 ### Required columns
 
-| Column | Meaning |
-|---|---|
-| POS | Position |
-| TEAM | Team name |
-| P | Played |
-| W | Wins |
-| D | Draws |
-| L | Losses |
-| GF | Goals for |
-| GA | Goals against |
-| GD | Goal difference |
-| PTS | Points |
+| Column | Meaning         |
+| ------ | --------------- |
+| POS    | Position        |
+| TEAM   | Team name       |
+| P      | Played          |
+| W      | Wins            |
+| D      | Draws           |
+| L      | Losses          |
+| GF     | Goals for       |
+| GA     | Goals against   |
+| GD     | Goal difference |
+| PTS    | Points          |
 
 Standard scoring:
+
 - Win: 3 points.
 - Draw: 1 point.
 - Loss: 0 points.
@@ -257,6 +264,7 @@ Example:
 David is registered to Team A but plays for Team B in a particular fixture.
 
 In this situation:
+
 - David's individual contributions belong to David.
 - His goals and assists count towards his individual tournament statistics.
 - His contributions count towards Team B's match result.
@@ -268,6 +276,7 @@ In this situation:
 A player can permanently change teams during an active tournament.
 
 The application should preserve:
+
 - Previous team.
 - New team.
 - Transfer date.
@@ -287,11 +296,11 @@ The objective is to select players who accumulate the most fantasy points throug
 The proposed valuation system uses four player categories:
 
 | Rank | Proposed price |
-|---|---|
-| S | Highest |
-| A | High |
-| B | Medium |
-| C | Lowest |
+| ---- | -------------- |
+| S    | Highest        |
+| A    | High           |
+| B    | Medium         |
+| C    | Lowest         |
 
 Players within the same category have the same price.
 
@@ -304,6 +313,7 @@ The final ranking methodology and price amounts remain undecided.
 ### Fantasy squad management
 
 Users should be able to:
+
 - Create a fantasy squad.
 - Select players within a fixed budget.
 - View player prices.
@@ -319,14 +329,14 @@ Fantasy points are calculated from actual player contributions.
 
 Proposed scoring categories include:
 
-| Event | Fantasy impact |
-|---|---|
-| Goal | Positive points |
-| Assist | Positive points |
-| Clean sheet | Positive points |
-| Save | Positive points |
+| Event          | Fantasy impact  |
+| -------------- | --------------- |
+| Goal           | Positive points |
+| Assist         | Positive points |
+| Clean sheet    | Positive points |
+| Save           | Positive points |
 | Goals conceded | Negative points |
-| Penalty saved | Positive points |
+| Penalty saved  | Positive points |
 
 Goalkeeper scoring must account for both saves and goals conceded.
 
@@ -347,6 +357,7 @@ Player form is a representation of recent performance.
 A possible implementation is to display a player's contributions across their last three matches.
 
 For example:
+
 - Goals in the last three matches.
 - Assists in the last three matches.
 - Clean sheets in the last three matches.
@@ -360,6 +371,7 @@ Fraud Watch is a manually managed entertainment feature.
 Administrators can add players who are currently under scrutiny and remove them when appropriate.
 
 Requirements:
+
 - Display a maximum of one or two players at a time.
 - Record how many consecutive weeks a player has remained on Fraud Watch.
 - Preserve previous Fraud Watch appearances.
@@ -376,6 +388,7 @@ Each tournament concludes with awards.
 The tournament's main individual award.
 
 The winner is determined through a combination of:
+
 - Fan votes.
 - Actual player contributions.
 
@@ -399,6 +412,7 @@ Award eligibility and calculations will be determined separately.
 ACE PL may include a news section for tournament-related information.
 
 Potential content:
+
 - Tournament announcements.
 - Match results and reports.
 - Player achievements.
@@ -417,6 +431,7 @@ The application must preserve completed tournaments.
 Historical records should include:
 
 **Tournament history**
+
 - Tournament details.
 - Participating players.
 - Team compositions.
@@ -427,6 +442,7 @@ Historical records should include:
 - Awards.
 
 **Player history**
+
 - Tournament appearances.
 - Goals and assists.
 - Clean sheets.
@@ -435,6 +451,7 @@ Historical records should include:
 - Previous teams represented.
 
 **Team combination history**
+
 - Team composition for each tournament.
 - Matches played.
 - Wins, draws and losses.
@@ -442,6 +459,7 @@ Historical records should include:
 - Final tournament position.
 
 **Fantasy history**
+
 - Fantasy users.
 - Selected squads.
 - Points accumulated.
@@ -455,20 +473,20 @@ The application requires a dedicated administrative area.
 
 Administrators should be able to manage:
 
-| Module | Operations |
-|---|---|
-| Players | Register, approve, edit and deactivate |
-| Teams | Create and assign players |
-| Tournaments | Create, configure and conclude |
-| Fixtures | Generate, edit and publish |
-| Match results | Enter and correct results |
-| Statistics | Record and correct contributions |
-| Borrowing | Manage temporary appearances |
-| Transfers | Manage permanent team changes |
-| Fantasy | Manage ranks, prices and scoring |
-| Fraud Watch | Add and remove players |
-| Awards | Manage voting and winners |
-| News | Publish announcements |
+| Module        | Operations                             |
+| ------------- | -------------------------------------- |
+| Players       | Register, approve, edit and deactivate |
+| Teams         | Create and assign players              |
+| Tournaments   | Create, configure and conclude         |
+| Fixtures      | Generate, edit and publish             |
+| Match results | Enter and correct results              |
+| Statistics    | Record and correct contributions       |
+| Borrowing     | Manage temporary appearances           |
+| Transfers     | Manage permanent team changes          |
+| Fantasy       | Manage ranks, prices and scoring       |
+| Fraud Watch   | Add and remove players                 |
+| Awards        | Manage voting and winners              |
+| News          | Publish announcements                  |
 
 Important administrative changes should be traceable, especially changes to match results and player statistics.
 
@@ -541,22 +559,22 @@ The homepage should prioritise:
 
 The following items require agreement before their respective features are implemented.
 
-| Area | Outstanding decision |
-|---|---|
-| Tournament | Exact tournament scheduling format |
-| Fixtures | Match duration and scheduling rules |
-| Player registration | Self-registration process and approval |
-| Positions | Available positions and classification |
-| Transfers | Rules governing permanent transfers |
-| Borrowing | Whether borrowed players can represent their original team in the same game day |
-| Fantasy | Squad size and formation |
-| Fantasy | Starting budget |
-| Fantasy | Player rank allocation |
-| Fantasy | Scoring values |
-| Fantasy | Transfer and selection deadlines |
-| Awards | Ballon d'Or weighting |
-| Awards | Voting eligibility |
-| Discipline | Whether cards and suspensions are tracked |
+| Area                | Outstanding decision                                                            |
+| ------------------- | ------------------------------------------------------------------------------- |
+| Tournament          | Exact tournament scheduling format                                              |
+| Fixtures            | Match duration and scheduling rules                                             |
+| Player registration | Self-registration process and approval                                          |
+| Positions           | Available positions and classification                                          |
+| Transfers           | Rules governing permanent transfers                                             |
+| Borrowing           | Whether borrowed players can represent their original team in the same game day |
+| Fantasy             | Squad size and formation                                                        |
+| Fantasy             | Starting budget                                                                 |
+| Fantasy             | Player rank allocation                                                          |
+| Fantasy             | Scoring values                                                                  |
+| Fantasy             | Transfer and selection deadlines                                                |
+| Awards              | Ballon d'Or weighting                                                           |
+| Awards              | Voting eligibility                                                              |
+| Discipline          | Whether cards and suspensions are tracked                                       |
 
 These decisions should be resolved as the relevant development modules are prepared.
 

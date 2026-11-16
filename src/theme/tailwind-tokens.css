@@ -1,0 +1,34 @@
+/*
+ * Maps theme variables to Tailwind utilities (bg-surface, text-muted, font-display...).
+ * Components use these utilities only; the values live in street.css and retro.css.
+ */
+
+@theme inline {
+  --color-canvas: var(--ace-canvas);
+  --color-surface: var(--ace-surface);
+  --color-surface-alt: var(--ace-surface-alt);
+  --color-line: var(--ace-line);
+  --color-line-soft: var(--ace-line-soft);
+  --color-ink: var(--ace-ink);
+  --color-muted: var(--ace-muted);
+  --color-accent: var(--ace-accent);
+  --color-on-accent: var(--ace-on-accent);
+  --color-hot: var(--ace-hot);
+  --color-on-hot: var(--ace-on-hot);
+  --color-hero: var(--ace-hero);
+  --color-on-hero: var(--ace-on-hero);
+  --color-win: var(--ace-win);
+  --color-draw: var(--ace-draw);
+  --color-loss: var(--ace-loss);
+  --color-hazard: var(--ace-hazard);
+  --color-hazard-alt: var(--ace-hazard-alt);
+  --color-pitch: var(--ace-pitch);
+  --color-pitch-alt: var(--ace-pitch-alt);
+
+  --font-display: var(--ace-font-display);
+  --font-body: var(--ace-font-body);
+
+  --radius-card: var(--ace-radius);
+  --shadow-offset: 4px 4px 0 var(--ace-offset-shadow);
+  --shadow-offset-sm: 3px 3px 0 var(--ace-offset-shadow);
+}

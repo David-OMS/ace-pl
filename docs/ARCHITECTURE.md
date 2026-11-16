@@ -75,26 +75,26 @@ features/league/
 
 Stats are stored as events. Every total on screen (goals, clean sheets, table points, fantasy points) is calculated from these rows.
 
-| Table | Purpose |
-|---|---|
-| `profiles` | One per login account. Links to a player if claimed. Admin flag. |
-| `players` | Football player profile: name, photo, default position, active flag. |
-| `tournaments` | Name, dates, status, rule settings (scoring, prices, budget, tiebreak choice). |
-| `teams` | A team within one tournament (names can repeat across tournaments). |
-| `team_memberships` | Player ↔ team for a tournament, with start and end dates (covers permanent transfers). |
-| `game_days` | Dates chosen by admins for a tournament. Doubles as the fantasy gameweek. |
-| `fixtures` | Home team, away team, game day, kick-off order, status (draft, published, completed, postponed, void). |
+| Table                  | Purpose                                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `profiles`             | One per login account. Links to a player if claimed. Admin flag.                                                                     |
+| `players`              | Football player profile: name, photo, default position, active flag.                                                                 |
+| `tournaments`          | Name, dates, status, rule settings (scoring, prices, budget, tiebreak choice).                                                       |
+| `teams`                | A team within one tournament (names can repeat across tournaments).                                                                  |
+| `team_memberships`     | Player ↔ team for a tournament, with start and end dates (covers permanent transfers).                                               |
+| `game_days`            | Dates chosen by admins for a tournament. Doubles as the fantasy gameweek.                                                            |
+| `fixtures`             | Home team, away team, game day, kick-off order, status (draft, published, completed, postponed, void).                               |
 | `match_participations` | Per fixture: player, team played for, status (played, unused sub, absent), position override, goalkeeper flag. Borrowing lives here. |
-| `match_events` | Goal (scorer, assister), own goal, save count, penalty save, yellow card, red card, MOTM. |
-| `fantasy_player_ranks` | Rank (S/A/B/C) and price per player per tournament. |
-| `fantasy_squads` | One per user per tournament: name, bank. |
-| `fantasy_picks` | Players in a squad per gameweek: starter or bench, captain, vice-captain. |
-| `fantasy_transfers` | Transfer history with gameweek and point cost. |
-| `fraud_watch_entries` | Player, caption, start and end dates. At most two open entries. |
-| `ballon_dor_votes` | One vote per user per tournament. Hidden until reveal. |
-| `awards` | Final award winners per tournament (shared winners allowed). |
-| `push_subscriptions` | Browser push endpoints per user. |
-| `audit_log` | Who changed what, when, before and after, optional reason. Written by database triggers. |
+| `match_events`         | Goal (scorer, assister), own goal, save count, penalty save, yellow card, red card, MOTM.                                            |
+| `fantasy_player_ranks` | Rank (S/A/B/C) and price per player per tournament.                                                                                  |
+| `fantasy_squads`       | One per user per tournament: name, bank.                                                                                             |
+| `fantasy_picks`        | Players in a squad per gameweek: starter or bench, captain, vice-captain.                                                            |
+| `fantasy_transfers`    | Transfer history with gameweek and point cost.                                                                                       |
+| `fraud_watch_entries`  | Player, caption, start and end dates. At most two open entries.                                                                      |
+| `ballon_dor_votes`     | One vote per user per tournament. Hidden until reveal.                                                                               |
+| `awards`               | Final award winners per tournament (shared winners allowed).                                                                         |
+| `push_subscriptions`   | Browser push endpoints per user.                                                                                                     |
+| `audit_log`            | Who changed what, when, before and after, optional reason. Written by database triggers.                                             |
 
 The schema is finalised in migrations as each feature is built.
 

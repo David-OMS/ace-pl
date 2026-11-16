@@ -17,14 +17,14 @@ The enforceable parts are mirrored in `.cursor/rules/` and checked by ESLint, Ty
 
 ## 2. Size limits
 
-| Unit | Limit | Enforced by |
-|---|---|---|
-| File | 250 lines (excluding blank lines and comments) | ESLint `max-lines` |
-| React component file | 200 lines | ESLint `max-lines` |
-| Function / component body | 50 lines | ESLint `max-lines-per-function` |
-| Cyclomatic complexity | 10 per function | ESLint `complexity` |
-| Function parameters | 3 (use an options object beyond that) | ESLint `max-params` |
-| Nesting depth | 3 | ESLint `max-depth` |
+| Unit                      | Limit                                          | Enforced by                     |
+| ------------------------- | ---------------------------------------------- | ------------------------------- |
+| File                      | 250 lines (excluding blank lines and comments) | ESLint `max-lines`              |
+| React component file      | 200 lines                                      | ESLint `max-lines`              |
+| Function / component body | 50 lines                                       | ESLint `max-lines-per-function` |
+| Cyclomatic complexity     | 10 per function                                | ESLint `complexity`             |
+| Function parameters       | 3 (use an options object beyond that)          | ESLint `max-params`             |
+| Nesting depth             | 3                                              | ESLint `max-depth`              |
 
 A limit may be exceeded only when splitting would make the code harder to follow, or when it is over by a few lines.
 The exception must be marked with an `eslint-disable-next-line` comment that states the reason.
@@ -95,12 +95,12 @@ See `docs/ARCHITECTURE.md` for the full layout. In short:
 
 ## 10. Testing
 
-| Layer | Tool | Requirement |
-|---|---|---|
-| Domain logic (standings, scoring, awards, fixtures) | Vitest | Every rule covered, including edge cases. Target 100%. |
-| Server actions and queries | Vitest | Happy path, invalid input, unauthorised user. |
-| Components with logic | Testing Library | Behaviour, not markup snapshots. |
-| Critical flows (log in, enter a match result, pick a fantasy squad) | Playwright | Must pass before release. |
+| Layer                                                               | Tool            | Requirement                                            |
+| ------------------------------------------------------------------- | --------------- | ------------------------------------------------------ |
+| Domain logic (standings, scoring, awards, fixtures)                 | Vitest          | Every rule covered, including edge cases. Target 100%. |
+| Server actions and queries                                          | Vitest          | Happy path, invalid input, unauthorised user.          |
+| Components with logic                                               | Testing Library | Behaviour, not markup snapshots.                       |
+| Critical flows (log in, enter a match result, pick a fantasy squad) | Playwright      | Must pass before release.                              |
 
 - Test names describe behaviour: `awards 3 points for a win`, not `test1`.
 - Every bug fix comes with a test that fails without the fix.
