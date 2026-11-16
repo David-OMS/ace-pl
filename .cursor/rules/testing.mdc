@@ -1,0 +1,15 @@
+---
+description: Testing rules for ACE PL
+globs: **/*.test.ts,**/*.test.tsx,tests/**
+alwaysApply: false
+---
+
+# Testing
+
+- Domain logic (`features/*/domain/`) is tested next to the source: `calculate-standings.test.ts`.
+- Test names describe behaviour in plain English: `"gives the goalkeeper and defenders a clean sheet when nothing is conceded"`.
+- Cover edge cases from `DECISIONS.md`: draws, own goals, borrowed players, shared awards, absent goalkeepers, ties on points and goal difference.
+- Server actions: test valid input, invalid input and a non-admin user.
+- Component tests check behaviour (what the user sees and can do), not snapshots.
+- Every bug fix includes a test that fails without the fix.
+- Build test data with small factory functions (`buildFixture`, `buildGoal`), not large inline objects.

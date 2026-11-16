@@ -1,0 +1,23 @@
+---
+description: Styling and theming rules for ACE PL
+globs: src/**/*.tsx,src/**/*.css,src/theme/**
+alwaysApply: false
+---
+
+# Styling and theme
+
+- Every colour, font, radius, shadow and spacing value comes from tokens in `src/theme/`.
+  Components never contain hex codes, `rgb()`, font family names or arbitrary Tailwind values like `bg-[#d4ff00]`.
+- Use the semantic Tailwind classes mapped to tokens: `bg-surface`, `text-muted`, `border-line`, `bg-accent`, `font-display`.
+- Themes: `street` (main app) and `retro` (Fantasy tab), each with `light` and `dark`.
+  Switching theme or mode only changes the `data-theme` / `data-mode` attributes.
+- If a design change needs edits in several components, a token is missing. Add the token instead.
+- Icons only through `src/ui/icon.tsx` (Lucide underneath). No emoji as icons.
+
+```tsx
+// Bad
+<div className="bg-[#0e0e0e] text-[#d4ff00] font-['Anton']">
+
+// Good
+<div className="bg-hero text-accent font-display">
+```

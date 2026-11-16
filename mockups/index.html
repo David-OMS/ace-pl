@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACE PL — Style Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- THEMES ---------- */
+  [data-theme="gold"] {
+    --bg: #0a0c11; --surface: #141821; --surface2: #1c2130; --line: #262c3b;
+    --text: #f3f1ea; --muted: #8b92a5; --accent: #d9b44a; --on-accent: #17130a;
+    --accent2: #3fd6a5; --danger: #ff5d6c; --win: #3fd6a5; --draw: #8b92a5; --loss: #ff5d6c;
+    --pitch: linear-gradient(180deg, #123524, #0d2a1c);
+    --hero: linear-gradient(135deg, #1d2333 0%, #0f121a 60%), radial-gradient(circle at 85% 10%, #d9b44a33, transparent 50%);
+    --font-display: "Oswald", sans-serif; --font-body: "Inter", sans-serif;
+    --radius: 16px; --border: 1px solid var(--line); --display-case: uppercase; --display-spacing: .04em;
+  }
+  [data-theme="street"] {
+    --bg: #f1f1ee; --surface: #ffffff; --surface2: #ececE8; --line: #111;
+    --text: #0e0e0e; --muted: #5d5d5d; --accent: #d4ff00; --on-accent: #0e0e0e;
+    --accent2: #ff3d00; --danger: #ff3d00; --win: #0e0e0e; --draw: #9a9a9a; --loss: #ff3d00;
+    --pitch: repeating-linear-gradient(180deg, #1f1f1f 0 36px, #262626 36px 72px);
+    --hero: #0e0e0e;
+    --font-display: "Anton", sans-serif; --font-body: "Space Grotesk", sans-serif;
+    --radius: 0px; --border: 2px solid var(--line); --display-case: uppercase; --display-spacing: .02em;
+    --shadow: #111;
+  }
+  [data-theme="street"][data-mode="dark"] {
+    --bg: #0b0b0b; --surface: #161616; --surface2: #222; --line: #f1f1ee;
+    --text: #f1f1ee; --muted: #9a9a9a; --win: #d4ff00; --draw: #6a6a6a;
+    --pitch: repeating-linear-gradient(180deg, #151515 0 36px, #1b1b1b 36px 72px);
+    --hero: #000; --shadow: #d4ff00;
+  }
+  [data-theme="pitch"] {
+    --bg: #f5f1e6; --surface: #fffdf7; --surface2: #efe9d9; --line: #e2dac4;
+    --text: #13281d; --muted: #6f7a6f; --accent: #0f5132; --on-accent: #fffdf7;
+    --accent2: #ff6b2c; --danger: #d7263d; --win: #0f8a4f; --draw: #a7a08a; --loss: #d7263d;
+    --pitch: repeating-linear-gradient(180deg, #2f8a4e 0 36px, #2a7f47 36px 72px);
+    --hero: linear-gradient(135deg, #0f5132, #0b3d26);
+    --font-display: "Fraunces", serif; --font-body: "DM Sans", sans-serif;
+    --radius: 20px; --border: 1px solid var(--line); --display-case: none; --display-spacing: -.01em;
+  }
+  [data-theme="retro"] {
+    --bg: #fdf0d5; --surface: #fff8e8; --surface2: #f6e3bd; --line: #14213d;
+    --text: #14213d; --muted: #5b6480; --accent: #c1121f; --on-accent: #fdf0d5;
+    --accent2: #14213d; --danger: #c1121f; --win: #2a6f3e; --draw: #8d8a7c; --loss: #c1121f;
+    --pitch: repeating-linear-gradient(180deg, #3c7a3f 0 36px, #357039 36px 72px);
+    --hero: repeating-linear-gradient(90deg, #14213d 0 26px, #1b2b4f 26px 52px);
+    --font-display: "Archivo Black", sans-serif; --font-body: "DM Sans", sans-serif;
+    --radius: 6px; --border: 2px solid var(--line); --display-case: uppercase; --display-spacing: .01em;
+  }
+  [data-theme="retro"][data-mode="dark"] {
+    --bg: #0d1730; --surface: #15224a; --surface2: #1c2c5a; --line: #fdf0d5;
+    --text: #fdf0d5; --muted: #a9b0c7; --accent: #e63946; --on-accent: #fdf0d5;
+    --win: #5fc27a; --draw: #8d8a7c; --loss: #e63946;
+    --pitch: repeating-linear-gradient(180deg, #2f6a33 0 36px, #295f2d 36px 72px);
+    --hero: repeating-linear-gradient(90deg, #091124 0 26px, #0f1a36 26px 52px);
+  }
+  .content[data-theme] { background: var(--bg); color: var(--text); }
+
+  /* ---------- PAGE / SWITCHER ---------- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh; background: #2a2d34; font-family: "Inter", sans-serif; color: #eee;
+    display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 22px 12px 40px;
+  }
+  .switcher { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 720px; }
+  .switcher h1 { width: 100%; text-align: center; font-size: 15px; font-weight: 600; color: #c9ccd3; margin-bottom: 4px; }
+  .switcher button {
+    border: 1px solid #4a4f5a; background: #1d2026; color: #ddd; padding: 9px 14px; border-radius: 999px;
+    font: 600 13px "Inter", sans-serif; cursor: pointer;
+  }
+  .switcher button.active { background: #fff; color: #111; border-color: #fff; }
+  .switcher .desc { width: 100%; text-align: center; font-size: 13px; color: #9aa0ab; min-height: 18px; }
+
+  /* ---------- PHONE ---------- */
+  .phone {
+    width: 390px; max-width: 100%; height: 820px; border-radius: 44px; overflow: hidden; position: relative;
+    background: var(--bg); color: var(--text); font-family: var(--font-body);
+    box-shadow: 0 0 0 10px #111, 0 30px 60px #0008; display: flex; flex-direction: column;
+  }
+  @media (max-width: 430px) { .phone { height: calc(100vh - 150px); border-radius: 0; box-shadow: none; } body { padding: 10px 0; } }
+  .status { height: 44px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0 28px; font-size: 13px; font-weight: 700; }
+  .topbar { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 4px 18px 12px; }
+  .logo { font-family: var(--font-display); font-size: 26px; text-transform: uppercase; letter-spacing: var(--display-spacing); line-height: 1; }
+  .logo span { color: var(--accent); }
+  [data-theme="street"] .logo span { background: var(--accent); color: #000; padding: 0 4px; }
+  .topbar .icons { display: flex; gap: 10px; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: var(--border); display: grid; place-items: center; font-size: 15px; }
+  [data-theme="street"] .icon-btn { border-radius: 0; }
+
+  .content { flex: 1; overflow-y: auto; padding: 0 16px 20px; scrollbar-width: none; }
+  .content::-webkit-scrollbar { display: none; }
+
+  .nav { flex: none; display: flex; justify-content: space-around; padding: 10px 6px 22px; background: var(--surface); border-top: var(--border); }
+  .nav button { background: none; border: none; color: var(--muted); font: 600 11px var(--font-body); display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 64px; }
+  .nav button .ni { font-size: 19px; filter: grayscale(1); opacity: .7; }
+  .nav button.active { color: var(--text); }
+  .nav button.active .ni { filter: none; opacity: 1; }
+  .nav button.active .lbl { border-bottom: 2px solid var(--accent); }
+
+  /* ---------- COMPONENTS ---------- */
+  .h { font-family: var(--font-display); text-transform: var(--display-case); letter-spacing: var(--display-spacing); }
+  .section-title { display: flex; justify-content: space-between; align-items: baseline; margin: 22px 2px 10px; }
+  .section-title .h { font-size: 19px; }
+  .section-title a { font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 600; }
+  .card { background: var(--surface); border: var(--border); border-radius: var(--radius); padding: 14px; }
+  [data-theme="street"] .card { box-shadow: 4px 4px 0 var(--shadow); }
+  [data-theme="retro"] .card { box-shadow: 3px 3px 0 var(--line); }
+  .muted { color: var(--muted); }
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: var(--accent); color: var(--on-accent); }
+  [data-theme="street"] .pill, [data-theme="retro"] .pill { border-radius: 0; }
+
+  .hero { border-radius: var(--radius); padding: 18px; color: #fff; background: var(--hero); position: relative; overflow: hidden; }
+  [data-theme="street"] .hero { box-shadow: 4px 4px 0 var(--accent2); }
+  [data-theme="retro"] .hero { border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--accent); }
+  .hero .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
+  .hero .title { font-size: 30px; margin: 6px 0 2px; line-height: 1.05; }
+  .hero .sub { font-size: 13px; opacity: .8; }
+  .hero .row { display: flex; gap: 8px; margin-top: 14px; }
+  .hero .stat { flex: 1; background: #ffffff14; border-radius: calc(var(--radius) * .6); padding: 8px 10px; }
+  .hero .stat b { display: block; font-family: var(--font-display); font-size: 20px; }
+  .hero .stat small { font-size: 10px; opacity: .75; text-transform: uppercase; letter-spacing: .08em; }
+  [data-theme="gold"] .hero .title { color: var(--accent); }
+  [data-theme="street"] .hero .title { color: var(--accent); }
+
+  .match { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  [data-theme="street"] .match, [data-theme="retro"] .match { border-bottom-width: 1px; border-bottom-style: dashed; }
+  .match:last-child { border-bottom: none; }
+  .match .side { flex: 1; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+  .match .side.right { justify-content: flex-end; text-align: right; }
+  .crest { width: 26px; height: 26px; border-radius: 50%; flex: none; display: grid; place-items: center; font: 800 10px var(--font-body); color: #fff; }
+  [data-theme="street"] .crest { border-radius: 0; }
+  [data-theme="retro"] .crest { border-radius: 4px; border: 2px solid var(--line); }
+  .match .mid { min-width: 64px; text-align: center; font-family: var(--font-display); font-size: 18px; }
+  .match .mid small { display: block; font-family: var(--font-body); font-size: 10px; color: var(--muted); font-weight: 600; }
+  .score-box { background: var(--surface2); border-radius: calc(var(--radius) * .5); padding: 3px 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { font-size: 10px; color: var(--muted); text-align: center; font-weight: 700; padding: 6px 2px; letter-spacing: .05em; }
+  td { text-align: center; padding: 9px 2px; border-top: 1px solid var(--line); }
+  td.team, th.team { text-align: left; }
+  td.team { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  td.pts { font-weight: 800; font-family: var(--font-display); font-size: 15px; }
+  tr.leader td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+  .form { display: flex; gap: 3px; justify-content: center; }
+  .form i { width: 8px; height: 8px; border-radius: 50%; display: block; }
+  .form i.W { background: var(--win); } .form i.D { background: var(--draw); } .form i.L { background: var(--loss); }
+
+  .leader-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .leader-row:first-child { border-top: none; }
+  .rank { width: 20px; font-family: var(--font-display); font-size: 16px; color: var(--muted); }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; flex: none; display: grid; place-items: center; font-weight: 800; font-size: 14px; color: #fff; }
+  [data-theme="street"] .avatar { border-radius: 0; }
+  [data-theme="retro"] .avatar { border-radius: 6px; border: 2px solid var(--line); }
+  .leader-row .name { flex: 1; }
+  .leader-row .name b { display: block; font-size: 14px; }
+  .leader-row .name small { font-size: 11px; color: var(--muted); }
+  .big-num { font-family: var(--font-display); font-size: 22px; }
+
+  .fraud { border-radius: var(--radius); padding: 16px; background: repeating-linear-gradient(-45deg, #ffcc00 0 14px, #111 14px 28px); position: relative; }
+  .fraud .inner { background: var(--surface); border-radius: calc(var(--radius) * .7); padding: 14px; display: flex; gap: 12px; align-items: center; border: var(--border); }
+  .fraud .tag { font-size: 10px; font-weight: 800; letter-spacing: .14em; color: var(--danger); }
+  .fraud .who { font-family: var(--font-display); font-size: 20px; text-transform: var(--display-case); }
+  .fraud .why { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .fraud .weeks { margin-left: auto; text-align: center; }
+  .fraud .weeks b { display: block; font-family: var(--font-display); font-size: 28px; color: var(--danger); line-height: 1; }
+  .fraud .weeks small { font-size: 10px; color: var(--muted); font-weight: 700; }
+
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .chip { flex: none; padding: 7px 13px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--surface); border: var(--border); color: var(--muted); cursor: pointer; }
+  .chip.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  [data-theme="street"] .chip, [data-theme="retro"] .chip { border-radius: 0; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .statbox { background: var(--surface2); border-radius: calc(var(--radius) * .6); padding: 12px 8px; text-align: center; }
+  .statbox b { display: block; font-family: var(--font-display); font-size: 24px; }
+  .statbox small { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+  .pitch { background: var(--pitch); border-radius: var(--radius); padding: 18px 8px 14px; position: relative; overflow: hidden; border: var(--border); }
+  .pitch::before { content: ""; position: absolute; left: 50%; top: -60px; width: 140px; height: 120px; border: 2px solid #ffffff40; border-radius: 50%; transform: translateX(-50%); }
+  .pitch::after { content: ""; position: absolute; left: 25%; right: 25%; bottom: 0; height: 54px; border: 2px solid #ffffff40; border-bottom: none; }
+  .line { display: flex; justify-content: center; gap: 14px; margin-bottom: 14px; position: relative; z-index: 1; }
+  .pcard { width: 76px; text-align: center; }
+  .pcard .shirt { width: 46px; height: 46px; margin: 0 auto 4px; border-radius: 12px 12px 8px 8px; display: grid; place-items: center; font-weight: 800; color: #fff; font-size: 12px; position: relative; box-shadow: 0 3px 8px #0005; }
+  .pcard .shirt .cap { position: absolute; top: -6px; right: -8px; width: 18px; height: 18px; border-radius: 50%; background: #ffd400; color: #111; font-size: 10px; font-weight: 900; display: grid; place-items: center; border: 2px solid #111; }
+  .pcard .pname { background: var(--surface); color: var(--text); font-size: 11px; font-weight: 700; padding: 3px 2px; border-radius: 4px 4px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pcard .ppts { background: var(--accent); color: var(--on-accent); font-size: 11px; font-weight: 800; padding: 2px; border-radius: 0 0 4px 4px; }
+  .rankbadge { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; font: 800 11px var(--font-body); color: #fff; }
+  .rank-S { background: #c58b00; } .rank-A { background: #7a3cff; } .rank-B { background: #1f7aec; } .rank-C { background: #6b7280; }
+  .bench { display: flex; justify-content: center; gap: 14px; padding: 10px 0 0; }
+
+  .news { display: flex; gap: 12px; align-items: center; }
+  .news .thumb { width: 64px; height: 64px; border-radius: calc(var(--radius) * .6); flex: none; display: grid; place-items: center; font-size: 26px; background: var(--surface2); }
+  .news b { font-size: 14px; display: block; line-height: 1.3; }
+  .news small { font-size: 11px; color: var(--muted); }
+
+  .profile-hero { text-align: center; padding: 22px 16px; border-radius: var(--radius); background: var(--hero); color: #fff; }
+  [data-theme="street"] .profile-hero { box-shadow: 4px 4px 0 var(--accent2); }
+  [data-theme="retro"] .profile-hero { border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--accent); }
+  .profile-hero .avatar { width: 84px; height: 84px; font-size: 28px; margin: 0 auto 10px; border: 3px solid var(--accent); }
+  .profile-hero .h { font-size: 28px; }
+  .profile-hero .meta { display: flex; justify-content: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .profile-hero .meta span { background: #ffffff1f; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+
+  .last3 { display: flex; gap: 8px; }
+  .last3 .m { flex: 1; background: var(--surface2); border-radius: calc(var(--radius) * .6); padding: 10px 6px; text-align: center; font-size: 12px; }
+  .last3 .m b { display: block; font-family: var(--font-display); font-size: 16px; margin: 2px 0; }
+  .ok { color: var(--win); font-weight: 700; } .bad { color: var(--loss); font-weight: 700; }
+  .btn { display: block; width: 100%; padding: 13px; border-radius: calc(var(--radius) * .7); border: none; background: var(--accent); color: var(--on-accent); font: 700 14px var(--font-body); cursor: pointer; }
+  [data-theme="street"] .btn { border: 2px solid #111; box-shadow: 3px 3px 0 var(--shadow); }
+  .switcher .pick { border-color: #d4ff00; color: #d4ff00; }
+  .switcher .pick.active { background: #d4ff00; color: #111; }
+  .switcher .mode[hidden] { display: none; }
+</style>
+</head>
+<body>
+
+<div class="switcher">
+  <h1>ACE PL — pick a style (mockup only, fake data)</h1>
+  <button data-set-theme="gold">1 · Night Gold</button>
+  <button data-set-theme="street">2 · Street Volt</button>
+  <button data-set-theme="pitch">3 · Pitchside</button>
+  <button data-set-theme="retro">4 · Retro Kit</button>
+  <button data-set-theme="mix" class="pick">★ Chosen: Street Volt + Retro fantasy</button>
+  <button class="mode" id="mode">🌙 Dark mode</button>
+  <button onclick="location.href='admin.html'">Admin mockup →</button>
+  <div class="desc" id="desc"></div>
+</div>
+
+<div class="phone" id="phone" data-theme="gold">
+  <div class="status"><span>21:04</span><span>●●● 5G ▮</span></div>
+  <div class="topbar">
+    <div class="logo h">ACE <span>PL</span></div>
+    <div class="icons"><div class="icon-btn" title="News">📰</div><div class="icon-btn" title="Profile">👤</div></div>
+  </div>
+  <div class="content" id="content"></div>
+  <nav class="nav" id="nav">
+    <button data-screen="home"><span class="ni">🏠</span><span class="lbl">Home</span></button>
+    <button data-screen="league"><span class="ni">🏆</span><span class="lbl">League</span></button>
+    <button data-screen="fixtures"><span class="ni">📅</span><span class="lbl">Fixtures</span></button>
+    <button data-screen="players"><span class="ni">👟</span><span class="lbl">Players</span></button>
+    <button data-screen="fantasy"><span class="ni">⭐</span><span class="lbl">Fantasy</span></button>
+  </nav>
+</div>
+
+<script>
+const THEMES = {
+  gold:   "Dark and premium. Gold accents, Champions League night feel.",
+  street: "Grassroots and loud. Black and white with a volt-yellow accent, hard edges.",
+  pitch:  "Fresh and editorial. Cream, deep pitch green and an orange pop.",
+  retro:  "90s matchday programme. Navy, cream and kit red, chunky borders.",
+  mix:    "Chosen direction: Street Volt everywhere, Retro Kit on the Fantasy tab. Light and dark mode.",
+};
+const HAS_DARK = ["street", "retro", "mix"];
+
+const TEAMS = {
+  VIP: { name: "Vipers",   color: "#e63946" },
+  WOL: { name: "Wolves",   color: "#2b2d42" },
+  TIT: { name: "Titans",   color: "#1d70b8" },
+  REB: { name: "Rebels",   color: "#f4a100" },
+  SPA: { name: "Spartans", color: "#2a9d8f" },
+};
+const crest = c => `<span class="crest" style="background:${TEAMS[c].color}">${c[0]}</span>`;
+
+const TABLE = [
+  ["VIP", 6, 4, 1, 1, 17, 9, 13, "WWDLW"],
+  ["TIT", 6, 4, 0, 2, 15, 11, 12, "WLWWL"],
+  ["SPA", 6, 3, 2, 1, 14, 10, 11, "DWWDW"],
+  ["REB", 6, 1, 2, 3, 10, 14, 5, "LDLWD"],
+  ["WOL", 6, 0, 1, 5, 7, 19, 1, "LLDLL"],
+];
+
+const RESULTS = [
+  ["VIP", 3, 2, "TIT"], ["SPA", 2, 2, "REB"], ["WOL", 1, 4, "VIP"], ["TIT", 3, 1, "SPA"],
+];
+const UPCOMING = [
+  ["TIT", "19:00", "REB"], ["VIP", "19:25", "SPA"], ["WOL", "19:50", "TIT"], ["REB", "20:15", "VIP"], ["SPA", "20:40", "WOL"],
+];
+
+const PLAYERS = [
+  { n: "Tunde A.",  i: "TA", t: "VIP", pos: "FWD", r: "S", p: 12, g: 9, a: 3, cs: 0, apps: 6, motm: 3, pts: 71 },
+  { n: "David K.",  i: "DK", t: "TIT", pos: "MID", r: "S", p: 12, g: 6, a: 7, cs: 0, apps: 6, motm: 2, pts: 66 },
+  { n: "Kwame O.",  i: "KO", t: "SPA", pos: "FWD", r: "A", p: 9,  g: 7, a: 2, cs: 0, apps: 6, motm: 1, pts: 52 },
+  { n: "Marcus L.", i: "ML", t: "VIP", pos: "GK",  r: "A", p: 9,  g: 0, a: 1, cs: 3, apps: 6, motm: 1, pts: 48, sv: 31 },
+  { n: "Jay R.",    i: "JR", t: "REB", pos: "MID", r: "B", p: 7,  g: 3, a: 5, cs: 0, apps: 6, motm: 1, pts: 41 },
+  { n: "Leon B.",   i: "LB", t: "SPA", pos: "DEF", r: "B", p: 7,  g: 1, a: 2, cs: 2, apps: 5, motm: 0, pts: 37 },
+  { n: "Sam E.",    i: "SE", t: "TIT", pos: "DEF", r: "C", p: 5,  g: 2, a: 0, cs: 1, apps: 6, motm: 1, pts: 33 },
+  { n: "Rico M.",   i: "RM", t: "WOL", pos: "FWD", r: "C", p: 5,  g: 4, a: 1, cs: 0, apps: 6, motm: 0, pts: 31 },
+  { n: "Chris N.",  i: "CN", t: "REB", pos: "DEF", r: "B", p: 7,  g: 0, a: 1, cs: 1, apps: 6, motm: 0, pts: 22 },
+  { n: "Femi O.",   i: "FO", t: "WOL", pos: "MID", r: "C", p: 5,  g: 0, a: 0, cs: 0, apps: 6, motm: 0, pts: 4 },
+];
+const P = n => PLAYERS.find(p => p.n === n);
+const av = (p, extra = "") => `<span class="avatar" style="background:${TEAMS[p.t].color};${extra}">${p.i}</span>`;
+const rb = r => `<span class="rankbadge rank-${r}">${r}</span>`;
+
+function matchRow(h, mid, a, small) {
+  return `<div class="match">
+    <div class="side">${crest(h)}${TEAMS[h].name}</div>
+    <div class="mid"><span class="score-box">${mid}</span>${small ? `<small>${small}</small>` : ""}</div>
+    <div class="side right">${TEAMS[a].name}${crest(a)}</div>
+  </div>`;
+}
+
+function tableHTML(compact) {
+  return `<table>
+    <tr><th>#</th><th class="team">TEAM</th><th>P</th>${compact ? "" : "<th>W</th><th>D</th><th>L</th>"}<th>GD</th><th>PTS</th>${compact ? "<th>FORM</th>" : ""}</tr>
+    ${TABLE.map((r, i) => `<tr class="${i === 0 ? "leader" : ""}">
+      <td>${i + 1}</td><td class="team">${crest(r[0])}${TEAMS[r[0]].name}</td><td>${r[1]}</td>
+      ${compact ? "" : `<td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td>`}
+      <td>${r[5] - r[6] > 0 ? "+" : ""}${r[5] - r[6]}</td><td class="pts">${r[7]}</td>
+      ${compact ? `<td><div class="form">${[...r[8]].slice(-3).map(f => `<i class="${f}"></i>`).join("")}</div></td>` : ""}
+    </tr>`).join("")}
+  </table>`;
+}
+
+function fraudHTML() {
+  const f = P("Femi O.");
+  return `<div class="fraud"><div class="inner">
+    ${av(f)}
+    <div><div class="tag">⚠ FRAUD WATCH</div><div class="who">${f.n}</div><div class="why">Apologised in the group chat. Again.</div></div>
+    <div class="weeks"><b>6</b><small>WEEKS</small></div>
+  </div></div>`;
+}
+
+const SCREENS = {
+  home: () => `
+    <div class="hero">
+      <div class="eyebrow">Current tournament · Gameweek 3 of 4</div>
+      <div class="title h">November Cup</div>
+      <div class="sub">Next up: Friday 20 Nov · 19:00 · 5 matches</div>
+      <div class="row">
+        <div class="stat"><b>12</b><small>Played</small></div>
+        <div class="stat"><b>63</b><small>Goals</small></div>
+        <div class="stat"><b>38</b><small>Players</small></div>
+      </div>
+    </div>
+
+    <div class="section-title"><span class="h">Fraud Watch</span><a>History →</a></div>
+    ${fraudHTML()}
+
+    <div class="section-title"><span class="h">Table</span><a data-go="league">Full table →</a></div>
+    <div class="card">${tableHTML(true)}</div>
+
+    <div class="section-title"><span class="h">Friday's fixtures</span><a data-go="fixtures">All →</a></div>
+    <div class="card">${UPCOMING.slice(0, 3).map(m => matchRow(m[0], m[1], m[2])).join("")}</div>
+
+    <div class="section-title"><span class="h">Top scorers</span><a data-go="players">Stats →</a></div>
+    <div class="card">${PLAYERS.slice().sort((a, b) => b.g - a.g).slice(0, 3).map((p, i) => `
+      <div class="leader-row"><span class="rank">${i + 1}</span>${av(p)}
+        <div class="name"><b>${p.n}</b><small>${TEAMS[p.t].name} · ${p.pos}</small></div>
+        <span class="big-num">${p.g}</span></div>`).join("")}</div>
+
+    <div class="section-title"><span class="h">Your fantasy</span><a data-go="fantasy">Open →</a></div>
+    <div class="card" style="display:flex;align-items:center;gap:14px">
+      <div style="flex:1"><b>Fraud Busters FC</b><div class="muted" style="font-size:12px">Rank 3 of 38 · Deadline Thu 23:59</div></div>
+      <div style="text-align:right"><div class="big-num">214</div><div class="muted" style="font-size:11px">pts</div></div>
+    </div>
+
+    <div class="section-title"><span class="h">News</span><a>All →</a></div>
+    <div class="card news"><div class="thumb">🎯</div><div><b>Tunde's hat-trick sinks the Wolves</b><small>2 days ago · Match report</small></div></div>
+  `,
+
+  league: () => `
+    <div class="chips" style="margin-top:4px"><span class="chip active">November Cup</span><span class="chip">October Cup</span><span class="chip">September Cup</span><span class="chip">All-time</span></div>
+    <div class="section-title"><span class="h">League table</span><span class="muted" style="font-size:12px">GW 2 of 4</span></div>
+    <div class="card">${tableHTML(false)}</div>
+    <div class="muted" style="font-size:11px;margin:10px 4px">Win 3 · Draw 1 · Loss 0. Level on points → goal difference. Still level at the top → fewer cards or playoff (admin's call).</div>
+
+    <div class="section-title"><span class="h">Form</span></div>
+    <div class="card">${TABLE.map(r => `<div class="leader-row">${crest(r[0])}<div class="name"><b>${TEAMS[r[0]].name}</b></div>
+      <div class="form">${[...r[8]].map(f => `<i class="${f}" style="width:12px;height:12px"></i>`).join("")}</div></div>`).join("")}</div>
+  `,
+
+  fixtures: () => `
+    <div class="chips" style="margin-top:4px"><span class="chip">GW 1 · 6 Nov</span><span class="chip">GW 2 · 13 Nov</span><span class="chip active">GW 3 · 20 Nov</span><span class="chip">GW 4 · 27 Nov</span></div>
+
+    <div class="section-title"><span class="h">Friday 20 Nov</span><span class="pill">UPCOMING</span></div>
+    <div class="card">${UPCOMING.map(m => matchRow(m[0], m[1], m[2], "20 min")).join("")}</div>
+
+    <div class="section-title"><span class="h">Friday 13 Nov</span><span class="muted" style="font-size:12px">Full time</span></div>
+    <div class="card">${RESULTS.map(m => matchRow(m[0], `${m[1]} – ${m[2]}`, m[3], "FT")).join("")}</div>
+
+    <div class="section-title"><span class="h">Match details</span></div>
+    <div class="card">
+      ${matchRow("VIP", "3 – 2", "TIT", "FT")}
+      <div style="font-size:13px;line-height:1.9;margin-top:6px">
+        ⚽ <b>Tunde A.</b> ×2 <span class="muted">(ast Marcus L.)</span><br>
+        ⚽ <b>Sam E.</b> <span class="muted">— borrowed from Titans, played for Vipers</span><br>
+        ⚽ <b>David K.</b>, <b>David K.</b> <span class="muted">(Titans)</span><br>
+        🧤 <b>Marcus L.</b> 7 saves · 🟨 <b>Jay R.</b><br>
+        ⭐ MOTM: <b>Tunde A.</b>
+      </div>
+    </div>
+  `,
+
+  players: () => {
+    const p = P("Tunde A.");
+    return `
+    <div class="profile-hero">
+      ${av(p)}
+      <div class="h">${p.n}</div>
+      <div class="meta"><span>${p.pos}</span><span>${TEAMS[p.t].name}</span><span>Rank ${p.r} · ${p.p}.0</span></div>
+    </div>
+    <div class="chips" style="margin-top:14px"><span class="chip active">November Cup</span><span class="chip">All-time</span></div>
+    <div class="grid3" style="margin-top:12px">
+      <div class="statbox"><b>${p.apps}</b><small>Apps</small></div>
+      <div class="statbox"><b>${p.g}</b><small>Goals</small></div>
+      <div class="statbox"><b>${p.a}</b><small>Assists</small></div>
+      <div class="statbox"><b>${p.motm}</b><small>MOTM</small></div>
+      <div class="statbox"><b>1</b><small>🟨 Cards</small></div>
+      <div class="statbox"><b>${p.pts}</b><small>Fantasy pts</small></div>
+    </div>
+
+    <div class="section-title"><span class="h">Last 3 matches</span></div>
+    <div class="last3">
+      <div class="m">vs Titans<b>3 – 2</b><span class="ok">2G · MOTM</span></div>
+      <div class="m">vs Wolves<b>4 – 1</b><span class="ok">3G 1A</span></div>
+      <div class="m">vs Spartans<b>1 – 2</b><span class="bad">—</span></div>
+    </div>
+
+    <div class="section-title"><span class="h">Leaderboards</span></div>
+    <div class="chips"><span class="chip active">Goals</span><span class="chip">Assists</span><span class="chip">Clean sheets</span><span class="chip">Saves</span><span class="chip">MOTM</span></div>
+    <div class="card" style="margin-top:10px">${PLAYERS.slice().sort((a, b) => b.g - a.g).slice(0, 6).map((q, i) => `
+      <div class="leader-row"><span class="rank">${i + 1}</span>${av(q)}
+        <div class="name"><b>${q.n}</b><small>${TEAMS[q.t].name} · ${q.pos}</small></div>
+        <span class="big-num">${q.g}</span></div>`).join("")}</div>
+  `;
+  },
+
+  fantasy: () => {
+    const pc = (n, cap) => {
+      const p = P(n);
+      return `<div class="pcard"><div class="shirt" style="background:${TEAMS[p.t].color}">${p.i}${cap ? `<span class="cap">${cap}</span>` : ""}</div>
+        <div class="pname">${p.n}</div><div class="ppts">${p.r} · ${Math.round(p.pts / 3)}</div></div>`;
+    };
+    return `
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div><div class="h" style="font-size:20px">Fraud Busters FC</div><div class="muted" style="font-size:12px">Formation 2-2-2 · Bank 2.0</div></div>
+      <span class="pill">Rank 3 / 38</span>
+    </div>
+    <div class="grid3" style="margin-top:10px">
+      <div class="statbox"><b>41</b><small>GW pts</small></div>
+      <div class="statbox"><b>214</b><small>Total</small></div>
+      <div class="statbox"><b>2</b><small>Free transfers</small></div>
+    </div>
+
+    <div class="section-title"><span class="h">My squad</span><span class="muted" style="font-size:12px">Deadline Thu 23:59</span></div>
+    <div class="pitch">
+      <div class="line">${pc("Tunde A.", "C")}${pc("Rico M.")}</div>
+      <div class="line">${pc("David K.", "V")}${pc("Jay R.")}</div>
+      <div class="line">${pc("Leon B.")}${pc("Sam E.")}</div>
+      <div class="line">${pc("Marcus L.")}</div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="muted" style="font-size:11px;font-weight:700;letter-spacing:.08em">BENCH · AUTO-SUB</div>
+      <div class="bench">${pc("Chris N.")}</div>
+    </div>
+
+    <div class="section-title"><span class="h">Prices</span></div>
+    <div class="card" style="display:flex;justify-content:space-around;text-align:center;font-size:12px">
+      <div>${rb("S")}<div class="big-num">12</div></div>
+      <div>${rb("A")}<div class="big-num">9</div></div>
+      <div>${rb("B")}<div class="big-num">7</div></div>
+      <div>${rb("C")}<div class="big-num">5</div></div>
+    </div>
+
+    <div class="section-title"><span class="h">Leaderboard</span></div>
+    <div class="card">
+      ${[["Ballers Anonymous", "Kwame O.", 231], ["No Fraud Zone", "Leon B.", 222], ["Fraud Busters FC", "You", 214], ["Femi's Apology FC", "Femi O.", 97]].map((r, i) => `
+        <div class="leader-row"><span class="rank">${i === 3 ? 38 : i + 1}</span>
+          <div class="name"><b>${r[0]}</b><small>${r[1]}</small></div><span class="big-num">${r[2]}</span></div>`).join("")}
+    </div>
+    <div style="margin-top:14px"><button class="btn">Make transfers</button></div>
+  `;
+  },
+};
+
+const phone = document.getElementById("phone");
+const content = document.getElementById("content");
+let screen = localStorage.getItem("acepl-screen") || "home";
+let theme = localStorage.getItem("acepl-theme") || "mix";
+let mode = localStorage.getItem("acepl-mode") || "light";
+
+function applyTheme() {
+  phone.dataset.theme = theme === "mix" ? "street" : theme;
+  const mixFantasy = theme === "mix" && screen === "fantasy";
+  if (mixFantasy) content.dataset.theme = "retro"; else delete content.dataset.theme;
+  const dark = HAS_DARK.includes(theme) && mode === "dark";
+  [phone, content].forEach(el => { if (dark) el.dataset.mode = "dark"; else delete el.dataset.mode; });
+  const modeBtn = document.getElementById("mode");
+  modeBtn.hidden = !HAS_DARK.includes(theme);
+  modeBtn.textContent = mode === "dark" ? "☀️ Light mode" : "🌙 Dark mode";
+  document.querySelectorAll("[data-set-theme]").forEach(b => b.classList.toggle("active", b.dataset.setTheme === theme));
+  document.getElementById("desc").textContent = THEMES[theme];
+}
+
+function render() {
+  applyTheme();
+  content.innerHTML = SCREENS[screen]();
+  content.scrollTop = 0;
+  document.querySelectorAll("[data-screen]").forEach(b => b.classList.toggle("active", b.dataset.screen === screen));
+  content.querySelectorAll("[data-go]").forEach(a => { a.style.cursor = "pointer"; a.onclick = () => go(a.dataset.go); });
+  content.querySelectorAll(".chips").forEach(row => row.querySelectorAll(".chip").forEach(c => c.onclick = () => {
+    row.querySelectorAll(".chip").forEach(x => x.classList.remove("active")); c.classList.add("active");
+  }));
+}
+function go(s) { screen = s; localStorage.setItem("acepl-screen", s); render(); }
+function setTheme(t) { theme = t; localStorage.setItem("acepl-theme", t); applyTheme(); }
+
+document.querySelectorAll("[data-screen]").forEach(b => b.onclick = () => go(b.dataset.screen));
+document.querySelectorAll("[data-set-theme]").forEach(b => b.onclick = () => setTheme(b.dataset.setTheme));
+document.getElementById("mode").onclick = () => {
+  mode = mode === "dark" ? "light" : "dark"; localStorage.setItem("acepl-mode", mode); applyTheme();
+};
+render();
+</script>
+</body>
+</html>
