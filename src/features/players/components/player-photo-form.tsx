@@ -42,7 +42,8 @@ export function PlayerPhotoForm({
         <PlayerAvatar name={name} photoUrl={photoUrl} size="lg" />
         <div>
           <p className="font-bold">{photoUrl ? copy.change : copy.add}</p>
-          <p className="text-xs text-muted">{copy.hint}</p>
+          <p className="text-sm">{copy.face}</p>
+          {offerSkip ? <p className="text-sm text-muted">{copy.gag}</p> : null}
         </div>
       </div>
       <input

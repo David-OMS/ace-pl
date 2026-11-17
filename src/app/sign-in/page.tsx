@@ -6,6 +6,7 @@ import {
   getCurrentUser,
   SIGN_IN_ERROR_PARAM,
   SIGN_IN_NEXT_PARAM,
+  SIGN_UP_MODE,
   SignInPanel,
   toSafeRedirectPath,
   toSignInError,
@@ -25,5 +26,6 @@ export default async function SignInPage({
 
   if (await getCurrentUser()) redirect(next);
 
-  return <SignInPanel next={next} error={toSignInError(params[SIGN_IN_ERROR_PARAM])} />;
+  const mode = params.mode === SIGN_UP_MODE ? "sign-up" : "sign-in";
+  return <SignInPanel next={next} error={toSignInError(params[SIGN_IN_ERROR_PARAM])} mode={mode} />;
 }

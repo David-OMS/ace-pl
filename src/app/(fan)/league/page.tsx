@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { resolveFanTournament } from "@/features/home";
 import {
   getTournamentStandings,
   listStandingsTournaments,
@@ -16,12 +17,12 @@ type LeaguePageProps = {
 export default async function LeaguePage({
   searchParams,
 }: LeaguePageProps): Promise<React.JSX.Element> {
-  const params = await searchParams;
-  const tournaments = await listStandingsTournaments();
-  const selectedId =
-    params.tournament && tournaments.some((t) => t.id === params.tournament)
-      ? params.tournament
-      : (tournaments[0]?.id ?? null);
+  const [params, tournaments, current] = await Promise.all([
+    searchParams,
+    listStandingsTournaments(),
+    resolveFanTournament(),
+  ]);
+  const selectedId = pickTournamentId(tournaments, params.tournament, current?.id ?? null);
   const standings = selectedId ? await getTournamentStandings(selectedId) : null;
 
   return (
@@ -31,4 +32,14 @@ export default async function LeaguePage({
       selectedTournamentId={selectedId}
     />
   );
+}
+
+function pickTournamentId(
+  tournaments: readonly { id: string }[],
+  requested: string | undefined,
+  currentId: string | null,
+): string | null {
+  if (requested && tournaments.some((tournament) => tournament.id === requested)) return requested;
+  if (currentId && tournaments.some((tournament) => tournament.id === currentId)) return currentId;
+  return tournaments[0]?.id ?? null;
 }

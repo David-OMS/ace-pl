@@ -1,4 +1,7 @@
+export { verifyEmailOtp } from "./actions/verify-email-otp";
 export { SignInPanel } from "./components/sign-in-panel";
+export { ForgotPasswordPanel } from "./components/forgot-password-panel";
+export { NewPasswordPanel } from "./components/new-password-panel";
 export { SignUpOptions } from "./components/sign-up-options";
 export { SignOutButton } from "./components/sign-out-button";
 export { authCopy } from "./copy";
@@ -9,6 +12,7 @@ export {
   SIGN_IN_ERROR_PARAM,
   SIGN_IN_NEXT_PARAM,
   SIGN_IN_PATH,
+  SIGN_UP_MODE,
   toSignInError,
   type SignInError,
 } from "./routes";

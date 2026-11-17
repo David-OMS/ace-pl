@@ -35,6 +35,7 @@ export async function generateFixtures(
   try {
     const context = await loadGenerateFixtureContext(tournamentId);
     if (!context) return fail("not_found");
+    if (context.teams.length < 2 || context.gameDays.length === 0) return fail("invalid_input");
 
     const rows = generateRoundRobinFixtures({
       teams: context.teams,

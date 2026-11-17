@@ -15,7 +15,6 @@ type FixturesPanelProps = {
   scores?: ReadonlyMap<string, FixtureScore> | undefined;
 };
 
-// eslint-disable-next-line max-lines-per-function -- admin fixtures board layout
 export function FixturesPanel({
   tournamentId,
   board,
@@ -29,11 +28,8 @@ export function FixturesPanel({
       <Card className="flex flex-col gap-4">
         <h3 className="font-display text-lg uppercase">{fixturesCopy.generateTitle}</h3>
         <GenerateFixturesButton tournamentId={tournamentId} hasExisting={hasAny} />
-        <CreateFixtureForm
-          tournamentId={tournamentId}
-          teams={board.teams}
-          gameDays={board.gameDays}
-        />
+        <h3 className="font-display text-lg uppercase">{fixturesCopy.form.addTitle}</h3>
+        <AddFixtureBlock tournamentId={tournamentId} board={board} />
       </Card>
 
       {board.undated.length > 0 ? (
@@ -70,5 +66,23 @@ export function FixturesPanel({
 
       {!hasAny ? <p className="text-sm text-muted">{fixturesCopy.empty}</p> : null}
     </section>
+  );
+}
+
+function AddFixtureBlock({
+  tournamentId,
+  board,
+}: {
+  tournamentId: string;
+  board: TournamentFixtureBoard;
+}): React.JSX.Element {
+  if (board.teams.length < 2) {
+    return <p className="text-sm text-muted">{fixturesCopy.needTeams}</p>;
+  }
+  if (board.gameDays.length === 0) {
+    return <p className="text-sm text-muted">{fixturesCopy.needGameDay}</p>;
+  }
+  return (
+    <CreateFixtureForm tournamentId={tournamentId} teams={board.teams} gameDays={board.gameDays} />
   );
 }

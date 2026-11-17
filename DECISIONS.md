@@ -20,7 +20,7 @@ Status key: **FINAL** = agreed · **OPEN** = not decided · **CONFIRM** = record
 | Hosting         | Free tiers only. Vercel subdomain for now.                                                                                                                                       |
 | Notifications   | Phone push notifications (e.g. fantasy deadline). Opt-in. On iPhone only works if added to the home screen; otherwise users get nothing, which is fine.                          |
 | Data            | Fresh start. No import of past tournaments.                                                                                                                                      |
-| Login           | Google sign-in + email magic link.                                                                                                                                               |
+| Login           | Email and password. Google sign-in when a Google Cloud client exists. A forgotten password is reset by an email link.                                                            |
 | Anonymous use   | Anyone with the link can view tables, fixtures and stats. Login needed for fantasy, voting and profile.                                                                          |
 | Player profiles | Admins create every player profile. A player logs in, links their account to their profile (admin sends a personal claim link, e.g. via WhatsApp) and uploads their own picture. |
 | Player “active” | Not used in admin UX. Who plays a tournament is chosen on the tournament roster. DB column may remain; ignore it for product flows.                                              |

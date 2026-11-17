@@ -45,6 +45,9 @@ export function TeamDetailScreen({
       <p className="text-xs font-bold text-muted uppercase">
         {openSpots > 0 ? teamsCopy.openSpots(openSpots) : teamsCopy.full}
       </p>
+      {openSpots > 0 && availablePlayers.length === 0 ? (
+        <p className="text-sm text-muted">{teamsCopy.noneLeft}</p>
+      ) : null}
       <TeamColorPicker tournamentId={tournamentId} teamId={teamId} color={teamColor} />
       <TeamSquadList tournamentId={tournamentId} teamId={teamId} players={players} />
       <AddTeamPlayersForm

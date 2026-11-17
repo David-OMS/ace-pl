@@ -11,6 +11,7 @@ import { TextField } from "@/ui/text-field";
 import { fanPlayersCopy } from "../copy";
 import { filterFanPlayers, type FanPlayerListItem } from "../domain/filter-fan-players";
 import type { FanLeaderboardRow } from "../queries/build-fan-player-stats";
+import { MyRosterCard, type MyRosterPlayer } from "./my-roster-card";
 import { PlayerLeaderboardPanel } from "./player-leaderboard-panel";
 
 type View = "roster" | "stats";
@@ -19,12 +20,14 @@ type FanPlayersListScreenProps = {
   players: readonly FanPlayerListItem[];
   boards: Record<LeaderboardMetric, FanLeaderboardRow[]>;
   initialView?: View;
+  me?: MyRosterPlayer | null;
 };
 
 export function FanPlayersListScreen({
   players,
   boards,
   initialView = "roster",
+  me = null,
 }: FanPlayersListScreenProps): React.JSX.Element {
   const [view, setView] = useState<View>(initialView);
   const [query, setQuery] = useState("");
@@ -46,9 +49,22 @@ export function FanPlayersListScreen({
         />
       </div>
       {view === "stats" ? (
-        <PlayerLeaderboardPanel boards={boards} />
+        <>
+          <p className="text-sm text-muted">{fanPlayersCopy.statsScope}</p>
+          <PlayerLeaderboardPanel boards={boards} />
+        </>
       ) : (
-        <RosterList players={players} filtered={filtered} query={query} onQuery={setQuery} />
+        <>
+          {me ? <MyRosterCard player={me} /> : null}
+          <RosterList
+            players={players}
+            filtered={filtered}
+            query={query}
+            onQuery={setQuery}
+            excludeId={me?.id ?? null}
+            heading={me ? fanPlayersCopy.otherPlayers : null}
+          />
+        </>
       )}
     </div>
   );
@@ -59,9 +75,15 @@ function RosterList(args: {
   filtered: readonly FanPlayerListItem[];
   query: string;
   onQuery: (value: string) => void;
+  excludeId: string | null;
+  heading: string | null;
 }): React.JSX.Element {
+  const pool = args.players.filter((player) => player.id !== args.excludeId);
+  const visible = args.filtered.filter((player) => player.id !== args.excludeId);
+
   return (
     <>
+      {args.heading ? <h2 className="font-display text-lg uppercase">{args.heading}</h2> : null}
       <TextField
         label={fanPlayersCopy.searchLabel}
         name="player-search"
@@ -69,13 +91,13 @@ function RosterList(args: {
         onChange={(event) => args.onQuery(event.target.value)}
         placeholder={fanPlayersCopy.searchPlaceholder}
       />
-      {args.players.length === 0 ? (
+      {pool.length === 0 ? (
         <p className="text-sm text-muted">{fanPlayersCopy.emptyRoster}</p>
-      ) : args.filtered.length === 0 ? (
+      ) : visible.length === 0 ? (
         <p className="text-sm text-muted">{fanPlayersCopy.emptySearch}</p>
       ) : (
         <ul className="flex flex-col gap-1">
-          {args.filtered.map((player) => (
+          {visible.map((player) => (
             <li key={player.id}>
               <SoftNavLink
                 href={fanPlayerPath(player.id)}

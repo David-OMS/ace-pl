@@ -1,5 +1,8 @@
 export const fanPlayersCopy = {
   title: "Players",
+  you: "You",
+  otherPlayers: "Other players",
+  statsScope: "This tournament",
   viewRoster: "Roster",
   viewStats: "Stats",
   searchLabel: "Search players",

@@ -14,3 +14,18 @@ export function toSafeRedirectPath(candidate: unknown): Route {
   // Checked above at runtime; typed routes can't know which app path it is.
   return candidate as Route;
 }
+
+/** Pull the in-app path out of the address Supabase puts on a magic-link email. */
+export function nextFromRedirectTarget(candidate: unknown): Route {
+  if (typeof candidate !== "string" || candidate.length === 0) return DEFAULT_PATH;
+  try {
+    const base = "https://ace.local";
+    const url = new URL(candidate, base);
+    const inner = url.searchParams.get("next");
+    if (inner) return toSafeRedirectPath(inner);
+    if (!candidate.startsWith("/") && url.origin !== base) return DEFAULT_PATH;
+    return toSafeRedirectPath(`${url.pathname}${url.search}`);
+  } catch {
+    return DEFAULT_PATH;
+  }
+}

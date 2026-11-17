@@ -9,9 +9,9 @@ export type StandingsTournamentChip = {
   status: string;
 };
 
-/** Active + completed tournaments for league chips (newest first). */
+/** Newest first, including a tournament that has not started. No results yet still has a table. */
 export function listStandingsTournaments(): Promise<StandingsTournamentChip[]> {
-  return fanPublicCache("standings-tournaments", readStandingsTournaments);
+  return fanPublicCache("standings-tournaments-any-status", readStandingsTournaments);
 }
 
 async function readStandingsTournaments(): Promise<StandingsTournamentChip[]> {
@@ -19,7 +19,6 @@ async function readStandingsTournaments(): Promise<StandingsTournamentChip[]> {
   const { data, error } = await supabase
     .from("tournaments")
     .select("id, name, status")
-    .in("status", ["active", "completed"])
     .order("created_at", { ascending: false });
   if (error) throw error;
   return data ?? [];

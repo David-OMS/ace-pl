@@ -4,7 +4,12 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/features/auth";
 import { loadFanFixtureScores } from "@/features/fan-fixtures";
 import { FixturesPanel, fixturesCopy, listTournamentFixtures } from "@/features/fixtures";
-import { ADMIN_TOURNAMENTS_PATH, adminTournamentPath, getTournament } from "@/features/tournaments";
+import {
+  ADMIN_TOURNAMENTS_PATH,
+  adminTournamentPath,
+  GameDaysPanel,
+  getTournament,
+} from "@/features/tournaments";
 import { PageHeader } from "@/ui/page-header";
 
 export const metadata: Metadata = { title: fixturesCopy.manageTitle };
@@ -38,6 +43,7 @@ export default async function TournamentFixturesPage({
         title={fixturesCopy.manageTitle}
         back={{ href: adminTournamentPath(tournament.id), label: tournament.name }}
       />
+      <GameDaysPanel tournamentId={tournament.id} gameDays={tournament.gameDays} />
       <FixturesPanel tournamentId={tournament.id} board={board} scores={scores} />
     </main>
   );

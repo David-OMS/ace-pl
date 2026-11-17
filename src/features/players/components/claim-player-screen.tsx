@@ -1,4 +1,6 @@
-import { SignUpOptions } from "@/features/auth";
+import Link from "next/link";
+
+import { buildSignInHref, SignUpOptions } from "@/features/auth";
 import { Card } from "@/ui/card";
 
 import { playersCopy } from "../copy";
@@ -28,12 +30,17 @@ export function ClaimPlayerScreen({
             {needsSignUp ? (
               <>
                 <p className="text-sm">{copy.signUp}</p>
-                <SignUpOptions next={claimPath(token)} />
+                <SignUpOptions next={claimPath(token)} lockedName={playerName} />
+                <Link
+                  href={buildSignInHref(claimPath(token))}
+                  className="text-sm font-bold underline"
+                >
+                  {copy.alreadySignedUp}
+                </Link>
               </>
             ) : (
               <ClaimPlayerForm token={token} />
             )}
-            <p className="text-sm text-muted">{copy.photoNext}</p>
           </>
         ) : (
           <p className="text-sm">{copy.invalid}</p>

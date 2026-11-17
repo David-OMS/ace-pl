@@ -1,4 +1,4 @@
-import { toSafeRedirectPath } from "./safe-redirect-path";
+import { nextFromRedirectTarget, toSafeRedirectPath } from "./safe-redirect-path";
 
 describe("toSafeRedirectPath", () => {
   it("keeps a path on this site", () => {
@@ -15,5 +15,17 @@ describe("toSafeRedirectPath", () => {
     ["a relative path", "fantasy"],
   ])("falls back to the home page for %s", (_description, candidate) => {
     expect(toSafeRedirectPath(candidate)).toBe("/");
+  });
+});
+
+describe("nextFromRedirectTarget", () => {
+  it("reads the next path from the callback address", () => {
+    expect(nextFromRedirectTarget("https://ace.example/auth/callback?next=/claim/abc")).toBe(
+      "/claim/abc",
+    );
+  });
+
+  it("keeps a plain app path", () => {
+    expect(nextFromRedirectTarget("/profile")).toBe("/profile");
   });
 });

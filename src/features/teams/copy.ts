@@ -12,6 +12,7 @@ export const teamsCopy = {
   openSpots: (n: number): string => (n === 1 ? "1 spot left" : `${n} spots left`),
   overfilled: (n: number): string => `${Math.abs(n)} over`,
   full: "Full",
+  noneLeft: "No one left to add.",
   captain: "Captain",
   makeCaptain: "Make captain",
   addPlayers: "Add players",
