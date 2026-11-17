@@ -9,6 +9,8 @@ export const authCopy = {
   emailPlaceholder: "you@example.com",
   nameLabel: "Name",
   passwordLabel: "Password",
+  showPassword: "Show password",
+  hidePassword: "Hide password",
   signInButton: "Sign in",
   signingIn: "Signing in…",
   createAccountTitle: "Create account",

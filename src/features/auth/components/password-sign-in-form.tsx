@@ -10,6 +10,7 @@ import { signInWithPassword, type PasswordSignInState } from "../actions/sign-in
 import { authCopy, describeActionError } from "../copy";
 import { PASSWORD_MIN_LENGTH } from "../domain/password-length";
 import { buildForgotPasswordHref } from "../routes";
+import { PasswordField } from "./password-field";
 
 type PasswordSignInFormProps = { next: string };
 
@@ -31,10 +32,9 @@ export function PasswordSignInForm({ next }: PasswordSignInFormProps): React.JSX
         required
         placeholder={authCopy.emailPlaceholder}
       />
-      <TextField
+      <PasswordField
         label={authCopy.passwordLabel}
         name="password"
-        type="password"
         autoComplete="current-password"
         required
         minLength={PASSWORD_MIN_LENGTH}

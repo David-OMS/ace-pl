@@ -1,14 +1,19 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { FAN_HOME_PATH } from "@/features/fan";
 import { Button } from "@/ui/button";
 import { ButtonLink } from "@/ui/button-link";
 import { PlayerAvatar } from "@/ui/player-avatar";
 
-import { uploadMyPlayerPhoto, type UploadPhotoState } from "../actions/upload-my-player-photo";
-import { describePlayersError, playersCopy } from "../copy";
+import { removeMyPlayerPhoto } from "../actions/remove-my-player-photo";
+import { uploadMyPlayerPhoto } from "../actions/upload-my-player-photo";
+import { playersCopy } from "../copy";
+import { PhotoFeedback } from "./photo-feedback";
+import { PhotoPickButtons } from "./photo-pick-buttons";
+import { PlayerPhotoCropper } from "./player-photo-cropper";
 
 type PlayerPhotoFormProps = {
   name: string;
@@ -16,28 +21,50 @@ type PlayerPhotoFormProps = {
   offerSkip: boolean;
 };
 
-function photoMessage(state: UploadPhotoState): string | null {
-  if (!state) return null;
-  if (state.ok) return playersCopy.photo.saved;
-  if (state.error === "invalid_input") return playersCopy.photo.wrongType;
-  return describePlayersError(state.error);
-}
+export function PlayerPhotoForm(props: PlayerPhotoFormProps): React.JSX.Element {
+  const [draft, setDraft] = useState<Blob | null>(null);
+  const [cropped, setCropped] = useState<File | null>(null);
 
-export function PlayerPhotoForm({
-  name,
-  photoUrl,
-  offerSkip,
-}: PlayerPhotoFormProps): React.JSX.Element {
-  const [state, formAction, isPending] = useActionState<UploadPhotoState, FormData>(
-    uploadMyPlayerPhoto,
-    null,
-  );
-  const copy = playersCopy.photo;
-  const message = photoMessage(state);
-  const failed = state !== null && !state.ok;
+  if (draft) {
+    return (
+      <PlayerPhotoCropper
+        source={draft}
+        onCancel={() => setDraft(null)}
+        onCropped={(file) => {
+          setCropped(file);
+          setDraft(null);
+        }}
+      />
+    );
+  }
 
   return (
-    <form action={formAction} className="flex flex-col gap-3">
+    <PlayerPhotoControls {...props} cropped={cropped} setCropped={setCropped} onEdit={setDraft} />
+  );
+}
+
+type ControlsProps = PlayerPhotoFormProps & {
+  cropped: File | null;
+  setCropped: (file: File | null) => void;
+  onEdit: (draft: Blob) => void;
+};
+
+function PlayerPhotoControls(props: ControlsProps): React.JSX.Element {
+  const { name, photoUrl, offerSkip, cropped, setCropped, onEdit } = props;
+  const router = useRouter();
+  const [uploadState, uploadAction, uploading] = useActionState(uploadMyPlayerPhoto, null);
+  const [removeState, removeAction, removing] = useActionState(removeMyPlayerPhoto, null);
+  const copy = playersCopy.photo;
+
+  useEffect(() => {
+    if (uploadState?.ok || removeState?.ok) {
+      setCropped(null);
+      router.refresh();
+    }
+  }, [uploadState, removeState, router, setCropped]);
+
+  return (
+    <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
         <PlayerAvatar name={name} photoUrl={photoUrl} size="lg" />
         <div>
@@ -46,31 +73,52 @@ export function PlayerPhotoForm({
           {offerSkip ? <p className="text-sm text-muted">{copy.gag}</p> : null}
         </div>
       </div>
-      <input
-        type="file"
-        name="photo"
-        accept="image/jpeg,image/png,image/webp"
-        required
-        className="text-sm"
-      />
-      {failed && message ? (
-        <p role="alert" className="text-sm font-bold text-hot">
-          {message}
-        </p>
+      <PhotoPickButtons disabled={uploading || removing} onPicked={onEdit} />
+      {cropped ? (
+        <CroppedSaveForm
+          uploading={uploading}
+          onCancel={() => setCropped(null)}
+          onSave={(formData) => {
+            formData.set("photo", cropped);
+            return uploadAction(formData);
+          }}
+        />
       ) : null}
-      {!failed && message ? (
-        <p role="status" className="text-sm">
-          {message}
-        </p>
+      <PhotoFeedback uploadState={uploadState} removeState={removeState} />
+      {photoUrl ? (
+        <form action={removeAction}>
+          <Button type="submit" variant="danger" fullWidth disabled={removing}>
+            {removing ? copy.removing : copy.remove}
+          </Button>
+        </form>
       ) : null}
-      <Button type="submit" fullWidth disabled={isPending}>
-        {isPending ? copy.saving : copy.save}
-      </Button>
       {offerSkip ? (
         <ButtonLink href={FAN_HOME_PATH} variant="secondary" fullWidth>
           {copy.skip}
         </ButtonLink>
       ) : null}
+    </div>
+  );
+}
+
+function CroppedSaveForm({
+  uploading,
+  onCancel,
+  onSave,
+}: {
+  uploading: boolean;
+  onCancel: () => void;
+  onSave: (formData: FormData) => void | Promise<void>;
+}): React.JSX.Element {
+  const copy = playersCopy.photo;
+  return (
+    <form className="flex flex-col gap-2" action={onSave}>
+      <Button type="submit" fullWidth disabled={uploading}>
+        {uploading ? copy.saving : copy.save}
+      </Button>
+      <Button type="button" variant="secondary" fullWidth onClick={onCancel}>
+        {copy.cancelCrop}
+      </Button>
     </form>
   );
 }

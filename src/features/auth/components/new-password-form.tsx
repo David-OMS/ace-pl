@@ -3,11 +3,11 @@
 import { useActionState } from "react";
 
 import { Button } from "@/ui/button";
-import { TextField } from "@/ui/text-field";
 
 import { setNewPassword, type NewPasswordState } from "../actions/set-new-password";
 import { authCopy, describeActionError } from "../copy";
 import { PASSWORD_MIN_LENGTH } from "../domain/password-length";
+import { PasswordField } from "./password-field";
 
 export function NewPasswordForm(): React.JSX.Element {
   const [state, formAction, isPending] = useActionState<NewPasswordState, FormData>(
@@ -17,10 +17,9 @@ export function NewPasswordForm(): React.JSX.Element {
 
   return (
     <form action={formAction} className="flex flex-col gap-3">
-      <TextField
+      <PasswordField
         label={authCopy.passwordLabel}
         name="password"
-        type="password"
         autoComplete="new-password"
         required
         minLength={PASSWORD_MIN_LENGTH}

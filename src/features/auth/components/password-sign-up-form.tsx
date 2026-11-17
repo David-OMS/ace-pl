@@ -8,6 +8,7 @@ import { TextField } from "@/ui/text-field";
 import { signUpWithPassword, type PasswordSignUpState } from "../actions/sign-up-with-password";
 import { authCopy, describeActionError } from "../copy";
 import { PASSWORD_MIN_LENGTH } from "../domain/password-length";
+import { PasswordField } from "./password-field";
 
 type PasswordSignUpFormProps = {
   next: string;
@@ -61,10 +62,9 @@ function SignUpFields({ lockedName }: { lockedName: string | null }): React.JSX.
         required
         placeholder={authCopy.emailPlaceholder}
       />
-      <TextField
+      <PasswordField
         label={authCopy.passwordLabel}
         name="password"
-        type="password"
         autoComplete="new-password"
         required
         minLength={PASSWORD_MIN_LENGTH}

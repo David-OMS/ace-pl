@@ -1092,6 +1092,7 @@ export type Database = {
       claim_player: { Args: { claim_token: string }; Returns: string }
       preview_claim: { Args: { claim_token: string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
+      clear_my_player_photo: { Args: never; Returns: undefined }
       set_my_player_photo: {
         Args: { new_photo_path: string }
         Returns: undefined
