@@ -13,7 +13,6 @@ import {
   listFantasyLeaderboard,
   listGameDayTopPlayers,
   listMyFantasyTransfers,
-  syncTournamentFantasyScores,
 } from "@/features/fantasy";
 import { resolveFanTournament } from "@/features/home";
 
@@ -33,8 +32,6 @@ export default async function FantasyPage({
 
   if (!user) return emptyCta("signed_out");
   if (!tournament) return emptyCta("no_tournament");
-
-  await syncTournamentFantasyScores(tournament.id);
 
   const [team, leaderboard, beforeFirstDeadline, gameDays] = await Promise.all([
     getMyFantasyTeam({ tournamentId: tournament.id, userId: user.id }),

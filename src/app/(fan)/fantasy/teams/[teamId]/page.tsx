@@ -8,7 +8,6 @@ import {
   getFantasyTeamById,
   getFantasyTeamGameweek,
   listFantasyGameDays,
-  syncTournamentFantasyScores,
 } from "@/features/fantasy";
 
 export const metadata: Metadata = { title: fantasyCopy.viewSquad };
@@ -26,8 +25,6 @@ export default async function FantasyPublicTeamPage({
   const { gw } = await searchParams;
   const team = await getFantasyTeamById(teamId);
   if (!team) notFound();
-
-  await syncTournamentFantasyScores(team.tournamentId);
 
   const gameDays = await listFantasyGameDays(team.tournamentId);
   const selectedGameDayId = gw ?? null;

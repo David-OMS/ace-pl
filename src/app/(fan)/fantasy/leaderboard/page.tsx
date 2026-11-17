@@ -10,7 +10,6 @@ import {
   FANTASY_CREATE_PATH,
   getMyFantasyTeam,
   listFantasyLeaderboard,
-  syncTournamentFantasyScores,
 } from "@/features/fantasy";
 import { resolveFanTournament } from "@/features/home";
 
@@ -35,8 +34,6 @@ export default async function FantasyLeaderboardPage(): Promise<React.JSX.Elemen
       </FantasyTheme>
     );
   }
-
-  await syncTournamentFantasyScores(tournament.id);
 
   const team = await getMyFantasyTeam({
     tournamentId: tournament.id,

@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 import { requireAdmin } from "@/features/auth";
 import { loadFanFixtureScores } from "@/features/fan-fixtures";
-import { syncTournamentFantasyScores } from "@/features/fantasy";
 import { FixturesPanel, fixturesCopy, listTournamentFixtures } from "@/features/fixtures";
 import { ADMIN_TOURNAMENTS_PATH, adminTournamentPath, getTournament } from "@/features/tournaments";
 import { PageHeader } from "@/ui/page-header";
@@ -22,7 +21,6 @@ export default async function TournamentFixturesPage({
   if (!tournament) notFound();
 
   const board = await listTournamentFixtures(tournament.id);
-  await syncTournamentFantasyScores(tournament.id);
 
   const scoreInputs = [...board.undated, ...board.groups.flatMap((group) => group.fixtures)].map(
     (fixture) => ({
