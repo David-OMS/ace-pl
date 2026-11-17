@@ -1,0 +1,105 @@
+import type { PlayerPosition } from "@/config/player-positions";
+import type { MatchEventType } from "@/config/match-events";
+import {
+  aggregatePlayerStats,
+  countAssistsFromEvents,
+  countCleanSheets,
+  mergeStatExtras,
+  type PlayerStatTotals,
+} from "@/features/leaderboards";
+import { buildStandingFixtures } from "@/features/standings";
+import { countGoalsConceded } from "../domain/count-goals-conceded";
+
+type ParticipationRow = {
+  player_id: string;
+  status: "played" | "unused_sub" | "absent";
+  team_id: string;
+  fixture_id: string;
+  position: string | null;
+  is_goalkeeper: boolean;
+};
+
+type EventRow = {
+  event_type: MatchEventType;
+  player_id: string;
+  quantity: number;
+  assist_player_id: string | null;
+  fixture_id: string;
+};
+
+type FixtureRow = {
+  id: string;
+  home_team_id: string;
+  away_team_id: string;
+  status: string;
+  walkover_winner_team_id: string | null;
+};
+
+export type AssembledStats = {
+  totals: PlayerStatTotals[];
+  goalsConceded: Map<string, number>;
+};
+
+function buildFixtureMeta(
+  fixtures: readonly FixtureRow[],
+  events: readonly EventRow[],
+  participations: readonly ParticipationRow[],
+) {
+  const standingFixtures = buildStandingFixtures(
+    fixtures,
+    events.map((e) => ({
+      fixture_id: e.fixture_id,
+      event_type: e.event_type,
+      player_id: e.player_id,
+    })),
+    participations.map((a) => ({
+      fixture_id: a.fixture_id,
+      player_id: a.player_id,
+      team_id: a.team_id,
+    })),
+  );
+  return fixtures.map((f, i) => ({
+    fixtureId: f.id,
+    homeTeamId: f.home_team_id,
+    awayTeamId: f.away_team_id,
+    homeGoals: standingFixtures[i]?.homeGoals ?? 0,
+    awayGoals: standingFixtures[i]?.awayGoals ?? 0,
+    status: f.status,
+  }));
+}
+
+export function assembleStatTotals(
+  participations: readonly ParticipationRow[],
+  events: readonly EventRow[],
+  fixtures: readonly FixtureRow[],
+): AssembledStats {
+  const appearanceRows = participations.map((row) => ({
+    playerId: row.player_id,
+    status: row.status,
+  }));
+  const eventRows = events.map((row) => ({
+    eventType: row.event_type,
+    playerId: row.player_id,
+    quantity: row.quantity,
+  }));
+  const assists = countAssistsFromEvents(
+    events.map((row) => ({ assistPlayerId: row.assist_player_id })),
+  );
+  const fixtureMeta = buildFixtureMeta(fixtures, events, participations);
+  const appearanceMeta = participations.map((a) => ({
+    fixtureId: a.fixture_id,
+    playerId: a.player_id,
+    teamId: a.team_id,
+    status: a.status,
+    position: a.position as PlayerPosition | null,
+    isGoalkeeper: a.is_goalkeeper,
+  }));
+  const cleanSheets = countCleanSheets(fixtureMeta, appearanceMeta);
+  const goalsConceded = countGoalsConceded(fixtureMeta, appearanceMeta);
+  const totals = mergeStatExtras(
+    aggregatePlayerStats(appearanceRows, eventRows),
+    assists,
+    cleanSheets,
+  );
+  return { totals, goalsConceded };
+}

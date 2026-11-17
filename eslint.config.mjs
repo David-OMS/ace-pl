@@ -48,8 +48,10 @@ export default defineConfig([
         {
           patterns: [
             {
-              group: ["@/features/*/*"],
-              message: "Import other features through their index.ts (e.g. '@/features/league').",
+              // Allow `@/features/<name>/server` so client barrels stay free of server-only code.
+              group: ["@/features/*/*", "!@/features/*/server"],
+              message:
+                "Import other features through their index.ts (e.g. '@/features/league'), or '@/features/<name>/server' for server-only exports.",
             },
           ],
         },
@@ -58,7 +60,7 @@ export default defineConfig([
   },
   {
     files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/theme/**"],
+    ignores: ["src/theme/**", "src/config/**"],
     rules: {
       "no-restricted-syntax": [
         "error",

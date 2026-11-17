@@ -1,0 +1,25 @@
+import Link from "next/link";
+import { User } from "lucide-react";
+
+import { Icon } from "@/ui/icon";
+
+import { fanCopy } from "../copy";
+import { FAN_HOME_PATH, FAN_PROFILE_PATH } from "../routes";
+
+export function FanBrandBar(): React.JSX.Element {
+  return (
+    <div className="flex items-center justify-between px-4 pt-2 pb-3">
+      <Link href={FAN_HOME_PATH} className="font-display text-2xl tracking-wide uppercase">
+        {fanCopy.brandPrimary}{" "}
+        <span className="bg-accent px-1 text-on-accent">{fanCopy.brandAccent}</span>
+      </Link>
+      <Link
+        href={FAN_PROFILE_PATH}
+        className="inline-flex size-9 items-center justify-center border-2 border-line bg-surface"
+        aria-label={fanCopy.profile}
+      >
+        <Icon icon={User} size="md" />
+      </Link>
+    </div>
+  );
+}

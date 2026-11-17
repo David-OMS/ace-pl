@@ -56,7 +56,8 @@ See `docs/ARCHITECTURE.md` for the full layout. In short:
 - `strict` mode on, plus `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`.
 - No `any`. Use `unknown` and narrow it.
 - No non-null assertions (`!`) except in tests.
-- Database types are generated from the schema (`npm run db:types`), never written by hand.
+- Keep `src/types/database.ts` in sync with migrations. Prefer `npm run db:types` when the CLI works;
+  otherwise update the file by hand to match the migration. Never ask the project owner to re-login for types.
 - All external input (forms, URL params, server action arguments) is validated with Zod at the boundary.
 - Prefer `type` over `interface` unless declaration merging is needed.
 - Return types are explicit on exported functions.
@@ -88,6 +89,7 @@ See `docs/ARCHITECTURE.md` for the full layout. In short:
 ## 9. Database
 
 - Every schema change is a migration in `supabase/migrations/`. The dashboard is never used to change the schema.
+- A migration is applied only after the project owner has reviewed the SQL and approved it.
 - Row Level Security is on for every table. Public read where the product allows it; writes for admins only, checked by policy.
 - Foreign keys and constraints enforce the rules the database can enforce (unique votes, max two Fraud Watch players, valid scores).
 - Results and stats are never hard-deleted. Changes are recorded in the audit log with who, when, before and after.
@@ -161,7 +163,9 @@ Playwright end-to-end tests run before each release.
 
 - WCAG 2.2 AA: colour contrast, focus states, labels on every input, tap targets of at least 44px.
 - Works on a mid-range Android phone on mobile data. Images are optimised; pages load the data they need, not more.
-- All times are stored in UTC and displayed in Africa/Lagos time.
+- Absolute moments (`timestamptz`) are stored in UTC. Calendar `date` / wall-clock `time`
+  values are league-local (Africa/Lagos) with no zone attached. Display uses Africa/Lagos
+  when converting from UTC.
 
 ## 18. Dependencies
 

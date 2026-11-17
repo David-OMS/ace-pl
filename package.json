@@ -11,7 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -21,7 +21,7 @@
     "test:coverage": "vitest run --coverage",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
     "db:types": "node --env-file=.env.local scripts/generate-db-types.mjs",
-    "db:push": "supabase db push",
+    "db:push": "supabase db push --remote",
     "db:new": "supabase migration new",
     "prepare": "husky"
   },
@@ -30,7 +30,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{css,md,mdc,json,yml,yaml}": [
+    "*.{css,md,json,yml,yaml}": [
       "prettier --write"
     ]
   },

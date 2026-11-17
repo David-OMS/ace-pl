@@ -7,7 +7,10 @@ alwaysApply: false
 # Database and Supabase
 
 - Schema changes only as new files in `supabase/migrations/`. Never edit an applied migration; add a new one.
-- After a migration, regenerate types with `npm run db:types`.
+- **Never apply a migration (`db push`, `--yes`, or any remote change) without first showing the user the SQL
+  and getting explicit approval for that specific migration.** Writing the file is fine; applying it is not.
+- After writing a migration, update `src/types/database.ts` to match (run `npm run db:types` if the CLI
+  works; otherwise edit by hand). Never ask the project owner to re-login just for types.
 - Tables plural `snake_case`; columns `snake_case`; foreign keys `<thing>_id`.
 - Enable Row Level Security on every table in the same migration that creates it.
   Public read only where the product allows it; writes only for admins (`is_admin()`).
