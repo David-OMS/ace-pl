@@ -6,6 +6,10 @@ vi.mock("@/lib/supabase/server-client", () => ({
   createSupabaseServerClient: async () => ({ auth: { resetPasswordForEmail } }),
 }));
 
+vi.mock("next/headers", () => ({
+  cookies: async () => ({ set: vi.fn() }),
+}));
+
 function buildForm(fields: Record<string, string>): FormData {
   const form = new FormData();
   Object.entries(fields).forEach(([key, value]) => form.set(key, value));

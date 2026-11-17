@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 import { SITE } from "@/config/site";
+import { RecoverySessionRedirect } from "@/features/auth";
 import { fontVariables } from "@/theme/fonts";
 import { DEFAULT_MODE, DEFAULT_THEME } from "@/theme/theme-config";
 
@@ -23,7 +24,10 @@ type RootLayoutProps = Readonly<{ children: React.ReactNode }>;
 export default function RootLayout({ children }: RootLayoutProps): React.JSX.Element {
   return (
     <html lang="en" data-theme={DEFAULT_THEME} data-mode={DEFAULT_MODE} className={fontVariables}>
-      <body className="min-h-dvh bg-canvas font-body text-ink antialiased">{children}</body>
+      <body className="min-h-dvh bg-canvas font-body text-ink antialiased">
+        <RecoverySessionRedirect />
+        {children}
+      </body>
     </html>
   );
 }

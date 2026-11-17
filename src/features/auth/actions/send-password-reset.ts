@@ -1,11 +1,14 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { publicEnv } from "@/lib/env/public-env";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 import { buildAuthCallbackUrl } from "../domain/build-auth-callback-url";
+import { PASSWORD_RESET_COOKIE } from "../domain/password-reset-cookie";
 import { toAuthFailure } from "../domain/to-auth-failure";
 import { emailOnlySchema } from "../schemas/email-sign-in-schema";
 import { NEW_PASSWORD_PATH } from "../routes";
@@ -30,5 +33,14 @@ export async function sendPasswordReset(
     logger.warn("password_reset_failed", { status: error.status, code: error.code });
     return fail(toAuthFailure(error));
   }
+
+  const cookieStore = await cookies();
+  cookieStore.set(PASSWORD_RESET_COOKIE, "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60,
+  });
   return ok({ email });
 }
