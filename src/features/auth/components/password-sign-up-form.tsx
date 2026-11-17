@@ -23,14 +23,6 @@ export function PasswordSignUpForm({
     null,
   );
 
-  if (state?.ok) {
-    return (
-      <p role="status" className="rounded-card border-2 border-line bg-surface-alt p-3 text-sm">
-        {authCopy.confirmEmailSent}
-      </p>
-    );
-  }
-
   return (
     <form action={formAction} className="flex flex-col gap-3">
       <input type="hidden" name="next" value={next} />

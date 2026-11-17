@@ -2,16 +2,17 @@
 
 import { redirect } from "next/navigation";
 
-import { fail, ok, type ActionResult } from "@/lib/action-result";
+import { fail, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 import { toAuthFailure } from "../domain/to-auth-failure";
 import { passwordSignUpSchema } from "../schemas/email-sign-in-schema";
 
-export type PasswordSignUpState = ActionResult<{ email: string }> | null;
+export type PasswordSignUpState = ActionResult<never> | null;
 
-/** Creates the account. A returned email means Supabase still wants a confirm link first. */
+/** Creates the account with no confirm email, then signs them in. */
 export async function signUpWithPassword(
   _previous: PasswordSignUpState,
   formData: FormData,
@@ -25,17 +26,30 @@ export async function signUpWithPassword(
   if (!parsed.success) return fail("invalid_input");
 
   const { name, email, password, next } = parsed.data;
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.auth.signUp({
+  const admin = createSupabaseAdminClient();
+  const created = await admin.auth.admin.createUser({
     email,
     password,
-    options: { data: { full_name: name } },
+    email_confirm: true,
+    user_metadata: { full_name: name },
   });
 
-  if (error) {
-    logger.warn("password_sign_up_failed", { status: error.status, code: error.code });
-    return fail(toAuthFailure(error));
+  if (created.error) {
+    logger.warn("password_sign_up_failed", {
+      status: created.error.status,
+      code: created.error.code,
+    });
+    return fail(toAuthFailure(created.error));
   }
-  if (!data.session) return ok({ email });
+
+  const supabase = await createSupabaseServerClient();
+  const signedIn = await supabase.auth.signInWithPassword({ email, password });
+  if (signedIn.error) {
+    logger.warn("password_sign_up_session_failed", {
+      status: signedIn.error.status,
+      code: signedIn.error.code,
+    });
+    return fail(toAuthFailure(signedIn.error));
+  }
   redirect(next);
 }

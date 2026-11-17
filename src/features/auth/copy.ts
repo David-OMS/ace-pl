@@ -27,7 +27,6 @@ export const authCopy = {
   savePassword: "Save password",
   savingPassword: "Saving…",
   resetLinkExpired: "That reset link has expired. Request a new one.",
-  confirmEmailSent: "Check your email and open the confirm link. Then sign in with your password.",
   sendLink: "Email me a sign-in link",
   sendingLink: "Sending…",
   linkSent: (email: string): string =>
@@ -44,7 +43,7 @@ export const authCopy = {
     invalid_input: "Check the email and password. Use at least 8 characters.",
     conflict: "That email already has an account. Sign in with it.",
     unauthenticated: "That reset link has expired. Request a new one.",
-    rate_limited: "Only a couple of emails can go out each hour. Wait, then try once.",
+    rate_limited: "Too many tries. Wait a minute, then try once.",
     request_failed: "Couldn't do that. Try again in a minute.",
   } satisfies Partial<Record<ActionErrorCode, string>>,
   fallbackError: "Something went wrong. Try again.",

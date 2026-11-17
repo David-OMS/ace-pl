@@ -1,6 +1,7 @@
 import { signUpWithPassword } from "./sign-up-with-password";
 
-const signUp = vi.fn();
+const createUser = vi.fn();
+const signInWithPassword = vi.fn();
 
 vi.mock("next/navigation", () => ({
   redirect: (path: string): never => {
@@ -8,8 +9,12 @@ vi.mock("next/navigation", () => ({
   },
 }));
 
+vi.mock("@/lib/supabase/admin-client", () => ({
+  createSupabaseAdminClient: () => ({ auth: { admin: { createUser } } }),
+}));
+
 vi.mock("@/lib/supabase/server-client", () => ({
-  createSupabaseServerClient: async () => ({ auth: { signUp } }),
+  createSupabaseServerClient: async () => ({ auth: { signInWithPassword } }),
 }));
 
 function buildForm(fields: Record<string, string>): FormData {
@@ -20,12 +25,14 @@ function buildForm(fields: Record<string, string>): FormData {
 
 describe("signUpWithPassword", () => {
   beforeEach(() => {
-    signUp.mockReset();
+    createUser.mockReset();
+    signInWithPassword.mockReset();
     vi.spyOn(console, "warn").mockImplementation(() => undefined);
   });
 
-  it("stores the player name and signs them straight in", async () => {
-    signUp.mockResolvedValue({ data: { session: { access_token: "token" } }, error: null });
+  it("creates the account with no confirm email and signs them in", async () => {
+    createUser.mockResolvedValue({ data: { user: { id: "u1" } }, error: null });
+    signInWithPassword.mockResolvedValue({ error: null });
 
     await expect(
       signUpWithPassword(
@@ -39,27 +46,21 @@ describe("signUpWithPassword", () => {
       ),
     ).rejects.toMatchObject({ path: "/claim/token" });
 
-    expect(signUp).toHaveBeenCalledWith({
+    expect(createUser).toHaveBeenCalledWith({
       email: "a@b.co",
       password: "pitchpass",
-      options: { data: { full_name: "Brymo" } },
+      email_confirm: true,
+      user_metadata: { full_name: "Brymo" },
+    });
+    expect(signInWithPassword).toHaveBeenCalledWith({
+      email: "a@b.co",
+      password: "pitchpass",
     });
   });
 
-  it("asks them to open a confirm email when Supabase does not start a session", async () => {
-    signUp.mockResolvedValue({ data: { session: null }, error: null });
-
-    const result = await signUpWithPassword(
-      null,
-      buildForm({ name: "Brymo", email: "a@b.co", password: "pitchpass" }),
-    );
-
-    expect(result).toEqual({ ok: true, data: { email: "a@b.co" } });
-  });
-
   it("sends an existing email to sign in", async () => {
-    signUp.mockResolvedValue({
-      data: { session: null },
+    createUser.mockResolvedValue({
+      data: { user: null },
       error: { status: 422, code: "user_already_exists", message: "registered" },
     });
 
@@ -69,5 +70,6 @@ describe("signUpWithPassword", () => {
     );
 
     expect(result).toEqual({ ok: false, error: "conflict" });
+    expect(signInWithPassword).not.toHaveBeenCalled();
   });
 });

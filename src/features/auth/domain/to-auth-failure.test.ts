@@ -7,6 +7,7 @@ describe("toAuthFailure", () => {
 
   it("tells an existing email to sign in instead of creating another account", () => {
     expect(toAuthFailure({ status: 422, code: "user_already_exists" })).toBe("conflict");
+    expect(toAuthFailure({ status: 422, code: "email_exists" })).toBe("conflict");
   });
 
   it("keeps the mail cap separate from a broken request", () => {

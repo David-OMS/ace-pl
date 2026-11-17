@@ -10,7 +10,7 @@ const INVALID_CODES = new Set(["invalid_credentials", "weak_password", "validati
 /** Maps a Supabase auth error onto the codes the forms already know how to explain. */
 export function toAuthFailure(error: AuthFailureInput): ActionErrorCode {
   if (error.status === 429 || error.code === "over_request_rate_limit") return "rate_limited";
-  if (error.code === "user_already_exists") return "conflict";
+  if (error.code === "user_already_exists" || error.code === "email_exists") return "conflict";
   if ((error.code && INVALID_CODES.has(error.code)) || error.status === 400) return "invalid_input";
   return "request_failed";
 }
