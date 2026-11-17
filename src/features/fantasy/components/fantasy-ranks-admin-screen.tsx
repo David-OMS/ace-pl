@@ -3,11 +3,11 @@
 import type { Route } from "next";
 import { useActionState } from "react";
 
-import { FANTASY_RANKS } from "@/config/fantasy";
+import { FANTASY_PRICE_CEILING, FANTASY_PRICE_FLOOR, FANTASY_PRICE_STEP } from "@/config/fantasy";
 import { Button } from "@/ui/button";
 import { FormFeedback } from "@/ui/form-feedback";
 import { PageHeader } from "@/ui/page-header";
-import { SelectField } from "@/ui/select-field";
+import { TextField } from "@/ui/text-field";
 
 import { upsertFantasyRank, type UpsertFantasyRankState } from "../actions/upsert-fantasy-rank";
 import { fantasyCopy } from "../copy";
@@ -65,11 +65,16 @@ function RankRow({
         <p className="font-bold">
           {player.name} <span className="text-xs font-bold text-muted">{player.position}</span>
         </p>
-        <SelectField
-          label="Rank"
-          name="rank"
-          defaultValue={player.rank}
-          options={FANTASY_RANKS.map((rank) => ({ value: rank, label: rank }))}
+        <TextField
+          label={fantasyCopy.prices}
+          name="price"
+          type="number"
+          inputMode="decimal"
+          min={FANTASY_PRICE_FLOOR}
+          max={FANTASY_PRICE_CEILING}
+          step={FANTASY_PRICE_STEP}
+          defaultValue={player.price}
+          required
         />
         <Button type="submit" disabled={isPending}>
           {isPending ? fantasyCopy.saving : fantasyCopy.adminRanksSave}

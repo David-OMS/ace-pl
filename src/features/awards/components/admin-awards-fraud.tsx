@@ -12,7 +12,6 @@ import { awardsCopy } from "../copy";
 import type { AwardsPlayerOption, FraudWatchRow } from "../queries/awards-admin-types";
 
 type AdminAwardsFraudProps = {
-  tournamentId: string;
   open: readonly FraudWatchRow[];
   history: readonly FraudWatchRow[];
   roster: readonly AwardsPlayerOption[];
@@ -20,7 +19,6 @@ type AdminAwardsFraudProps = {
 
 // eslint-disable-next-line max-lines-per-function, complexity -- awards admin panel UI
 export function AdminAwardsFraud({
-  tournamentId,
   open,
   history,
   roster,
@@ -73,7 +71,6 @@ export function AdminAwardsFraud({
       </div>
       {open.length < 2 && options.length > 0 ? (
         <form action={addAction} className="flex flex-col gap-2">
-          <input type="hidden" name="tournamentId" value={tournamentId} />
           <SelectField label={awardsCopy.pickPlayer} name="playerId" options={options} />
           <label className="flex flex-col gap-1">
             <span className="text-[10px] font-extrabold tracking-wide text-muted uppercase">

@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { STATS_ROTATE_MS } from "@/config/stats-rotate";
 import { FAN_PLAYERS_STATS_PATH } from "@/features/fan";
 import { Card } from "@/ui/card";
 import { PlayerAvatar } from "@/ui/player-avatar";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { homeCopy } from "../copy";
 import type { HomeStatBoard } from "../queries/load-home-stat-boards";
@@ -43,9 +43,9 @@ export function HomeRotatingStats({ boards }: HomeRotatingStatsProps): React.JSX
     <section className="flex flex-col gap-2">
       <div className="flex items-end justify-between px-1">
         <h2 className="font-display text-lg uppercase">{TITLES[board.metric]}</h2>
-        <Link href={FAN_PLAYERS_STATS_PATH} className="text-xs font-bold text-muted">
+        <SoftNavLink href={FAN_PLAYERS_STATS_PATH} className="text-xs font-bold text-muted">
           {homeCopy.statsLink}
-        </Link>
+        </SoftNavLink>
       </div>
       <Card className="p-0">
         <ul>

@@ -1,6 +1,6 @@
 import type { Route } from "next";
-import Link from "next/link";
 
+import { SoftNavLink } from "@/ui/soft-nav-link";
 import { TeamCrest } from "@/ui/team-crest";
 
 import { tournamentsCopy } from "../copy";
@@ -28,7 +28,7 @@ export function HubTeamList({
         <ul className="flex flex-col divide-y-2 divide-line-soft rounded-card border-2 border-line bg-surface shadow-offset">
           {teams.map((team) => (
             <li key={team.id}>
-              <Link
+              <SoftNavLink
                 href={adminTeamPath(tournamentId, team.id) as Route}
                 className="flex min-h-14 items-center gap-3 px-3"
               >
@@ -37,7 +37,7 @@ export function HubTeamList({
                 <span className="text-xs font-bold text-muted">
                   {team.playerCount}/{squadSize}
                 </span>
-              </Link>
+              </SoftNavLink>
             </li>
           ))}
         </ul>

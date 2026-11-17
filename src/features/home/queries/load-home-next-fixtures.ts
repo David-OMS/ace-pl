@@ -1,7 +1,8 @@
 import "server-only";
 
 import { DEFAULT_TEAM_COLOR } from "@/config/team-colors";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 export type HomeFixtureRow = {
   id: string;
@@ -15,8 +16,12 @@ export type HomeFixtureRow = {
 const MAX_NEXT = 3;
 
 /** Next upcoming published/draft fixtures for the home strip. */
-export async function loadHomeNextFixtures(tournamentId: string): Promise<HomeFixtureRow[]> {
-  const supabase = await createSupabaseServerClient();
+export function loadHomeNextFixtures(tournamentId: string): Promise<HomeFixtureRow[]> {
+  return fanPublicCache(`home-fixtures:${tournamentId}`, () => readHomeNextFixtures(tournamentId));
+}
+
+async function readHomeNextFixtures(tournamentId: string): Promise<HomeFixtureRow[]> {
+  const supabase = createPublicSupabaseClient();
   const [fixtures, teams] = await Promise.all([
     supabase
       .from("fixtures")

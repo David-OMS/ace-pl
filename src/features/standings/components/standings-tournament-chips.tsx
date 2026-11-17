@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { FAN_LEAGUE_PATH } from "@/features/fan";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import type { StandingsTournamentChip } from "../queries/list-standings-tournaments";
 
@@ -21,7 +20,7 @@ export function StandingsTournamentChips({
       {tournaments.map((tournament) => {
         const active = tournament.id === selectedId;
         return (
-          <Link
+          <SoftNavLink
             key={tournament.id}
             href={`${FAN_LEAGUE_PATH}?tournament=${tournament.id}`}
             className={`shrink-0 border-2 px-3 py-1.5 text-xs font-extrabold tracking-wide uppercase ${
@@ -31,7 +30,7 @@ export function StandingsTournamentChips({
             }`}
           >
             {tournament.name}
-          </Link>
+          </SoftNavLink>
         );
       })}
     </div>

@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { fanPlayerPath } from "@/features/fan";
 import type { LeaderboardMetric } from "@/features/leaderboards";
 import { PlayerAvatar } from "@/ui/player-avatar";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 import { TextField } from "@/ui/text-field";
 
 import { fanPlayersCopy } from "../copy";
@@ -77,7 +77,7 @@ function RosterList(args: {
         <ul className="flex flex-col gap-1">
           {args.filtered.map((player) => (
             <li key={player.id}>
-              <Link
+              <SoftNavLink
                 href={fanPlayerPath(player.id)}
                 className="flex items-center gap-3 border-2 border-line-soft bg-surface px-3 py-2.5"
               >
@@ -86,7 +86,7 @@ function RosterList(args: {
                   <p className="truncate text-sm font-bold">{player.name}</p>
                   <p className="text-xs text-muted">{fanPlayersCopy.position(player.position)}</p>
                 </div>
-              </Link>
+              </SoftNavLink>
             </li>
           ))}
         </ul>

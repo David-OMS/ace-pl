@@ -13,7 +13,7 @@ import { FanFixtureRow, type FanFixtureRowData } from "./fan-fixture-row";
 
 type FanFixtureDaySectionProps = {
   group: FanFixtureGameDayGroup<FanFixtureRowData>;
-  scores: ReadonlyMap<string, FixtureListScore>;
+  scores: Record<string, FixtureListScore>;
   fixtureHref?: (fixtureId: string) => Route;
   pill?: "upcoming" | "past";
 };
@@ -49,7 +49,7 @@ export function FanFixtureDaySection({
               key={fixture.id}
               fixture={fixture}
               href={fixtureHref(fixture.id)}
-              score={scores.get(fixture.id) ?? null}
+              score={scores[fixture.id] ?? null}
             />
           ))
         )}

@@ -1,9 +1,8 @@
-import Link from "next/link";
-
 import { buildSignInHref } from "@/features/auth";
 import { FAN_FANTASY_PATH } from "@/features/fan";
-import { Card } from "@/ui/card";
 import { ButtonLink } from "@/ui/button-link";
+import { Card } from "@/ui/card";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { homeCopy } from "../copy";
 import type { HomeFantasyTeaser } from "../queries/get-home-snapshot";
@@ -16,9 +15,9 @@ export function HomeFantasyCard({ fantasy }: HomeFantasyCardProps): React.JSX.El
       <div className="flex items-end justify-between px-1">
         <h2 className="font-display text-lg uppercase">{homeCopy.fantasy}</h2>
         {fantasy.kind === "has_team" ? (
-          <Link href={FAN_FANTASY_PATH} className="text-xs font-bold text-muted">
+          <SoftNavLink href={FAN_FANTASY_PATH} className="text-xs font-bold text-muted">
             {homeCopy.fantasyOpen}
-          </Link>
+          </SoftNavLink>
         ) : null}
       </div>
       <Card>

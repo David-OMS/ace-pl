@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
+
 import { ADMIN_HOME_PATH } from "@/features/admin";
 import { checkAdminAccess } from "@/features/auth";
 import { adminTournamentFixturesPath, adminTournamentPath } from "@/features/tournaments";
@@ -47,5 +49,6 @@ export async function createFixture(
   revalidatePath(adminTournamentPath(tournamentId));
   revalidatePath(adminTournamentFixturesPath(tournamentId));
   revalidatePath(ADMIN_HOME_PATH);
+  revalidateFanPublic();
   return ok({ savedAt: Date.now() });
 }

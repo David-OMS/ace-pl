@@ -1,4 +1,5 @@
 export { SignInPanel } from "./components/sign-in-panel";
+export { SignUpOptions } from "./components/sign-up-options";
 export { SignOutButton } from "./components/sign-out-button";
 export { authCopy } from "./copy";
 export { toSafeRedirectPath } from "./domain/safe-redirect-path";

@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { z } from "zod";
 
 import { ADMIN_HOME_PATH } from "@/features/admin";
@@ -78,5 +80,6 @@ export async function setFixtureDate(
   revalidatePath(adminTournamentFixturesPath(tournamentId));
   revalidatePath(adminFixturePath(tournamentId, fixtureId));
   revalidatePath(ADMIN_HOME_PATH);
+  revalidateFanPublic();
   return ok({ savedAt: Date.now() });
 }

@@ -1,6 +1,7 @@
 import "server-only";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 import { calculateStandings, type StandingRow } from "../domain/calculate-standings";
 import { buildStandingFixtures } from "./build-standing-fixtures";
@@ -18,10 +19,12 @@ export type TournamentStandings = {
   rows: StandingTeamRow[];
 };
 
-export async function getTournamentStandings(
-  tournamentId: string,
-): Promise<TournamentStandings | null> {
-  const supabase = await createSupabaseServerClient();
+export function getTournamentStandings(tournamentId: string): Promise<TournamentStandings | null> {
+  return fanPublicCache(`standings:${tournamentId}`, () => readTournamentStandings(tournamentId));
+}
+
+async function readTournamentStandings(tournamentId: string): Promise<TournamentStandings | null> {
+  const supabase = createPublicSupabaseClient();
   const { data: tournament, error } = await supabase
     .from("tournaments")
     .select("id, name")

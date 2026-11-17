@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { adminFixturePath } from "@/features/fixtures";
 import { formatKickoffTime } from "@/lib/dates/format-kickoff-time";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 import { TeamCrest } from "@/ui/team-crest";
 
 import { adminCopy } from "../copy";
@@ -33,7 +32,7 @@ export function AdminHomeNextFixture({
           {fixture.playedOnLabel} · {formatKickoffTime(fixture.kickoffTime)}
         </span>
       </div>
-      <Link
+      <SoftNavLink
         href={adminFixturePath(fixture.tournamentId, fixture.id)}
         className="flex items-center justify-between border-2 border-line bg-hero px-3.5 py-3.5 text-on-hero shadow-[4px_4px_0_var(--color-hot)]"
       >
@@ -45,7 +44,7 @@ export function AdminHomeNextFixture({
           </span>
         </div>
         <ScoreSide name={fixture.awayTeamName} color={fixture.awayTeamColor} />
-      </Link>
+      </SoftNavLink>
     </section>
   );
 }

@@ -15,6 +15,7 @@ export { FantasyPublicTeamScreen } from "./components/fantasy-public-team-screen
 export { fantasyCopy } from "./copy";
 export { applyTransfer, applyTransferBatch } from "./domain/apply-transfer";
 export { calculatePriceChanges } from "./domain/calculate-price-changes";
+export { canEditFantasyPrices } from "./domain/can-edit-fantasy-prices";
 export { isWithinBudget, remainingBank } from "./domain/fantasy-budget";
 export { formatFantasyPrice } from "./domain/format-fantasy-price";
 export { parseFormation } from "./domain/parse-formation";
@@ -28,6 +29,7 @@ export { listFantasyLeaderboard } from "./queries/list-fantasy-leaderboard";
 export { listFantasyGameDays } from "./queries/list-fantasy-game-days";
 export { getFantasyTeamGameweek } from "./queries/get-fantasy-team-gameweek";
 export { listGameDayTopPlayers } from "./queries/list-game-day-top-players";
+export { listTeamGameweeks } from "./queries/list-team-gameweeks";
 export { listMyFantasyTransfers } from "./queries/list-my-fantasy-transfers";
 export { listPickablePlayers } from "./queries/list-pickable-players";
 export { loadFantasyHomeTeaser } from "./queries/load-fantasy-home-teaser";

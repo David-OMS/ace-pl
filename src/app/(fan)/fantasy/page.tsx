@@ -6,13 +6,13 @@ import {
   FantasyTeamScreen,
   FantasyTheme,
   fantasyCopy,
-  getFantasyTeamGameweek,
   getMyFantasyTeam,
   isUnlimitedTransferPeriod,
   listFantasyGameDays,
   listFantasyLeaderboard,
   listGameDayTopPlayers,
   listMyFantasyTransfers,
+  listTeamGameweeks,
 } from "@/features/fantasy";
 import { resolveFanTournament } from "@/features/home";
 
@@ -42,14 +42,11 @@ export default async function FantasyPage({
   if (!team) return emptyCta("no_team");
 
   const myRank = leaderboard.find((row) => row.teamId === team.id)?.rank ?? leaderboard.length + 1;
-  const [{ gameweek, topPlayers }, transfers] = await Promise.all([
-    loadGwViews({
-      teamId: team.id,
-      tournamentId: tournament.id,
-      selectedGameDayId,
-    }),
+  const [gameweeks, transfers] = await Promise.all([
+    listTeamGameweeks({ teamId: team.id, tournamentId: tournament.id }),
     listMyFantasyTransfers(team.id),
   ]);
+  const topPlayers = await loadInitialTopPlayers(selectedGameDayId, gameweeks);
 
   return (
     <FantasyTeamScreen
@@ -59,8 +56,8 @@ export default async function FantasyPage({
       myRank={myRank}
       beforeFirstDeadline={beforeFirstDeadline}
       gameDays={gameDays}
+      gameweeks={gameweeks}
       selectedGameDayId={selectedGameDayId}
-      gameweek={gameweek}
       topPlayers={topPlayers}
       transfers={transfers}
     />
@@ -75,18 +72,11 @@ function emptyCta(kind: "signed_out" | "no_tournament" | "no_team"): React.JSX.E
   );
 }
 
-async function loadGwViews(args: {
-  teamId: string;
-  tournamentId: string;
-  selectedGameDayId: string | null;
-}) {
-  const { teamId, tournamentId, selectedGameDayId } = args;
-  if (selectedGameDayId === null) {
-    return { gameweek: null, topPlayers: [] as const };
-  }
-  const [gameweek, topPlayers] = await Promise.all([
-    getFantasyTeamGameweek({ teamId, gameDayId: selectedGameDayId, tournamentId }),
-    listGameDayTopPlayers(selectedGameDayId),
-  ]);
-  return { gameweek, topPlayers };
+async function loadInitialTopPlayers(
+  selectedGameDayId: string | null,
+  gameweeks: readonly { gameDayId: string }[],
+) {
+  if (!selectedGameDayId) return [];
+  if (!gameweeks.some((week) => week.gameDayId === selectedGameDayId)) return [];
+  return listGameDayTopPlayers(selectedGameDayId);
 }

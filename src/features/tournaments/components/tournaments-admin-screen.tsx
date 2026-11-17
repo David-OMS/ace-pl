@@ -1,9 +1,9 @@
 import { ChevronRight, Plus } from "lucide-react";
-import Link from "next/link";
 
 import { ButtonLink } from "@/ui/button-link";
 import { Icon } from "@/ui/icon";
 import { PageHeader } from "@/ui/page-header";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { tournamentsCopy } from "../copy";
 import type { TournamentSummary } from "../queries/list-tournaments";
@@ -31,7 +31,7 @@ export function TournamentsAdminScreen({
         <ul className="flex flex-col divide-y-2 divide-line-soft rounded-card border-2 border-line bg-surface">
           {tournaments.map((tournament) => (
             <li key={tournament.id}>
-              <Link
+              <SoftNavLink
                 href={adminTournamentPath(tournament.id)}
                 className="flex min-h-14 items-center gap-3 px-3"
               >
@@ -40,7 +40,7 @@ export function TournamentsAdminScreen({
                   {tournamentsCopy.statuses[tournament.status]}
                 </span>
                 <Icon icon={ChevronRight} size="sm" />
-              </Link>
+              </SoftNavLink>
             </li>
           ))}
         </ul>

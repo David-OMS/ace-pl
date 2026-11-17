@@ -20,7 +20,7 @@ export function PlayerDetailHero({
 }: PlayerDetailHeroProps): React.JSX.Element {
   return (
     <Card className="flex items-center gap-4 p-4">
-      <PlayerAvatar name={name} photoUrl={photoUrl} size="lg" />
+      <PlayerAvatar name={name} photoUrl={photoUrl} size="lg" priority />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <h1 className="truncate font-display text-xl uppercase">{name}</h1>
         <p className="text-sm text-muted">{fanPlayersCopy.position(position)}</p>

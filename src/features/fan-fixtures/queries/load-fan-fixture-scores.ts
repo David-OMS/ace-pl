@@ -1,9 +1,12 @@
 import "server-only";
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import type { FixtureStatus } from "@/config/fixture-status";
 import { calculateMatchScore } from "@/features/matches";
 import { resolveEventTeam } from "@/features/matches";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import type { Database } from "@/types/database";
 
 import { isFixtureFinished } from "../domain/is-fixture-finished";
 
@@ -18,11 +21,12 @@ export type FixtureListScore = { homeGoals: number; awayGoals: number };
 
 export async function loadFanFixtureScores(
   fixtures: readonly ScoreFixture[],
+  client?: SupabaseClient<Database>,
 ): Promise<Map<string, FixtureListScore>> {
   const finished = fixtures.filter((fixture) => isFixtureFinished(fixture.status));
   if (finished.length === 0) return new Map();
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = client ?? (await createSupabaseServerClient());
   const ids = finished.map((fixture) => fixture.id);
   const [eventsResult, participationsResult] = await Promise.all([
     supabase

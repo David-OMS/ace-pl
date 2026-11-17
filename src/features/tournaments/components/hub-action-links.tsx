@@ -1,4 +1,3 @@
-import { adminFantasyRanksPath, fantasyCopy } from "@/features/fantasy";
 import { ButtonLink } from "@/ui/button-link";
 
 import { tournamentsCopy } from "../copy";
@@ -32,9 +31,6 @@ export function HubActionLinks({
         fullWidth
       >
         {copy.manageFixtures}
-      </ButtonLink>
-      <ButtonLink href={adminFantasyRanksPath(tournamentId)} variant="secondary" fullWidth>
-        {fantasyCopy.adminRanksLink}
       </ButtonLink>
     </div>
   );

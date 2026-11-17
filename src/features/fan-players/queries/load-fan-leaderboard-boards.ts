@@ -1,8 +1,9 @@
 import "server-only";
 
 import type { PlayerPosition } from "@/config/player-positions";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
 import { playerPhotoUrl } from "@/lib/players/player-photo-url";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 import { resolveFanTournament } from "@/features/home";
 import type { LeaderboardMetric } from "@/features/leaderboards";
 
@@ -11,7 +12,11 @@ import { loadFanStatScope } from "./load-fan-stat-scope";
 
 export type FanLeaderboardBoards = Record<LeaderboardMetric, FanLeaderboardRow[]>;
 
-export async function loadFanLeaderboardBoards(): Promise<FanLeaderboardBoards> {
+export function loadFanLeaderboardBoards(): Promise<FanLeaderboardBoards> {
+  return fanPublicCache("fan-leaderboards", readFanLeaderboardBoards);
+}
+
+async function readFanLeaderboardBoards(): Promise<FanLeaderboardBoards> {
   const tournament = await resolveFanTournament();
   const [scope, playersResult] = await Promise.all([
     loadFanStatScope(tournament?.id ?? null),
@@ -21,7 +26,7 @@ export async function loadFanLeaderboardBoards(): Promise<FanLeaderboardBoards> 
 }
 
 async function loadRosterMeta() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createPublicSupabaseClient();
   const { data, error } = await supabase
     .from("players")
     .select("id, name, position, photo_path")

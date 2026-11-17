@@ -9,6 +9,7 @@ export {
   FAN_PLAYERS_PATH,
   FAN_PLAYERS_STATS_PATH,
   FAN_PROFILE_PATH,
+  PROFILE_PHOTO_SETUP_PATH,
   fanFixturePath,
   fanPlayerPath,
 } from "./routes";

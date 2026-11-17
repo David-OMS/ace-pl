@@ -21,8 +21,10 @@ export default async function FanFixturesPage({
 
   return (
     <FanFixturesScreen
-      data={data}
-      selectedGameDayId={params.day ?? null}
+      board={data.board}
+      scores={Object.fromEntries(data.scores)}
+      tournamentName={data.tournamentName}
+      initialGameDayId={params.day ?? null}
       todayIso={leagueToday()}
     />
   );

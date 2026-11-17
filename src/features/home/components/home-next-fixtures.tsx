@@ -1,9 +1,8 @@
-import Link from "next/link";
-
 import { FAN_FIXTURES_PATH, fanFixturePath } from "@/features/fan";
 import { formatKickoffTime } from "@/lib/dates/format-kickoff-time";
 import { Card } from "@/ui/card";
 import { FixturePairRow } from "@/ui/fixture-pair-row";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { homeCopy } from "../copy";
 import type { HomeFixtureRow } from "../queries/load-home-next-fixtures";
@@ -15,9 +14,9 @@ export function HomeNextFixtures({ fixtures }: HomeNextFixturesProps): React.JSX
     <section className="flex flex-col gap-2">
       <div className="flex items-end justify-between px-1">
         <h2 className="font-display text-lg uppercase">{homeCopy.nextFixtures}</h2>
-        <Link href={FAN_FIXTURES_PATH} className="text-xs font-bold text-muted">
+        <SoftNavLink href={FAN_FIXTURES_PATH} className="text-xs font-bold text-muted">
           {homeCopy.allFixtures}
-        </Link>
+        </SoftNavLink>
       </div>
       <Card className="px-3 py-1">
         {fixtures.length === 0 ? (

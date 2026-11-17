@@ -1,7 +1,10 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { FANTASY_DEFAULT_BUDGET, FANTASY_SQUAD_SIZE } from "@/config/fantasy";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 export type FanTournament = {
   id: string;
@@ -13,9 +16,13 @@ export type FanTournament = {
   playersOnPitch: number;
 };
 
-/** Prefer active; else newest completed; else newest any. */
-export async function resolveFanTournament(): Promise<FanTournament | null> {
-  const supabase = await createSupabaseServerClient();
+/** Prefer active; else newest. Shared for a minute, and deduped within one request. */
+export const resolveFanTournament = cache((): Promise<FanTournament | null> => {
+  return fanPublicCache("fan-tournament", readFanTournament);
+});
+
+async function readFanTournament(): Promise<FanTournament | null> {
+  const supabase = createPublicSupabaseClient();
   const active = await supabase
     .from("tournaments")
     .select("id, name, status, squad_size, players_on_pitch, fantasy_budget")

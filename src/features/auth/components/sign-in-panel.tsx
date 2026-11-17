@@ -1,10 +1,8 @@
-import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
 
-import { signInWithGoogle } from "../actions/sign-in-with-google";
 import { authCopy } from "../copy";
 import type { SignInError } from "../routes";
-import { MagicLinkForm } from "./magic-link-form";
+import { SignUpOptions } from "./sign-up-options";
 
 type SignInPanelProps = {
   next: string;
@@ -23,15 +21,8 @@ export function SignInPanel({ next, error }: SignInPanelProps): React.JSX.Elemen
         </p>
       ) : null}
 
-      <Card className="flex flex-col gap-4">
-        <MagicLinkForm next={next} />
-        <p className="text-center text-xs font-bold text-muted uppercase">{authCopy.divider}</p>
-        <form action={signInWithGoogle}>
-          <input type="hidden" name="next" value={next} />
-          <Button type="submit" variant="secondary" fullWidth>
-            {authCopy.continueWithGoogle}
-          </Button>
-        </form>
+      <Card>
+        <SignUpOptions next={next} />
       </Card>
     </main>
   );

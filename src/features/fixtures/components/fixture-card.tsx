@@ -1,8 +1,8 @@
 import type { Route } from "next";
-import Link from "next/link";
 
 import type { FixtureStatus } from "@/config/fixture-status";
 import { formatKickoffTime } from "@/lib/dates/format-kickoff-time";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { fixturesCopy } from "../copy";
 
@@ -23,7 +23,7 @@ type FixtureCardProps = {
 
 export function FixtureCard({ fixture, href, eyebrow }: FixtureCardProps): React.JSX.Element {
   return (
-    <Link
+    <SoftNavLink
       href={href}
       className="flex min-h-16 items-center gap-3 rounded-card border-2 border-line bg-surface px-3 py-3"
     >
@@ -33,7 +33,7 @@ export function FixtureCard({ fixture, href, eyebrow }: FixtureCardProps): React
         <span className="font-display text-lg uppercase">{centreLabel(fixture)}</span>
       </div>
       <TeamSide name={fixture.awayTeamName} />
-    </Link>
+    </SoftNavLink>
   );
 }
 

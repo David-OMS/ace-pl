@@ -165,6 +165,7 @@ Tunde wins: the most popular, with strong stats. David had the best stats but no
 ## 8. Fraud Watch — FINAL
 
 - For absolute stinker performances. Purely admin judgement ("vibes"), no stats or voting.
+- Not tied to a tournament. Admins can put someone on it when no tournament exists. Baller d'Or and the auto awards stay on the tournament.
 - Up to 2 players at a time (1 is fine).
 - Streak counted in Fridays (gameweeks) on the list, e.g. "Fraud Watch: 4 weeks".
 - Current and past Fraud Watch appearances are preserved and displayed.
@@ -202,15 +203,15 @@ Tunde wins: the most popular, with strong stats. David had the best stats but no
 
 ## 12. Admin — FINAL
 
-| Item                | Decision                                                                                                                                               |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Admins              | Added by the developer. Unlimited. Every admin can do everything.                                                                                      |
-| Admin bottom nav    | **Home**, **Tournaments**, **Players**, **Awards**. Fixtures are managed inside each tournament. Match entry from a fixture. Change log later.         |
-| Admin order of work | 1) Maintain global player pool → 2) Create tournament + settings → 3) Select tournament players → 4) Build teams → 5) Set fixtures → 6) Record matches |
-| Match availability  | Tap fixture → tap team → see squad list → tap player → mark absent. Add borrowed players to the squad for that match. No lineup submission.            |
-| Live entry          | Several admins can add events to the same match as it happens (division of labour). Everything stays a **draft** until an admin publishes the result.  |
-| Change log          | Admin-only. Records who, when, before → after, optional reason.                                                                                        |
-| Fraud Watch caption | Optional                                                                                                                                               |
+| Item                | Decision                                                                                                                                                            |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Admins              | Added by the developer. Unlimited. Every admin can do everything, except fantasy prices: only account `a90018ef-f708-4d44-8a9f-7bed7b2676ef` can see or edit those. |
+| Admin bottom nav    | **Home**, **Tournaments**, **Players**, **Awards**. Fixtures are managed inside each tournament. Match entry from a fixture. Change log later.                      |
+| Admin order of work | 1) Maintain global player pool → 2) Create tournament + settings → 3) Select tournament players → 4) Build teams → 5) Set fixtures → 6) Record matches              |
+| Match availability  | Tap fixture → tap team → see squad list → tap player → mark absent. Add borrowed players to the squad for that match. No lineup submission.                         |
+| Live entry          | Several admins can add events to the same match as it happens (division of labour). Everything stays a **draft** until an admin publishes the result.               |
+| Change log          | Admin-only. Records who, when, before → after, optional reason.                                                                                                     |
+| Fraud Watch caption | Optional                                                                                                                                                            |
 
 ### Admin screens
 

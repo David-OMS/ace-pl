@@ -1,7 +1,8 @@
 import "server-only";
 
 import { formatGameDay } from "@/lib/dates/format-game-day";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 import type { FanTournament } from "./resolve-fan-tournament";
 
@@ -14,8 +15,12 @@ export type HomeHero = {
   goals: number;
 };
 
-export async function loadHomeHero(tournament: FanTournament): Promise<HomeHero> {
-  const supabase = await createSupabaseServerClient();
+export function loadHomeHero(tournament: FanTournament): Promise<HomeHero> {
+  return fanPublicCache(`home-hero:${tournament.id}`, () => readHomeHero(tournament));
+}
+
+async function readHomeHero(tournament: FanTournament): Promise<HomeHero> {
+  const supabase = createPublicSupabaseClient();
   const [gameDays, fixtures, events] = await Promise.all([
     supabase
       .from("game_days")

@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
+
 import { FRAUD_WATCH_MAX_OPEN } from "@/config/awards";
 import { checkAdminAccess } from "@/features/auth";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
@@ -22,16 +24,14 @@ export async function addFraudWatch(
   const access = await checkAdminAccess();
   if (access) return fail(access);
 
-  const tournamentId = String(formData.get("tournamentId") ?? "");
   const playerId = String(formData.get("playerId") ?? "");
   const caption = String(formData.get("caption") ?? "").trim() || null;
-  if (!tournamentId || !playerId) return fail("invalid_input");
+  if (!playerId) return fail("invalid_input");
 
   const supabase = await createSupabaseServerClient();
   const { count, error: countError } = await supabase
     .from("fraud_watch_entries")
     .select("id", { count: "exact", head: true })
-    .eq("tournament_id", tournamentId)
     .is("ended_on", null);
   if (countError) throw countError;
   if ((count ?? 0) >= FRAUD_WATCH_MAX_OPEN) return fail("conflict");
@@ -39,7 +39,6 @@ export async function addFraudWatch(
   const { data, error } = await supabase
     .from("fraud_watch_entries")
     .insert({
-      tournament_id: tournamentId,
       player_id: playerId,
       caption,
     })
@@ -53,5 +52,6 @@ export async function addFraudWatch(
 
   revalidatePath(AWARDS_ADMIN_PATH);
   revalidatePath(FAN_HOME_PATH);
+  revalidateFanPublic();
   return ok({ id: data.id });
 }

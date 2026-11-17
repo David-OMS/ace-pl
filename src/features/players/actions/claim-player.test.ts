@@ -28,7 +28,7 @@ describe("claimPlayer", () => {
     await claimPlayer(null, buildForm(VALID_TOKEN));
 
     expect(rpc).toHaveBeenCalledWith("claim_player", { claim_token: VALID_TOKEN });
-    expect(redirect).toHaveBeenCalledWith("/");
+    expect(redirect).toHaveBeenCalledWith("/profile?setup=photo");
   });
 
   it("treats a malformed token as an invalid link without asking the database", async () => {

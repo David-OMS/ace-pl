@@ -1,27 +1,38 @@
+import Image from "next/image";
+
 type PlayerAvatarProps = {
   name: string;
   photoUrl?: string | null;
   size?: "sm" | "md" | "lg" | "xl";
+  priority?: boolean;
 };
 
 const SIZES = {
-  sm: "size-8",
-  md: "size-10",
-  lg: "size-[84px]",
-  xl: "size-28",
+  sm: { box: "size-8", px: 32 },
+  md: { box: "size-10", px: 40 },
+  lg: { box: "size-[84px]", px: 84 },
+  xl: { box: "size-28", px: 112 },
 } as const;
 
-/** Photo when set; otherwise a blank silhouette (no fake kit crest). */
+/** Photo when set; otherwise a blank silhouette. Requests a 2x thumbnail, not the original file. */
 export function PlayerAvatar({
   name,
   photoUrl,
   size = "md",
+  priority = false,
 }: PlayerAvatarProps): React.JSX.Element {
-  const box = SIZES[size];
+  const { box, px } = SIZES[size];
   if (photoUrl) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element -- storage URLs vary by env
-      <img src={photoUrl} alt={name} className={`${box} shrink-0 object-cover`} />
+      <Image
+        src={photoUrl}
+        alt={name}
+        width={px * 2}
+        height={px * 2}
+        sizes={`${px}px`}
+        priority={priority}
+        className={`${box} shrink-0 object-cover`}
+      />
     );
   }
   return (

@@ -1,14 +1,19 @@
 import "server-only";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 import { buildHomeStatBoards } from "./build-home-stat-boards";
 import type { HomeStatBoard } from "./home-stat-types";
 
 export type { HomeStatBoard, HomeStatEntry } from "./home-stat-types";
 
-export async function loadHomeStatBoards(tournamentId: string): Promise<HomeStatBoard[]> {
-  const supabase = await createSupabaseServerClient();
+export function loadHomeStatBoards(tournamentId: string): Promise<HomeStatBoard[]> {
+  return fanPublicCache(`home-stats:${tournamentId}`, () => readHomeStatBoards(tournamentId));
+}
+
+async function readHomeStatBoards(tournamentId: string): Promise<HomeStatBoard[]> {
+  const supabase = createPublicSupabaseClient();
   const [appearances, events, fixtures, players] = await Promise.all([
     supabase
       .from("match_participations")

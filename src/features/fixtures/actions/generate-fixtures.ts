@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { z } from "zod";
 
 import { FIXTURE_SCHEDULE } from "@/config/fixture-schedule";
@@ -64,6 +66,7 @@ export async function generateFixtures(
     revalidatePath(adminTournamentPath(tournamentId));
     revalidatePath(adminTournamentFixturesPath(tournamentId));
     revalidatePath(ADMIN_HOME_PATH);
+    revalidateFanPublic();
     return ok({ created: rows.length });
   } catch (error) {
     logger.error("generate_fixtures_failed", { tournamentId, error });

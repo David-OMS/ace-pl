@@ -1,20 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { buildSignInHref, getCurrentUser, SIGN_IN_PATH, SignOutButton } from "@/features/auth";
 import { ADMIN_HOME_PATH } from "@/features/admin";
+import { buildSignInHref, getCurrentUser, SIGN_IN_PATH, SignOutButton } from "@/features/auth";
 import { FAN_HOME_PATH, FAN_PROFILE_PATH, fanCopy } from "@/features/fan";
-import { Card } from "@/ui/card";
+import { getMyLinkedPlayer, PlayerPhotoForm } from "@/features/players";
 import { ButtonLink } from "@/ui/button-link";
+import { Card } from "@/ui/card";
 
 export const metadata: Metadata = { title: fanCopy.profile };
 
-export default async function ProfilePage(): Promise<React.JSX.Element> {
-  const user = await getCurrentUser();
+type ProfilePageProps = {
+  searchParams: Promise<{ setup?: string }>;
+};
+
+export default async function ProfilePage({
+  searchParams,
+}: ProfilePageProps): Promise<React.JSX.Element> {
+  const [{ setup }, user] = await Promise.all([searchParams, getCurrentUser()]);
+  const player = user ? await getMyLinkedPlayer(user.id) : null;
 
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
       <h1 className="font-display text-2xl uppercase">{fanCopy.profile}</h1>
+      {user && player ? (
+        <Card>
+          <PlayerPhotoForm
+            name={player.name}
+            photoUrl={player.photoUrl}
+            offerSkip={setup === "photo"}
+          />
+        </Card>
+      ) : null}
       {user ? (
         <Card className="flex flex-col gap-3">
           <p className="font-bold">{user.displayName}</p>

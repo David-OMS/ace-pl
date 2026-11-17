@@ -1,7 +1,7 @@
 import type { Route } from "next";
-import Link from "next/link";
 
 import type { ButtonVariant } from "./button";
+import { SoftNavLink } from "./soft-nav-link";
 
 const VARIANT_CLASSES = {
   primary: "bg-accent text-on-accent shadow-offset-sm",
@@ -24,11 +24,11 @@ export function ButtonLink({
   variant = "primary",
 }: ButtonLinkProps): React.JSX.Element {
   return (
-    <Link
+    <SoftNavLink
       href={href}
       className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-card border-2 border-line px-4 text-sm font-bold ${VARIANT_CLASSES[variant]} ${fullWidth ? "w-full" : ""}`}
     >
       {children}
-    </Link>
+    </SoftNavLink>
   );
 }

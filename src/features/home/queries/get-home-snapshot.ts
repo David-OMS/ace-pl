@@ -43,11 +43,12 @@ const COMPACT_TABLE = 5;
 
 export async function getHomeSnapshot(user: CurrentUser | null): Promise<HomeSnapshot> {
   const tournament = await resolveFanTournament();
+  const fraudWatch = await loadHomeFraudWatch();
   if (!tournament) {
     return {
       user,
       hero: null,
-      fraudWatch: [],
+      fraudWatch,
       tableRows: [],
       nextFixtures: [],
       statBoards: [],
@@ -58,19 +59,17 @@ export async function getHomeSnapshot(user: CurrentUser | null): Promise<HomeSna
     };
   }
 
-  const [hero, fraudWatch, standings, formRows, nextFixtures, statBoards, fantasy] =
-    await Promise.all([
-      loadHomeHero(tournament),
-      loadHomeFraudWatch(tournament.id),
-      getTournamentStandings(tournament.id),
-      getTournamentForm(tournament.id),
-      loadHomeNextFixtures(tournament.id),
-      loadHomeStatBoards(tournament.id),
-      loadFantasyHomeTeaser({
-        userId: user?.id ?? null,
-        tournamentId: tournament.id,
-      }),
-    ]);
+  const [hero, standings, formRows, nextFixtures, statBoards, fantasy] = await Promise.all([
+    loadHomeHero(tournament),
+    getTournamentStandings(tournament.id),
+    getTournamentForm(tournament.id),
+    loadHomeNextFixtures(tournament.id),
+    loadHomeStatBoards(tournament.id),
+    loadFantasyHomeTeaser({
+      userId: user?.id ?? null,
+      tournamentId: tournament.id,
+    }),
+  ]);
 
   const formByTeam = new Map(formRows.map((row) => [row.teamId, row.results]));
 

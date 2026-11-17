@@ -2,13 +2,18 @@ import "server-only";
 
 import type { PlayerPosition } from "@/config/player-positions";
 import { sortPlayers } from "@/features/players";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
 import { playerPhotoUrl } from "@/lib/players/player-photo-url";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 import type { FanPlayerListItem } from "../domain/filter-fan-players";
 
-export async function listFanPlayers(): Promise<FanPlayerListItem[]> {
-  const supabase = await createSupabaseServerClient();
+export function listFanPlayers(): Promise<FanPlayerListItem[]> {
+  return fanPublicCache("fan-players", readFanPlayers);
+}
+
+async function readFanPlayers(): Promise<FanPlayerListItem[]> {
+  const supabase = createPublicSupabaseClient();
   const { data, error } = await supabase
     .from("players")
     .select("id, name, position, photo_path")

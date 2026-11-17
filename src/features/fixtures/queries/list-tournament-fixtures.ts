@@ -1,9 +1,12 @@
 import "server-only";
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { DEFAULT_TEAM_COLOR } from "@/config/team-colors";
 import type { FixtureStatus } from "@/config/fixture-status";
 import { formatGameDay } from "@/lib/dates/format-game-day";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import type { Database } from "@/types/database";
 
 import type { FixtureGameDayGroup } from "../domain/group-fixtures-by-game-day";
 import { partitionFixtureBoard } from "../domain/partition-fixture-board";
@@ -39,8 +42,9 @@ export type TournamentFixtureBoard = {
 
 export async function listTournamentFixtures(
   tournamentId: string,
+  client?: SupabaseClient<Database>,
 ): Promise<TournamentFixtureBoard> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = client ?? (await createSupabaseServerClient());
   const [teams, gameDays, fixtures] = await Promise.all([
     supabase
       .from("teams")

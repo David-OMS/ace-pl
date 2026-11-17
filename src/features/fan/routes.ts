@@ -7,6 +7,7 @@ export const FAN_PLAYERS_PATH = "/players" as Route;
 export const FAN_PLAYERS_STATS_PATH = "/players?view=stats" as Route;
 export const FAN_FANTASY_PATH = "/fantasy" as Route;
 export const FAN_PROFILE_PATH = "/profile" as Route;
+export const PROFILE_PHOTO_SETUP_PATH = "/profile?setup=photo" as Route;
 
 export function fanFixturePath(fixtureId: string): Route {
   return `${FAN_FIXTURES_PATH}/${fixtureId}` as Route;

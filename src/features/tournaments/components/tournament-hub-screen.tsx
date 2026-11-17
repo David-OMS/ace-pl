@@ -1,8 +1,10 @@
-import Link from "next/link";
 import { Settings } from "lucide-react";
 
+import { adminFantasyRanksPath, fantasyCopy } from "@/features/fantasy";
+import { ButtonLink } from "@/ui/button-link";
 import { Icon } from "@/ui/icon";
 import { PageHeader } from "@/ui/page-header";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { tournamentsCopy } from "../copy";
 import type { TournamentDetail } from "../queries/get-tournament";
@@ -19,6 +21,7 @@ type TournamentHubScreenProps = {
   unassigned: readonly HubPlayer[];
   rosterCount: number;
   hasFixtures: boolean;
+  showPrices: boolean;
   children?: React.ReactNode;
 };
 
@@ -28,6 +31,7 @@ export function TournamentHubScreen({
   unassigned,
   rosterCount,
   hasFixtures,
+  showPrices,
   children,
 }: TournamentHubScreenProps): React.JSX.Element {
   const needsRoster = rosterCount === 0;
@@ -40,13 +44,13 @@ export function TournamentHubScreen({
         title={tournament.name}
         back={{ href: ADMIN_TOURNAMENTS_PATH, label: tournamentsCopy.backToTournaments }}
         action={
-          <Link
+          <SoftNavLink
             href={adminTournamentSettingsPath(tournament.id)}
             className="inline-flex size-11 items-center justify-center rounded-card border-2 border-line bg-surface"
             aria-label={tournamentsCopy.settingsLink}
           >
             <Icon icon={Settings} size="md" />
-          </Link>
+          </SoftNavLink>
         }
       />
       <p className="text-xs font-bold text-muted uppercase">
@@ -58,6 +62,11 @@ export function TournamentHubScreen({
         needsTeams={needsTeams}
         needsFixtures={needsFixtures}
       />
+      {showPrices ? (
+        <ButtonLink href={adminFantasyRanksPath(tournament.id)} variant="secondary" fullWidth>
+          {fantasyCopy.adminRanksLink}
+        </ButtonLink>
+      ) : null}
       <HubTeamList tournamentId={tournament.id} squadSize={tournament.squadSize} teams={teams} />
       <HubUnassignedList players={unassigned} />
       {children}

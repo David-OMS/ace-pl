@@ -2,12 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 
-import { FANTASY_RANK_PRICES, type FantasyRank } from "@/config/fantasy";
-import { checkAdminAccess } from "@/features/auth";
-import { fail, ok, type ActionResult } from "@/lib/action-result";
+import { rankFromPrice } from "@/config/fantasy-ranks";
+import { getCurrentUser } from "@/features/auth";
+import { fail, ok, type ActionErrorCode, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
+import { canEditFantasyPrices } from "../domain/can-edit-fantasy-prices";
 import { adminFantasyRanksPath } from "../routes";
 import { readUpsertRankForm, upsertFantasyRankSchema } from "../schemas/upsert-rank-schema";
 
@@ -20,19 +21,17 @@ export async function upsertFantasyRank(
   const parsed = upsertFantasyRankSchema.safeParse(readUpsertRankForm(formData));
   if (!parsed.success) return fail("invalid_input");
 
-  const accessError = await checkAdminAccess();
+  const accessError = await priceAdminError();
   if (accessError) return fail(accessError);
 
-  const { tournamentId, playerId, rank } = parsed.data;
-  const typedRank = rank as FantasyRank;
-  const price = FANTASY_RANK_PRICES[typedRank];
+  const { tournamentId, playerId, price } = parsed.data;
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("fantasy_player_ranks").upsert(
     {
       tournament_id: tournamentId,
       player_id: playerId,
-      rank: typedRank,
+      rank: rankFromPrice(price),
       price,
     },
     { onConflict: "tournament_id,player_id" },
@@ -45,4 +44,11 @@ export async function upsertFantasyRank(
 
   revalidatePath(adminFantasyRanksPath(tournamentId));
   return ok({ savedAt: Date.now() });
+}
+
+async function priceAdminError(): Promise<ActionErrorCode | null> {
+  const user = await getCurrentUser();
+  if (!user) return "unauthenticated";
+  if (!user.isAdmin || !canEditFantasyPrices(user.id)) return "forbidden";
+  return null;
 }

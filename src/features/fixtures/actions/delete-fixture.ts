@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { z } from "zod";
 
 import { ADMIN_HOME_PATH } from "@/features/admin";
@@ -43,5 +45,6 @@ export async function deleteFixture(
   revalidatePath(adminTournamentPath(tournamentId));
   revalidatePath(adminTournamentFixturesPath(tournamentId));
   revalidatePath(ADMIN_HOME_PATH);
+  revalidateFanPublic();
   return ok({ savedAt: Date.now() });
 }

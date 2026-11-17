@@ -2,8 +2,9 @@ import "server-only";
 
 import type { PlayerPosition } from "@/config/player-positions";
 import { resolveFanTournament } from "@/features/home";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
 import { playerPhotoUrl } from "@/lib/players/player-photo-url";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 import { resolveFantasyPrice } from "../domain/resolve-fantasy-price";
 import type { FanPlayerDetail } from "./fan-player-detail-model";
@@ -12,8 +13,12 @@ import { mapFanPlayerDetail } from "./map-fan-player-detail";
 
 export type { FanPlayerDetail } from "./fan-player-detail-model";
 
-export async function getFanPlayerDetail(playerId: string): Promise<FanPlayerDetail | null> {
-  const supabase = await createSupabaseServerClient();
+export function getFanPlayerDetail(playerId: string): Promise<FanPlayerDetail | null> {
+  return fanPublicCache(`fan-player:${playerId}`, () => readFanPlayerDetail(playerId));
+}
+
+async function readFanPlayerDetail(playerId: string): Promise<FanPlayerDetail | null> {
+  const supabase = createPublicSupabaseClient();
   const { data: player, error } = await supabase
     .from("players")
     .select("id, name, position, photo_path")
@@ -54,7 +59,7 @@ export async function getFanPlayerDetail(playerId: string): Promise<FanPlayerDet
 
 async function loadPlayerPrice(tournamentId: string | null, playerId: string): Promise<number> {
   if (!tournamentId) return resolveFantasyPrice(null);
-  const supabase = await createSupabaseServerClient();
+  const supabase = createPublicSupabaseClient();
   const { data, error } = await supabase
     .from("fantasy_player_ranks")
     .select("price")

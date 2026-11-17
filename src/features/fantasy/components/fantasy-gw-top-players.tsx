@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { Card } from "@/ui/card";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { fantasyCopy } from "../copy";
 import type { GameDayTopPlayer } from "../queries/list-game-day-top-players";
@@ -24,9 +23,12 @@ export function FantasyGwTopPlayers({
     <section className="flex flex-col gap-2">
       <div className="flex items-end justify-between px-1">
         <h2 className="font-display text-lg uppercase">{fantasyCopy.gwTopPlayers}</h2>
-        <Link href={fantasyGwPlayersPath(gameDayId)} className="text-xs font-bold text-muted">
+        <SoftNavLink
+          href={fantasyGwPlayersPath(gameDayId)}
+          className="text-xs font-bold text-muted"
+        >
           {fantasyCopy.fullGwPlayers}
-        </Link>
+        </SoftNavLink>
       </div>
       <Card className="flex flex-col p-0">
         {top.map((row, index) => (

@@ -1,3 +1,5 @@
+import { SamePagePending } from "@/ui/same-page-pending";
+
 import { getTournamentForm } from "../queries/get-tournament-form";
 import type { StandingsTournamentChip } from "../queries/list-standings-tournaments";
 import type { TournamentStandings } from "../queries/get-tournament-standings";
@@ -22,18 +24,22 @@ export async function StandingsScreen({
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
       <StandingsTournamentChips tournaments={tournaments} selectedId={selectedTournamentId} />
-      {standings ? (
-        <>
-          <div className="flex items-end justify-between gap-2 px-1">
-            <h1 className="font-display text-xl uppercase">{standingsCopy.title}</h1>
-            <p className="text-xs text-muted">{standings.tournamentName}</p>
-          </div>
-          <StandingsTable rows={standings.rows} />
-          <StandingsForm rows={orderFormByTable(formRows, standings.rows)} />
-        </>
-      ) : (
-        <p className="text-sm text-muted">{standingsCopy.noTournament}</p>
-      )}
+      <SamePagePending>
+        <div className="flex flex-col gap-4">
+          {standings ? (
+            <>
+              <div className="flex items-end justify-between gap-2 px-1">
+                <h1 className="font-display text-xl uppercase">{standingsCopy.title}</h1>
+                <p className="text-xs text-muted">{standings.tournamentName}</p>
+              </div>
+              <StandingsTable rows={standings.rows} />
+              <StandingsForm rows={orderFormByTable(formRows, standings.rows)} />
+            </>
+          ) : (
+            <p className="text-sm text-muted">{standingsCopy.noTournament}</p>
+          )}
+        </div>
+      </SamePagePending>
     </div>
   );
 }

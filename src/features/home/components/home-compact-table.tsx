@@ -1,8 +1,7 @@
-import Link from "next/link";
-
 import { FAN_LEAGUE_PATH } from "@/features/fan";
 import { FormDots, formatGoalDifference, standingsCopy } from "@/features/standings";
 import { Card } from "@/ui/card";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 import { TeamCrest } from "@/ui/team-crest";
 
 import { homeCopy } from "../copy";
@@ -17,9 +16,9 @@ export function HomeCompactTable({ rows }: HomeCompactTableProps): React.JSX.Ele
     <section className="flex flex-col gap-2">
       <div className="flex items-end justify-between px-1">
         <h2 className="font-display text-lg uppercase">{homeCopy.table}</h2>
-        <Link href={FAN_LEAGUE_PATH} className="text-xs font-bold text-muted">
+        <SoftNavLink href={FAN_LEAGUE_PATH} className="text-xs font-bold text-muted">
           {homeCopy.fullTable}
-        </Link>
+        </SoftNavLink>
       </div>
       <Card className="overflow-hidden p-0">
         <div className="grid grid-cols-[1.25rem_minmax(0,1fr)_1.5rem_2rem_2rem_3.5rem] items-center gap-1 border-b border-line-soft px-3 py-2 text-[10px] font-extrabold tracking-wide text-muted uppercase">

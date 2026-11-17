@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { z } from "zod";
 
 import { checkAdminAccess } from "@/features/auth";
@@ -64,5 +66,6 @@ export async function recordWalkover(
   revalidatePath(adminTournamentPath(tournamentId));
   revalidatePath(FANTASY_PATH);
   revalidatePath(FANTASY_LEADERBOARD_PATH);
+  revalidateFanPublic();
   return ok({ savedAt: Date.now() });
 }

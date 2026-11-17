@@ -6,8 +6,9 @@ import {
   FantasyTheme,
   fantasyCopy,
   getFantasyTeamById,
-  getFantasyTeamGameweek,
   listFantasyGameDays,
+  listGameDayTopPlayers,
+  listTeamGameweeks,
 } from "@/features/fantasy";
 
 export const metadata: Metadata = { title: fantasyCopy.viewSquad };
@@ -26,24 +27,24 @@ export default async function FantasyPublicTeamPage({
   const team = await getFantasyTeamById(teamId);
   if (!team) notFound();
 
-  const gameDays = await listFantasyGameDays(team.tournamentId);
+  const [gameDays, gameweeks] = await Promise.all([
+    listFantasyGameDays(team.tournamentId),
+    listTeamGameweeks({ teamId: team.id, tournamentId: team.tournamentId }),
+  ]);
   const selectedGameDayId = gw ?? null;
-  const gameweek =
-    selectedGameDayId !== null && selectedGameDayId !== undefined
-      ? await getFantasyTeamGameweek({
-          teamId: team.id,
-          gameDayId: selectedGameDayId,
-          tournamentId: team.tournamentId,
-        })
-      : null;
+  const topPlayers =
+    selectedGameDayId && gameweeks.some((week) => week.gameDayId === selectedGameDayId)
+      ? await listGameDayTopPlayers(selectedGameDayId)
+      : [];
 
   return (
     <FantasyTheme>
       <FantasyPublicTeamScreen
         team={team}
         gameDays={gameDays}
+        gameweeks={gameweeks}
         selectedGameDayId={selectedGameDayId}
-        gameweek={gameweek}
+        topPlayers={topPlayers}
       />
     </FantasyTheme>
   );

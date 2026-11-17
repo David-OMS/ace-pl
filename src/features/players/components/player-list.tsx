@@ -1,12 +1,12 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { PLAYER_POSITIONS, type PlayerPosition } from "@/config/player-positions";
 import { Icon } from "@/ui/icon";
 import { SelectField } from "@/ui/select-field";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { playersCopy } from "../copy";
 import type { PlayerSummary } from "../queries/list-players";
@@ -46,7 +46,7 @@ export function PlayerList({ players }: PlayerListProps): React.JSX.Element {
         <ul className="flex flex-col divide-y-2 divide-line-soft rounded-card border-2 border-line bg-surface">
           {visible.map((player) => (
             <li key={player.id}>
-              <Link
+              <SoftNavLink
                 href={adminPlayerPath(player.id)}
                 className="flex min-h-14 items-center gap-3 px-3"
               >
@@ -54,7 +54,7 @@ export function PlayerList({ players }: PlayerListProps): React.JSX.Element {
                 <span className="flex-1 font-bold">{player.name}</span>
                 {player.isClaimed ? <Badge>{playersCopy.claimed}</Badge> : null}
                 <Icon icon={ChevronRight} size="sm" />
-              </Link>
+              </SoftNavLink>
             </li>
           ))}
         </ul>

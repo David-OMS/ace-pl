@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -35,5 +37,6 @@ export async function deleteTournament(
   }
 
   revalidatePath(ADMIN_TOURNAMENTS_PATH);
+  revalidateFanPublic();
   redirect(ADMIN_TOURNAMENTS_PATH);
 }

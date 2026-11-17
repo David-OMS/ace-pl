@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { requireAdmin } from "@/features/auth";
-import { FantasyRanksAdminScreen, fantasyCopy, listPickablePlayers } from "@/features/fantasy";
+import { getCurrentUser, requireAdmin } from "@/features/auth";
+import {
+  canEditFantasyPrices,
+  FantasyRanksAdminScreen,
+  fantasyCopy,
+  listPickablePlayers,
+} from "@/features/fantasy";
 import { ADMIN_TOURNAMENTS_PATH, adminTournamentPath, getTournament } from "@/features/tournaments";
 
 export const metadata: Metadata = { title: fantasyCopy.adminRanksTitle };
@@ -12,6 +17,8 @@ export default async function FantasyRanksAdminPage({
 }: PageProps<"/admin/tournaments/[tournamentId]/fantasy-ranks">): Promise<React.JSX.Element> {
   const { tournamentId } = await params;
   await requireAdmin(`${ADMIN_TOURNAMENTS_PATH}/${tournamentId}/fantasy-ranks`);
+  const user = await getCurrentUser();
+  if (!user || !canEditFantasyPrices(user.id)) notFound();
 
   const tournament = await getTournament(tournamentId);
   if (!tournament) notFound();

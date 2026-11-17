@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
 import { FAN_PLAYERS_PATH } from "@/features/fan";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { fanPlayersCopy } from "../copy";
 import type { FanPlayerDetail } from "../queries/fan-player-detail-model";
@@ -24,9 +24,9 @@ export function FanPlayerDetailScreen({ detail }: FanPlayerDetailScreenProps): R
 
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
-      <Link href={FAN_PLAYERS_PATH} className="text-xs font-bold text-muted">
+      <SoftNavLink href={FAN_PLAYERS_PATH} className="text-xs font-bold text-muted">
         {fanPlayersCopy.backToList}
-      </Link>
+      </SoftNavLink>
       <PlayerDetailHero
         name={detail.name}
         position={detail.position}

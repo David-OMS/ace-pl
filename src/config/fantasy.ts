@@ -17,6 +17,9 @@ export const FANTASY_SQUAD_SIZE = 9;
 /** Migration / new-tournament default; runtime budget lives on tournaments.fantasy_budget. */
 export const FANTASY_DEFAULT_BUDGET = 68;
 
+/** Only this account may open or change fantasy prices. */
+export const FANTASY_PRICE_ADMIN_ID = "a90018ef-f708-4d44-8a9f-7bed7b2676ef";
+
 export const FANTASY_PRICE_FLOOR = 5;
 export const FANTASY_PRICE_CEILING = 20;
 export const FANTASY_PRICE_STEP = 0.5;

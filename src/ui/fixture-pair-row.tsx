@@ -1,6 +1,6 @@
 import type { Route } from "next";
-import Link from "next/link";
 
+import { SoftNavLink } from "./soft-nav-link";
 import { TeamCrest } from "./team-crest";
 
 type FixturePairRowProps = {
@@ -45,9 +45,9 @@ export function FixturePairRow({
   return (
     <div className="flex items-center gap-2 border-b border-dashed border-line py-3 first:pt-0 last:border-b-0">
       {href ? (
-        <Link href={href} className="flex min-w-0 flex-1 items-center gap-2.5">
+        <SoftNavLink href={href} className="flex min-w-0 flex-1 items-center gap-2.5">
           {body}
-        </Link>
+        </SoftNavLink>
       ) : (
         <div className="flex min-w-0 flex-1 items-center gap-2.5">{body}</div>
       )}

@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { PlayerPosition } from "@/config/player-positions";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 import { assembleStatTotals } from "./assemble-stat-totals";
 
@@ -10,7 +10,7 @@ const EMPTY_UUID = "00000000-0000-0000-0000-000000000000";
 export async function loadFanStatScope(
   tournamentId: string | null,
 ): Promise<ReturnType<typeof assembleStatTotals>> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createPublicSupabaseClient();
   const participationQuery = supabase
     .from("match_participations")
     .select("player_id, status, team_id, fixture_id, position, is_goalkeeper, tournament_id");

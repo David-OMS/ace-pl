@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { z } from "zod";
 
 import { ADMIN_HOME_PATH } from "@/features/admin";
@@ -57,5 +59,6 @@ export async function publishResult(
   revalidatePath(ADMIN_HOME_PATH);
   revalidatePath(FANTASY_PATH);
   revalidatePath(FANTASY_LEADERBOARD_PATH);
+  revalidateFanPublic();
   return ok({ savedAt: Date.now() });
 }

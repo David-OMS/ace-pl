@@ -30,7 +30,7 @@ export const playersCopy = {
   claimLink: {
     title: "Claim link",
     intro:
-      "Send this to the player. Opening it while signed in links their account to this player. It works once.",
+      "Send this to the player. They sign up on the page, see their name, then the link connects their account. It works once.",
     copy: "Copy link",
     copied: "Copied",
     reset: "Make a new link",
@@ -41,14 +41,26 @@ export const playersCopy = {
   },
   claimPage: {
     title: "Link your player profile",
-    intro: "This connects your account to your player, so your stats and photo show up as yours.",
-    confirm: "Link my account",
+    hey: (name: string): string => `Hey ${name}`,
+    signUp: "Please sign up with your mail below.",
+    photoNext:
+      "After you sign up, add a picture if you want. You can skip it and add or change it later from Profile.",
+    confirm: "This is me",
     linking: "Linking…",
-    signInFirst: "Sign in first, then come back to this link.",
-    signIn: "Sign in",
+    invalid: "That link is no longer valid. Ask an admin for a new one.",
+  },
+  photo: {
+    add: "Add a picture",
+    change: "Change picture",
+    hint: "Optional. You can add or change it any time from Profile.",
+    save: "Save picture",
+    saving: "Saving…",
+    saved: "Picture saved.",
+    skip: "Skip for now",
+    wrongType: "Use a JPEG, PNG or WebP under 2 MB.",
   },
   actionErrors: {
-    invalid_input: "Check the name and position.",
+    invalid_input: "Check that and try again.",
     unauthenticated: "Your session has ended. Sign in again.",
     forbidden: "Only admins can do that.",
     not_found: "That link is no longer valid. Ask an admin for a new one.",

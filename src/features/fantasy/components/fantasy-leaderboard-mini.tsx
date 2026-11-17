@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { Card } from "@/ui/card";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { fantasyCopy } from "../copy";
 import type { FantasyLeaderboardRow } from "../queries/list-fantasy-leaderboard";
@@ -34,13 +33,13 @@ export function FantasyLeaderboardMini({
     <section className="flex flex-col gap-2">
       <div className="flex items-end justify-between px-1">
         <h2 className="font-display text-lg uppercase">{fantasyCopy.leaderboard}</h2>
-        <Link href={FANTASY_LEADERBOARD_PATH} className="text-xs font-bold text-muted">
+        <SoftNavLink href={FANTASY_LEADERBOARD_PATH} className="text-xs font-bold text-muted">
           {fantasyCopy.fullLeaderboard}
-        </Link>
+        </SoftNavLink>
       </div>
       <Card className="flex flex-col gap-2 p-0">
         {display.map((row) => (
-          <Link
+          <SoftNavLink
             key={row.teamId}
             href={fantasyTeamPath(row.teamId)}
             className={`flex items-center gap-3 px-3 py-2 ${
@@ -53,7 +52,7 @@ export function FantasyLeaderboardMini({
               <p className="truncate text-xs text-muted">{row.ownerName}</p>
             </div>
             <span className="font-display text-lg">{row.totalPoints}</span>
-          </Link>
+          </SoftNavLink>
         ))}
       </Card>
     </section>

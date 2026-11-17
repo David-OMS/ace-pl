@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -61,6 +63,7 @@ export async function saveTournament(
 
   await syncTournamentStatus(supabase, data.id);
   revalidatePath(ADMIN_TOURNAMENTS_PATH);
+  revalidateFanPublic();
   if (!tournamentId.data) redirect(adminTournamentPlayersPath(data.id));
   revalidatePath(adminTournamentPath(data.id));
   revalidatePath(adminTournamentSettingsPath(data.id));

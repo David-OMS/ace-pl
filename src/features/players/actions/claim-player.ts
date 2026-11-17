@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { PROFILE_PHOTO_SETUP_PATH } from "@/features/fan";
 import { fail, type ActionErrorCode, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
@@ -33,5 +34,5 @@ export async function claimPlayer(
     if (!code) logger.error("claim_player_failed", { error });
     return fail(code ?? "save_failed");
   }
-  redirect("/");
+  redirect(PROFILE_PHOTO_SETUP_PATH);
 }

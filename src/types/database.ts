@@ -607,7 +607,7 @@ export type Database = {
           id: string
           player_id: string
           started_on: string
-          tournament_id: string
+          tournament_id: string | null
           updated_at: string
         }
         Insert: {
@@ -617,7 +617,7 @@ export type Database = {
           id?: string
           player_id: string
           started_on?: string
-          tournament_id: string
+          tournament_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -627,7 +627,7 @@ export type Database = {
           id?: string
           player_id?: string
           started_on?: string
-          tournament_id?: string
+          tournament_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1090,6 +1090,7 @@ export type Database = {
         Returns: boolean
       }
       claim_player: { Args: { claim_token: string }; Returns: string }
+      preview_claim: { Args: { claim_token: string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       set_my_player_photo: {
         Args: { new_photo_path: string }

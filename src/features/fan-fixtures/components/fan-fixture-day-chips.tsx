@@ -1,6 +1,3 @@
-import Link from "next/link";
-
-import { FAN_FIXTURES_PATH } from "@/features/fan";
 import type { FixtureGameDayHeading } from "@/features/fixtures";
 
 import { fanFixturesCopy } from "../copy";
@@ -8,11 +5,13 @@ import { fanFixturesCopy } from "../copy";
 type FanFixtureDayChipsProps = {
   gameDays: readonly FixtureGameDayHeading[];
   selectedId: string | null;
+  onSelect: (dayId: string) => void;
 };
 
 export function FanFixtureDayChips({
   gameDays,
   selectedId,
+  onSelect,
 }: FanFixtureDayChipsProps): React.JSX.Element | null {
   if (gameDays.length === 0) return null;
 
@@ -20,11 +19,11 @@ export function FanFixtureDayChips({
     <div className="flex gap-2 overflow-x-auto px-1 pb-1">
       {gameDays.map((day) => {
         const active = day.id === selectedId;
-        const href = `${FAN_FIXTURES_PATH}?day=${day.id}` as const;
         return (
-          <Link
+          <button
             key={day.id}
-            href={href}
+            type="button"
+            onClick={() => onSelect(day.id)}
             className={`shrink-0 border-2 px-3 py-1.5 text-xs font-extrabold tracking-wide uppercase ${
               active
                 ? "border-line bg-accent text-on-accent"
@@ -32,7 +31,7 @@ export function FanFixtureDayChips({
             }`}
           >
             {fanFixturesCopy.gameDayChip(day.gameweek, day.label)}
-          </Link>
+          </button>
         );
       })}
     </div>

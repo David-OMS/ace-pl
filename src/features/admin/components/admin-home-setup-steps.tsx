@@ -1,7 +1,7 @@
 import type { Route } from "next";
-import Link from "next/link";
 
 import { Card } from "@/ui/card";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { adminCopy } from "../copy";
 import type { AdminHomeSnapshot } from "../queries/get-admin-home-snapshot";
@@ -38,9 +38,9 @@ export function AdminHomeSetupSteps({
             {step.done || !step.href ? (
               <span className="text-sm font-bold text-muted">{step.label}</span>
             ) : (
-              <Link href={step.href} className="text-sm font-bold underline">
+              <SoftNavLink href={step.href} className="text-sm font-bold underline">
                 {step.label}
-              </Link>
+              </SoftNavLink>
             )}
           </li>
         ))}

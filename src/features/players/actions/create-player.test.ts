@@ -5,7 +5,11 @@ const insert = vi.fn();
 const redirect = vi.fn();
 
 vi.mock("@/features/auth", () => ({ checkAdminAccess: () => checkAdminAccess() }));
-vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+  updateTag: vi.fn(),
+  unstable_cache: vi.fn(),
+}));
 vi.mock("next/navigation", () => ({ redirect: (path: string) => redirect(path) }));
 vi.mock("@/lib/supabase/server-client", () => ({
   createSupabaseServerClient: async () => ({ from: () => ({ insert }) }),

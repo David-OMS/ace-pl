@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Icon } from "@/ui/icon";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { ADMIN_NAV_ITEMS, isAdminNavActive } from "../nav-items";
 
@@ -20,7 +20,7 @@ export function AdminBottomNav(): React.JSX.Element {
           const active = isAdminNavActive(pathname, item);
           return (
             <li key={item.href} className="flex-1">
-              <Link
+              <SoftNavLink
                 href={item.href}
                 className={`flex min-h-11 flex-col items-center justify-center gap-0.5 text-[11px] font-bold ${
                   active ? "text-ink" : "text-muted"
@@ -30,7 +30,7 @@ export function AdminBottomNav(): React.JSX.Element {
                 <span className={active ? "border-b-2 border-accent" : undefined}>
                   {item.label}
                 </span>
-              </Link>
+              </SoftNavLink>
             </li>
           );
         })}

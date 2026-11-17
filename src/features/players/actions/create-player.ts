@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
 import { redirect } from "next/navigation";
 
 import { checkAdminAccess } from "@/features/auth";
@@ -36,5 +38,6 @@ export async function createPlayer(
     return fail("save_failed");
   }
   revalidatePath(ADMIN_PLAYERS_PATH);
+  revalidateFanPublic();
   redirect(adminPlayerPath(data.id));
 }

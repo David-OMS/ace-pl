@@ -1,6 +1,7 @@
 import "server-only";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 export type StandingsTournamentChip = {
   id: string;
@@ -9,8 +10,12 @@ export type StandingsTournamentChip = {
 };
 
 /** Active + completed tournaments for league chips (newest first). */
-export async function listStandingsTournaments(): Promise<StandingsTournamentChip[]> {
-  const supabase = await createSupabaseServerClient();
+export function listStandingsTournaments(): Promise<StandingsTournamentChip[]> {
+  return fanPublicCache("standings-tournaments", readStandingsTournaments);
+}
+
+async function readStandingsTournaments(): Promise<StandingsTournamentChip[]> {
+  const supabase = createPublicSupabaseClient();
   const { data, error } = await supabase
     .from("tournaments")
     .select("id, name, status")

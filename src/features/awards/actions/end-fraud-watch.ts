@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
+import { revalidateFanPublic } from "@/lib/cache/fan-public-cache";
+
 import { checkAdminAccess } from "@/features/auth";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
@@ -41,5 +43,6 @@ export async function endFraudWatch(
 
   revalidatePath(AWARDS_ADMIN_PATH);
   revalidatePath(FAN_HOME_PATH);
+  revalidateFanPublic();
   return ok({ id: data.id });
 }

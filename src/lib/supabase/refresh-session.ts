@@ -9,6 +9,9 @@ import type { Database } from "@/types/database";
  * because Server Components can read cookies but can't set them.
  */
 export async function refreshSession(request: NextRequest): Promise<NextResponse> {
+  // Public visitors have no session cookie. Skip the auth round-trip on every navigation.
+  if (!hasAuthCookie(request)) return NextResponse.next({ request });
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient<Database>(
@@ -30,4 +33,8 @@ export async function refreshSession(request: NextRequest): Promise<NextResponse
 
   await supabase.auth.getClaims();
   return response;
+}
+
+function hasAuthCookie(request: NextRequest): boolean {
+  return request.cookies.getAll().some((cookie) => cookie.name.includes("-auth-token"));
 }

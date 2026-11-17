@@ -1,7 +1,8 @@
 import "server-only";
 
 import { DEFAULT_TEAM_COLOR } from "@/config/team-colors";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { fanPublicCache } from "@/lib/cache/fan-public-cache";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 
 import { calculateForm, type FormResult } from "../domain/calculate-form";
 import { buildStandingFixtures } from "./build-standing-fixtures";
@@ -13,8 +14,12 @@ export type FormDisplayRow = {
   results: FormResult[];
 };
 
-export async function getTournamentForm(tournamentId: string): Promise<FormDisplayRow[]> {
-  const supabase = await createSupabaseServerClient();
+export function getTournamentForm(tournamentId: string): Promise<FormDisplayRow[]> {
+  return fanPublicCache(`form:${tournamentId}`, () => readTournamentForm(tournamentId));
+}
+
+async function readTournamentForm(tournamentId: string): Promise<FormDisplayRow[]> {
+  const supabase = createPublicSupabaseClient();
   const [teams, fixtures, events, participations] = await Promise.all([
     supabase.from("teams").select("id, name, color").eq("tournament_id", tournamentId),
     supabase

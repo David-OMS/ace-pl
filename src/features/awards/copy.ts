@@ -1,5 +1,6 @@
 export const awardsCopy = {
   noTournament: "Create a tournament before awards.",
+  awardsNeedTournament: "Baller d'Or and the season awards show once a tournament exists.",
   fraudTitle: "Fraud Watch",
   fraudHint: "Max 2",
   fraudEmpty: "No one on Fraud Watch.",
