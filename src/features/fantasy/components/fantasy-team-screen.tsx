@@ -23,7 +23,6 @@ type FantasyTeamScreenProps = {
   userId: string;
   myRank: number;
   beforeFirstDeadline: boolean;
-  canOpenOtherSquads: boolean;
   gameDays: readonly FantasyGameDayOption[];
   gameweeks: readonly FantasyGameweekView[];
   selectedGameDayId: string | null;
@@ -62,11 +61,7 @@ export function FantasyTeamScreen(props: FantasyTeamScreenProps): React.JSX.Elem
       <ButtonLink href={FANTASY_TRANSFERS_PATH} fullWidth>
         {fantasyCopy.makeTransfers}
       </ButtonLink>
-      <FantasyLeaderboardMini
-        rows={props.leaderboard}
-        highlightUserId={props.userId}
-        canOpenOtherSquads={props.canOpenOtherSquads}
-      />
+      <FantasyLeaderboardMini rows={props.leaderboard} highlightUserId={props.userId} />
       <FantasyTransferLog rows={props.transfers} />
       <FantasyScoringTable />
     </FantasyTheme>

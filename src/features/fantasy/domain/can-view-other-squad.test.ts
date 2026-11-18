@@ -1,11 +1,11 @@
-import { canViewOtherSquad } from "./can-view-other-squad";
+import { canViewOtherSquadGameweek } from "./can-view-other-squad";
 
-describe("canViewOtherSquad", () => {
-  it("hides other squads before any gameweek is locked", () => {
-    expect(canViewOtherSquad(0)).toBe(false);
+describe("canViewOtherSquadGameweek", () => {
+  it("hides a gameweek with no locked snapshot", () => {
+    expect(canViewOtherSquadGameweek(false)).toBe(false);
   });
 
-  it("allows viewing once a locked gameweek exists", () => {
-    expect(canViewOtherSquad(1)).toBe(true);
+  it("shows a gameweek after a match locks the snapshot", () => {
+    expect(canViewOtherSquadGameweek(true)).toBe(true);
   });
 });

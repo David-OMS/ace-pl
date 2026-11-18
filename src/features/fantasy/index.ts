@@ -28,7 +28,6 @@ export { getFantasyTeamById } from "./queries/get-fantasy-team-by-id";
 export { getFantasyTeamPublicHeader } from "./queries/get-fantasy-team-public";
 export { isUnlimitedTransferPeriod } from "./queries/is-unlimited-transfer-period";
 export { listFantasyLeaderboard } from "./queries/list-fantasy-leaderboard";
-export { tournamentHasLockedSquads } from "./queries/tournament-has-locked-squads";
 export { listFantasyGameDays } from "./queries/list-fantasy-game-days";
 export { getFantasyTeamGameweek } from "./queries/get-fantasy-team-gameweek";
 export { listGameDayTopPlayers } from "./queries/list-game-day-top-players";

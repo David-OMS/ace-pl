@@ -2,7 +2,6 @@ import { Card } from "@/ui/card";
 import { PageHeader } from "@/ui/page-header";
 
 import { fantasyCopy } from "../copy";
-import { canViewOtherSquad } from "../domain/can-view-other-squad";
 import type { FantasyGameweekView } from "../queries/get-fantasy-team-gameweek";
 import type { FantasyTeamPublicHeader } from "../queries/get-fantasy-team-public";
 import type { FantasyGameDayOption } from "../queries/list-fantasy-game-days";
@@ -26,12 +25,12 @@ export function FantasyPublicTeamScreen({
   selectedGameDayId,
   topPlayers,
 }: FantasyPublicTeamScreenProps): React.JSX.Element {
-  const unlocked = canViewOtherSquad(gameweeks.length);
-  const lockedDays = gameDays.filter((day) => gameweeks.some((week) => week.gameDayId === day.id));
+  const lockedIds = new Set(gameweeks.map((week) => week.gameDayId));
+  const latestLocked = [...gameDays].reverse().find((day) => lockedIds.has(day.id));
   const initialGw =
-    selectedGameDayId && gameweeks.some((week) => week.gameDayId === selectedGameDayId)
+    selectedGameDayId && lockedIds.has(selectedGameDayId)
       ? selectedGameDayId
-      : (lockedDays[lockedDays.length - 1]?.id ?? null);
+      : (latestLocked?.id ?? gameDays[0]?.id ?? null);
 
   return (
     <FantasyTheme className="flex flex-col gap-4 px-4 py-4 pb-8">
@@ -45,25 +44,17 @@ export function FantasyPublicTeamScreen({
           {fantasyCopy.totalPoints} {team.totalPoints}
         </p>
       </Card>
-      {unlocked ? (
-        <>
-          <h2 className="font-display text-lg uppercase">{fantasyCopy.theirSquad}</h2>
-          <FantasyGwPanel
-            days={lockedDays}
-            gameweeks={gameweeks}
-            livePicks={[]}
-            liveFormation={team.formation}
-            initialGameDayId={initialGw}
-            initialTopPlayers={topPlayers}
-            hideLive
-            showTopPlayers
-          />
-        </>
-      ) : (
-        <Card>
-          <p className="text-sm text-muted">{fantasyCopy.squadHiddenUntilMatchday}</p>
-        </Card>
-      )}
+      <h2 className="font-display text-lg uppercase">{fantasyCopy.theirSquad}</h2>
+      <FantasyGwPanel
+        days={gameDays}
+        gameweeks={gameweeks}
+        livePicks={[]}
+        liveFormation={team.formation}
+        initialGameDayId={initialGw}
+        initialTopPlayers={topPlayers}
+        hideLive
+        showTopPlayers
+      />
     </FantasyTheme>
   );
 }

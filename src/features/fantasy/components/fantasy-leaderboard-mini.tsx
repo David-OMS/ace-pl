@@ -10,13 +10,11 @@ const TOP = 5;
 type FantasyLeaderboardMiniProps = {
   rows: readonly FantasyLeaderboardRow[];
   highlightUserId?: string;
-  canOpenOtherSquads: boolean;
 };
 
 export function FantasyLeaderboardMini({
   rows,
   highlightUserId,
-  canOpenOtherSquads,
 }: FantasyLeaderboardMiniProps): React.JSX.Element {
   if (rows.length === 0) {
     return (
@@ -38,12 +36,7 @@ export function FantasyLeaderboardMini({
       </div>
       <Card className="flex flex-col gap-2 p-0">
         {display.map((row) => (
-          <MiniRow
-            key={row.teamId}
-            row={row}
-            highlight={row.userId === highlightUserId}
-            openable={canOpenOtherSquads || row.userId === highlightUserId}
-          />
+          <MiniRow key={row.teamId} row={row} highlight={row.userId === highlightUserId} />
         ))}
       </Card>
     </section>
@@ -60,31 +53,18 @@ function miniRows(
   return [...top, mine];
 }
 
-function MiniRow(args: {
-  row: FantasyLeaderboardRow;
-  highlight: boolean;
-  openable: boolean;
-}): React.JSX.Element {
-  const className = `flex items-center gap-3 px-3 py-2 ${args.highlight ? "bg-surface-alt" : ""}`;
-  const body = (
-    <>
+function MiniRow(args: { row: FantasyLeaderboardRow; highlight: boolean }): React.JSX.Element {
+  return (
+    <SoftNavLink
+      href={args.highlight ? FANTASY_PATH : fantasyTeamPath(args.row.teamId)}
+      className={`flex items-center gap-3 px-3 py-2 ${args.highlight ? "bg-surface-alt" : ""}`}
+    >
       <span className="w-6 font-display text-muted">{args.row.rank}</span>
       <div className="min-w-0 flex-1">
         <p className="truncate font-bold">{args.row.teamName}</p>
         <p className="truncate text-xs text-muted">{args.row.ownerName}</p>
       </div>
       <span className="font-display text-lg">{args.row.totalPoints}</span>
-    </>
-  );
-  if (!args.openable) {
-    return <div className={className}>{body}</div>;
-  }
-  return (
-    <SoftNavLink
-      href={args.highlight ? FANTASY_PATH : fantasyTeamPath(args.row.teamId)}
-      className={className}
-    >
-      {body}
     </SoftNavLink>
   );
 }

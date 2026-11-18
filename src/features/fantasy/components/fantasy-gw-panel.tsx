@@ -11,6 +11,7 @@ import { FantasyGwChips } from "./fantasy-gw-chips";
 import { FantasyGwTopPlayers } from "./fantasy-gw-top-players";
 import { FantasyPitchView } from "./fantasy-pitch-view";
 import { FantasyStatRow } from "./fantasy-stat-row";
+import { ScoutingLockedCard } from "./scouting-locked-card";
 import { useFantasyGwBrowse } from "./use-fantasy-gw-browse";
 
 type FantasyGwPanelProps = {
@@ -28,7 +29,7 @@ type FantasyGwPanelProps = {
   };
   showSquadTitle?: boolean;
   showTopPlayers?: boolean;
-  /** Public other-team view: no LIVE chip, only locked gameweeks. */
+  /** Public other-team view: no LIVE chip; unlocked GWs show the scouting card. */
   hideLive?: boolean;
 };
 
@@ -53,17 +54,23 @@ export function FantasyGwPanel(props: FantasyGwPanelProps): React.JSX.Element {
         hideLive={props.hideLive ?? false}
       />
       {props.showSquadTitle ? <SquadHeading /> : null}
-      <FantasyPitchView
-        formation={browse.formation}
-        picks={browse.picks}
-        metaByPlayerId={browse.meta}
-      />
-      <TopPlayersBlock
-        show={browse.showTop}
-        pending={browse.topPending}
-        gameDayId={browse.selectedId}
-        rows={browse.topPlayers}
-      />
+      {props.hideLive && !isLockedGw(props.gameweeks, browse.selectedId) ? (
+        <ScoutingLockedCard />
+      ) : (
+        <>
+          <FantasyPitchView
+            formation={browse.formation}
+            picks={browse.picks}
+            metaByPlayerId={browse.meta}
+          />
+          <TopPlayersBlock
+            show={browse.showTop}
+            pending={browse.topPending}
+            gameDayId={browse.selectedId}
+            rows={browse.topPlayers}
+          />
+        </>
+      )}
     </>
   );
 }
@@ -94,4 +101,9 @@ function SquadHeading(): React.JSX.Element {
       <p className="text-xs text-muted">{fantasyCopy.deadline}</p>
     </div>
   );
+}
+
+function isLockedGw(gameweeks: readonly FantasyGameweekView[], gameDayId: string | null): boolean {
+  if (!gameDayId) return false;
+  return gameweeks.some((week) => week.gameDayId === gameDayId);
 }
