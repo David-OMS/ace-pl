@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
+import { getCurrentUser } from "@/features/auth";
 import {
   FantasyPublicTeamScreen,
   FantasyTheme,
   fantasyCopy,
-  getFantasyTeamById,
+  FANTASY_PATH,
+  getFantasyTeamPublicHeader,
   listFantasyGameDays,
   listGameDayTopPlayers,
   listTeamGameweeks,
@@ -24,8 +26,11 @@ export default async function FantasyPublicTeamPage({
 }: PublicTeamPageProps): Promise<React.JSX.Element> {
   const { teamId } = await params;
   const { gw } = await searchParams;
-  const team = await getFantasyTeamById(teamId);
+  const team = await getFantasyTeamPublicHeader(teamId);
   if (!team) notFound();
+
+  const user = await getCurrentUser();
+  if (user?.id === team.userId) redirect(FANTASY_PATH);
 
   const [gameDays, gameweeks] = await Promise.all([
     listFantasyGameDays(team.tournamentId),

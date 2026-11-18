@@ -54,6 +54,7 @@ export const fantasyCopy = {
   setVice: "Make vice",
   mySquad: "My squad",
   theirSquad: "Squad",
+  squadHiddenUntilMatchday: "Squad unlocks on matchday, after the deadline locks it in.",
   deadline: "Deadline Thu 23:59",
   freeTransfers: "Free transfers",
   squadEditsLabel: "Squad edits",

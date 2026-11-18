@@ -1,6 +1,6 @@
 export const homeCopy = {
   logoPrimary: "ACE",
-  logoAccent: "PL",
+  logoAccent: "BALLERZ",
   title: "Home",
   tournamentIdle: "No live tournament right now.",
   gameweekOf: (current: number, total: number): string => `Gameweek ${current} of ${total}`,

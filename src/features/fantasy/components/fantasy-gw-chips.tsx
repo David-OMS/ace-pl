@@ -10,6 +10,7 @@ type FantasyGwChipsProps = {
   selectedId: string | null;
   hrefFor?: (dayId: string | null) => Route;
   onSelect?: (dayId: string | null) => void;
+  hideLive?: boolean;
 };
 
 export function FantasyGwChips({
@@ -17,16 +18,19 @@ export function FantasyGwChips({
   selectedId,
   hrefFor,
   onSelect,
+  hideLive = false,
 }: FantasyGwChipsProps): React.JSX.Element {
   if (days.length === 0) return <></>;
 
   return (
     <div className="flex flex-wrap gap-2">
-      <Chip
-        {...chipActions(null, hrefFor, onSelect)}
-        active={selectedId === null}
-        label={fantasyCopy.gameweekLive}
-      />
+      {hideLive ? null : (
+        <Chip
+          {...chipActions(null, hrefFor, onSelect)}
+          active={selectedId === null}
+          label={fantasyCopy.gameweekLive}
+        />
+      )}
       {days.map((day) => (
         <Chip
           key={day.id}

@@ -13,6 +13,7 @@ import {
   listGameDayTopPlayers,
   listMyFantasyTransfers,
   listTeamGameweeks,
+  tournamentHasLockedSquads,
 } from "@/features/fantasy";
 import { resolveFanTournament } from "@/features/home";
 
@@ -33,11 +34,12 @@ export default async function FantasyPage({
   if (!user) return emptyCta("signed_out");
   if (!tournament) return emptyCta("no_tournament");
 
-  const [team, leaderboard, beforeFirstDeadline, gameDays] = await Promise.all([
+  const [team, leaderboard, beforeFirstDeadline, gameDays, canOpenOtherSquads] = await Promise.all([
     getMyFantasyTeam({ tournamentId: tournament.id, userId: user.id }),
     listFantasyLeaderboard(tournament.id),
     isUnlimitedTransferPeriod(tournament.id),
     listFantasyGameDays(tournament.id),
+    tournamentHasLockedSquads(tournament.id),
   ]);
   if (!team) return emptyCta("no_team");
 
@@ -55,6 +57,7 @@ export default async function FantasyPage({
       userId={user.id}
       myRank={myRank}
       beforeFirstDeadline={beforeFirstDeadline}
+      canOpenOtherSquads={canOpenOtherSquads}
       gameDays={gameDays}
       gameweeks={gameweeks}
       selectedGameDayId={selectedGameDayId}

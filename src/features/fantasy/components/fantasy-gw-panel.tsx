@@ -28,10 +28,20 @@ type FantasyGwPanelProps = {
   };
   showSquadTitle?: boolean;
   showTopPlayers?: boolean;
+  /** Public other-team view: no LIVE chip, only locked gameweeks. */
+  hideLive?: boolean;
 };
 
 export function FantasyGwPanel(props: FantasyGwPanelProps): React.JSX.Element {
-  const browse = useFantasyGwBrowse(props);
+  const browse = useFantasyGwBrowse({
+    gameweeks: props.gameweeks,
+    livePicks: props.livePicks,
+    liveFormation: props.liveFormation,
+    initialGameDayId: props.initialGameDayId,
+    initialTopPlayers: props.initialTopPlayers,
+    ...(props.showTopPlayers !== undefined ? { showTopPlayers: props.showTopPlayers } : {}),
+    ...(props.hideLive !== undefined ? { hideLive: props.hideLive } : {}),
+  });
 
   return (
     <>
@@ -40,6 +50,7 @@ export function FantasyGwPanel(props: FantasyGwPanelProps): React.JSX.Element {
         days={props.days}
         selectedId={browse.selectedId}
         onSelect={browse.selectDay}
+        hideLive={props.hideLive ?? false}
       />
       {props.showSquadTitle ? <SquadHeading /> : null}
       <FantasyPitchView

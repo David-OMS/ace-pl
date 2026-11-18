@@ -1,6 +1,6 @@
 export const fanCopy = {
   brandPrimary: "ACE",
-  brandAccent: "PL",
+  brandAccent: "BALLERZ",
   nav: {
     home: "Home",
     league: "League",

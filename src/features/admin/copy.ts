@@ -1,7 +1,7 @@
 export const adminCopy = {
-  brand: "ACE PL",
+  brand: "ACE BALLERZ",
   brandPrimary: "ACE",
-  brandAccent: "PL",
+  brandAccent: "BALLERZ",
   tag: "ADMIN",
   nav: {
     home: "Home",

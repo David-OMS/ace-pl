@@ -10,6 +10,7 @@ import {
   FANTASY_CREATE_PATH,
   getMyFantasyTeam,
   listFantasyLeaderboard,
+  tournamentHasLockedSquads,
 } from "@/features/fantasy";
 import { resolveFanTournament } from "@/features/home";
 
@@ -41,7 +42,16 @@ export default async function FantasyLeaderboardPage(): Promise<React.JSX.Elemen
   });
   if (!team) redirect(FANTASY_CREATE_PATH);
 
-  const rows = await listFantasyLeaderboard(tournament.id);
+  const [rows, canOpenOtherSquads] = await Promise.all([
+    listFantasyLeaderboard(tournament.id),
+    tournamentHasLockedSquads(tournament.id),
+  ]);
 
-  return <FantasyLeaderboardScreen rows={rows} highlightUserId={user.id} />;
+  return (
+    <FantasyLeaderboardScreen
+      rows={rows}
+      highlightUserId={user.id}
+      canOpenOtherSquads={canOpenOtherSquads}
+    />
+  );
 }

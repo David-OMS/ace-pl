@@ -18,6 +18,7 @@ type BrowseInput = {
   initialGameDayId: string | null;
   initialTopPlayers: readonly GameDayTopPlayer[];
   showTopPlayers?: boolean;
+  hideLive?: boolean;
 };
 
 export function useFantasyGwBrowse(input: BrowseInput): FantasyGwBrowse {
@@ -53,10 +54,12 @@ function browseView(args: {
   selectDay: (dayId: string | null) => void;
 }): FantasyGwBrowse {
   const gameweek = args.input.gameweeks.find((week) => week.gameDayId === args.selectedId) ?? null;
+  const hideLive = Boolean(args.input.hideLive);
+  const picks = gameweek?.picks ?? (hideLive ? [] : args.input.livePicks);
   return {
     selectedId: args.selectedId,
     formation: resolveFormation(gameweek?.formation ?? args.input.liveFormation),
-    picks: gameweek?.picks ?? args.input.livePicks,
+    picks,
     meta: buildPitchPointsMeta(gameweek),
     gwPoints: gwPoints(gameweek),
     topPlayers: cachedTop(args.selectedId, args.topByDay),
