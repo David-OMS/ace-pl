@@ -31,6 +31,7 @@ export function SharedKeepersPanel({
   return (
     <Card className="flex flex-col gap-3">
       <h2 className="font-display text-lg uppercase">{copy.title}</h2>
+      <p className="text-sm text-muted">{copy.hint}</p>
       {keepers.length === 0 ? (
         <p className="text-sm text-muted">{copy.empty}</p>
       ) : (

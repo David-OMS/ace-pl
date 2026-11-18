@@ -9,6 +9,8 @@ import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
+import { sharedKeeperBlocked } from "./shared-keeper-blocked";
+
 export type BorrowPlayerState = ActionResult<{ savedAt: number }> | null;
 
 const schema = z.object({
@@ -35,13 +37,13 @@ export async function borrowPlayer(
 
   const { tournamentId, fixtureId, teamId, playerId } = parsed.data;
   const supabase = await createSupabaseServerClient();
-  const { data: player, error: playerError } = await supabase
-    .from("players")
-    .select("position")
-    .eq("id", playerId)
-    .maybeSingle();
+  const [{ data: player, error: playerError }, blocked] = await Promise.all([
+    supabase.from("players").select("position").eq("id", playerId).maybeSingle(),
+    sharedKeeperBlocked(supabase, { tournamentId, fixtureId, teamId, playerId }),
+  ]);
 
   if (playerError || !player) return fail("not_found");
+  if (blocked) return fail("conflict");
 
   const { error } = await supabase.from("match_participations").insert({
     tournament_id: tournamentId,

@@ -19,7 +19,7 @@ export function WhoPlayedSection({ match }: { match: MatchEntry }): React.JSX.El
           fixtureId={match.fixtureId}
           teamId={match.homeTeamId}
           players={match.homePlayers}
-          borrowPool={match.borrowPool}
+          borrowPool={match.homeBorrowPool}
           locked={match.isLocked}
         />
         <TeamSquadCard
@@ -29,7 +29,7 @@ export function WhoPlayedSection({ match }: { match: MatchEntry }): React.JSX.El
           fixtureId={match.fixtureId}
           teamId={match.awayTeamId}
           players={match.awayPlayers}
-          borrowPool={match.borrowPool}
+          borrowPool={match.awayBorrowPool}
           locked={match.isLocked}
         />
       </Card>

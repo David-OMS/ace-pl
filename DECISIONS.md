@@ -32,24 +32,24 @@ Status key: **FINAL** = agreed · **OPEN** = not decided · **CONFIRM** = record
 
 ## 3. Tournament Structure
 
-| Item                        | Decision                                                                                                                                                                                              | Status               |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| Players per tournament      | ~40+                                                                                                                                                                                                  | FINAL                |
-| Team setup                  | Configurable per tournament (any number of teams and squad size). Likely 4×10 or 5×8.                                                                                                                 | FINAL (configurable) |
-| Players on pitch            | Tournament setting, any number (6-a-side now, could be 7 or 8 next time). Nothing in the app assumes a fixed number; fantasy formations follow it.                                                    | FINAL (configurable) |
-| Captains                    | One captain per team, marked by an admin.                                                                                                                                                             | FINAL                |
-| Goalkeepers                 | Configurable per tournament: **per team** (each squad has its own GK) or **shared** (pick keepers for the tournament — often 2 — who cover matches across teams; outfield squads don't include them). | FINAL (configurable) |
-| Game days                   | Admins pick the dates per tournament (usually Fridays)                                                                                                                                                | FINAL                |
-| Match length                | 20 minutes                                                                                                                                                                                            | FINAL                |
-| Matches per game day        | Configurable per tournament. A session is ~2 hours, so ~4–5 matches. Not every team plays every Friday.                                                                                               | FINAL (configurable) |
-| Fixture schedule pattern    | Manual add **or** auto-generate. Generator: round-robin (home/away flip second half), respect matches/day, no back-to-back for the same team, prefer teams who haven't played yet that day.           | FINAL                |
-| Fixture status on create    | Creating a fixture schedules it (`published`). No draft/publish step on create. **Postpone** is an action on an existing fixture. Result publish (match entry) is separate.                           | FINAL                |
-| Walkover                    | Recorded as 3–0 to the team that turned up. Counts in the table only: no goals, appearances or clean sheets for anyone.                                                                               | FINAL                |
-| Postponed / cancelled match | Admin chooses each time: reschedule, void, or award the result                                                                                                                                        | FINAL                |
-| Winner                      | Top of the league table                                                                                                                                                                               | FINAL                |
-| Points                      | Win 3, Draw 1, Loss 0                                                                                                                                                                                 | FINAL                |
-| Tiebreak (default)          | Points → goal difference → goals scored → head-to-head → fewest discipline points (yellow = 1, red = 3).                                                                                              | FINAL                |
-| Playoff option              | Admin can switch a tournament to settle a tie for 1st with an extra playoff match instead of the discipline step. Default is the chain above.                                                         | FINAL                |
+| Item                        | Decision                                                                                                                                                                                                                   | Status               |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| Players per tournament      | ~40+                                                                                                                                                                                                                       | FINAL                |
+| Team setup                  | Configurable per tournament (any number of teams and squad size). Likely 4×10 or 5×8.                                                                                                                                      | FINAL (configurable) |
+| Players on pitch            | Tournament setting, any number (6-a-side now, could be 7 or 8 next time). Nothing in the app assumes a fixed number; fantasy formations follow it.                                                                         | FINAL (configurable) |
+| Captains                    | One captain per team, marked by an admin.                                                                                                                                                                                  | FINAL                |
+| Goalkeepers                 | Configurable per tournament: **per team** (each squad has its own GK) or **shared**. In shared mode a team may still have a fixed GK on its squad; only sides without a fixed GK borrow from the shared pool on match day. | FINAL (configurable) |
+| Game days                   | Admins pick the dates per tournament (usually Fridays)                                                                                                                                                                     | FINAL                |
+| Match length                | 20 minutes                                                                                                                                                                                                                 | FINAL                |
+| Matches per game day        | Configurable per tournament. A session is ~2 hours, so ~4–5 matches. Not every team plays every Friday.                                                                                                                    | FINAL (configurable) |
+| Fixture schedule pattern    | Manual add **or** auto-generate. Generator: round-robin (home/away flip second half), respect matches/day, no back-to-back for the same team, prefer teams who haven't played yet that day.                                | FINAL                |
+| Fixture status on create    | Creating a fixture schedules it (`published`). No draft/publish step on create. **Postpone** is an action on an existing fixture. Result publish (match entry) is separate.                                                | FINAL                |
+| Walkover                    | Recorded as 3–0 to the team that turned up. Counts in the table only: no goals, appearances or clean sheets for anyone.                                                                                                    | FINAL                |
+| Postponed / cancelled match | Admin chooses each time: reschedule, void, or award the result                                                                                                                                                             | FINAL                |
+| Winner                      | Top of the league table                                                                                                                                                                                                    | FINAL                |
+| Points                      | Win 3, Draw 1, Loss 0                                                                                                                                                                                                      | FINAL                |
+| Tiebreak (default)          | Points → goal difference → goals scored → head-to-head → fewest discipline points (yellow = 1, red = 3).                                                                                                                   | FINAL                |
+| Playoff option              | Admin can switch a tournament to settle a tie for 1st with an extra playoff match instead of the discipline step. Default is the chain above.                                                                              | FINAL                |
 
 Matches available per month: 4 Fridays × 4–5 matches = **16–20 matches**.
 
@@ -200,6 +200,8 @@ Tunde wins: the most popular, with strong stats. David had the best stats but no
 - Logo: the user will supply it at the end of the decision process. — PENDING
 - Bottom navigation (5 tabs): Home, League, Fixtures, Players, Fantasy. News and Profile sit in the header.
 - **Icons:** proper custom/icon-set icons in the real app. No emoji-style icons (the mockup emojis are placeholders). — FINAL
+- **Home “Next fixtures”:** next open matches in real order (game day, then kick-off), filling across weeks — not first kick-off of each week, and not only the current week. — FINAL
+- **Fan match page:** before full time show each team’s full registered squad (who plays is decided on the session). Score and “who played” only after the result is recorded. — FINAL
 
 ## 12. Admin — FINAL
 
@@ -271,6 +273,8 @@ Tunde wins: the most popular, with strong stats. David had the best stats but no
 - 2026-11-16: Round 7 recorded (participation states, own goal −2, live drafts, notifications, naira prices, fresh start). Remaining open items stay open; building starts.
 - 2026-11-16: Handbook (Ace Ballerz League 2026) reviewed. Players on pitch is a setting, captains per team, walkovers 3–0 result-only, full tiebreak chain with playoff as an option, fixtures entered manually for now.
 - 2026-11-16: Keeper mode per tournament — per-team or shared pool (often 2 keepers for the whole league).
+- 2026-11-18: Shared mode hybrid — a team may still carry a fixed GK; only sides without one borrow from the shared pool on match day.
+- 2026-11-18: Home next fixtures = chronological upcoming strip; fan match page shows squads until FT, then who played + score.
 - 2026-11-16: Admin IA locked — Home / Tournaments / Players / Fixtures nav; tournament workspace vs settings; explicit tournament squad; fixtures tab separate; start+end dates plus game days.
 - 2026-11-16: Player “Still plays” / inactive not used in admin; tournament roster is who plays.
 - 2026-11-16: Fixtures — create = scheduled; postpone after; auto-gen with no back-to-back; match entry matches mockup (tap absent, borrow).

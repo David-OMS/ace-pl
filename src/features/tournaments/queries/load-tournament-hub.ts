@@ -32,8 +32,8 @@ export async function loadTournamentHub(tournament: TournamentDetail): Promise<T
 
   const rosterIds = new Set(tournament.rosterPlayerIds);
   const sharedKeeperSet = new Set(sharedKeeperIds);
+  // Only unassigned GKs — a GK already on a team is that team's fixed keeper.
   const keeperCandidates = setup.unassigned
-    .concat(setup.squads.flatMap((squad) => squad.players))
     .filter((player) => player.position === "GK" && rosterIds.has(player.id))
     .filter((player) => !sharedKeeperSet.has(player.id))
     .map((player) => ({ id: player.id, name: player.name }));

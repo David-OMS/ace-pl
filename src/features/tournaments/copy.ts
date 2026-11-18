@@ -57,11 +57,12 @@ export const tournamentsCopy = {
   } satisfies Record<FirstPlaceTiebreak, string>,
   keeperModes: {
     per_team: "Each team has its own",
-    shared: "Shared pool for the tournament",
+    shared: "Shared pool, or a fixed GK on a team",
   } satisfies Record<KeeperMode, string>,
   sharedKeepers: {
     title: "Shared keepers",
     empty: "No keepers selected.",
+    hint: "Teams with no fixed GK can borrow these on match day.",
     pick: "Keeper",
     add: "Add",
     remove: "Remove",

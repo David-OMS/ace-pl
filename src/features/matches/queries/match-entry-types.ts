@@ -38,7 +38,8 @@ export type MatchEntry = {
   gameDayLabel: string;
   homePlayers: MatchPlayer[];
   awayPlayers: MatchPlayer[];
-  borrowPool: { id: string; name: string; position: PlayerPosition }[];
+  homeBorrowPool: { id: string; name: string; position: PlayerPosition }[];
+  awayBorrowPool: { id: string; name: string; position: PlayerPosition }[];
   events: MatchEventRow[];
   score: { homeGoals: number; awayGoals: number };
   isLocked: boolean;

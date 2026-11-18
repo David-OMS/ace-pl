@@ -1,10 +1,12 @@
 import type { FixtureStatus } from "@/config/fixture-status";
 import type { MatchEventType, ParticipationStatus } from "@/config/match-events";
 import type { PlayerPosition } from "@/config/player-positions";
+import type { KeeperMode } from "@/config/tournament-rules";
 import { DEFAULT_TEAM_COLOR } from "@/config/team-colors";
 import { sortPlayers } from "@/features/players";
 import { formatGameDay } from "@/lib/dates/format-game-day";
 
+import { borrowPoolForTeam, teamHasGoalkeeper } from "../domain/borrow-pool-for-team";
 import { calculateMatchScore } from "../domain/calculate-match-score";
 import { resolveEventTeam } from "../domain/resolve-event-team";
 import type { MatchEntry, MatchEventRow } from "./match-entry-types";
@@ -38,6 +40,8 @@ export type AssembleMatchEntryInput = {
   }[];
   memberships: { player_id: string; team_id: string }[];
   players: { id: string; name: string; position: PlayerPosition; is_active: boolean }[];
+  keeperMode: KeeperMode;
+  sharedKeeperIds: readonly string[];
 };
 
 const LOCKED: ReadonlySet<FixtureStatus> = new Set(["completed", "void", "walkover"]);
@@ -54,12 +58,7 @@ export function assembleMatchEntry(input: AssembleMatchEntryInput): MatchEntry {
     homeTeamId: fixture.home_team_id,
     awayTeamId: fixture.away_team_id,
   });
-  const onFixture = new Set([...homePlayers, ...awayPlayers].map((p) => p.playerId));
-  const borrowPool = sortPlayers(
-    players
-      .filter((p) => p.is_active && !onFixture.has(p.id))
-      .map((p) => ({ id: p.id, name: p.name, position: p.position, isActive: p.is_active })),
-  ).map((p) => ({ id: p.id, name: p.name, position: p.position }));
+  const pools = sideBorrowPools(input, homePlayers, awayPlayers);
 
   return {
     fixtureId: fixture.id,
@@ -75,7 +74,7 @@ export function assembleMatchEntry(input: AssembleMatchEntryInput): MatchEntry {
     gameDayLabel: gameDayPlayedOn ? formatGameDay(gameDayPlayedOn) : "",
     homePlayers,
     awayPlayers,
-    borrowPool,
+    ...pools,
     events: toEventRows(events, playerById),
     score: scoreFromEvents({
       homeTeamId: fixture.home_team_id,
@@ -84,6 +83,34 @@ export function assembleMatchEntry(input: AssembleMatchEntryInput): MatchEntry {
       lineup: [...homePlayers, ...awayPlayers],
     }),
     isLocked: LOCKED.has(fixture.status),
+  };
+}
+
+function sideBorrowPools(
+  input: AssembleMatchEntryInput,
+  homePlayers: { playerId: string; isGoalkeeper: boolean }[],
+  awayPlayers: { playerId: string; isGoalkeeper: boolean }[],
+) {
+  const onFixture = new Set([...homePlayers, ...awayPlayers].map((p) => p.playerId));
+  const openPool = sortPlayers(
+    input.players
+      .filter((p) => p.is_active && !onFixture.has(p.id))
+      .map((p) => ({ id: p.id, name: p.name, position: p.position, isActive: p.is_active })),
+  ).map((p) => ({ id: p.id, name: p.name, position: p.position }));
+  const poolArgs = {
+    pool: openPool,
+    sharedKeeperIds: input.sharedKeeperIds,
+    keeperMode: input.keeperMode,
+  };
+  return {
+    homeBorrowPool: borrowPoolForTeam({
+      ...poolArgs,
+      teamHasGoalkeeper: teamHasGoalkeeper(homePlayers),
+    }),
+    awayBorrowPool: borrowPoolForTeam({
+      ...poolArgs,
+      teamHasGoalkeeper: teamHasGoalkeeper(awayPlayers),
+    }),
   };
 }
 

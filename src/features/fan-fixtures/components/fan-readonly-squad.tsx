@@ -8,6 +8,7 @@ type FanReadonlySquadProps = {
   teamColor: string;
   players: readonly MatchPlayer[];
   borrowFrom: ReadonlyMap<string, string>;
+  preview?: boolean;
 };
 
 export function FanReadonlySquad({
@@ -15,6 +16,7 @@ export function FanReadonlySquad({
   teamColor,
   players,
   borrowFrom,
+  preview = false,
 }: FanReadonlySquadProps): React.JSX.Element {
   return (
     <div className="flex min-w-0 flex-col gap-2">
@@ -30,7 +32,7 @@ export function FanReadonlySquad({
             <li
               key={player.participationId}
               className={`flex min-h-10 items-center gap-2 border-2 px-2 text-sm font-bold ${
-                player.status === "absent"
+                !preview && player.status === "absent"
                   ? "border-dashed border-line bg-canvas text-muted line-through opacity-50"
                   : "border-line bg-surface"
               }`}
@@ -39,11 +41,13 @@ export function FanReadonlySquad({
                 {player.position}
               </span>
               <span className="flex-1 truncate">{player.name}</span>
-              <PlayerLabels
-                player={player}
-                fromTeam={borrowFrom.get(player.playerId)}
-                forTeam={teamName}
-              />
+              {preview ? null : (
+                <PlayerLabels
+                  player={player}
+                  fromTeam={borrowFrom.get(player.playerId)}
+                  forTeam={teamName}
+                />
+              )}
             </li>
           ))}
         </ul>

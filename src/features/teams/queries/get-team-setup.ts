@@ -16,8 +16,7 @@ type GetTeamSetupArgs = {
 
 /**
  * Hub unassigned = roster players with no current team.
- * Only picked shared keepers are kept out of that list (they show under Shared keepers).
- * GKs are still listed until they’re picked — they just can’t be added to teams in shared mode.
+ * Picked shared keepers stay under Shared keepers; other GKs can still join a team as a fixed keeper.
  */
 export async function getTeamSetup(args: GetTeamSetupArgs): Promise<TeamSetup> {
   const { tournamentId, squadSize, sharedKeeperIds, rosterPlayerIds } = args;

@@ -9,21 +9,26 @@ type MatchScoreHeaderProps = {
   match: MatchEntry;
   /** Fan view hides the admin locked note. */
   showLockedNote?: boolean;
+  /** Fan preview hides 0–0 until the result is published. */
+  showScore?: boolean;
 };
 
 export function MatchScoreHeader({
   match,
   showLockedNote = true,
+  showScore = true,
 }: MatchScoreHeaderProps): React.JSX.Element {
-  const scorers = groupGoalScorers({
-    homeTeamId: match.homeTeamId,
-    awayTeamId: match.awayTeamId,
-    lineup: [...match.homePlayers, ...match.awayPlayers].map((p) => ({
-      playerId: p.playerId,
-      teamId: p.teamId,
-    })),
-    events: match.events,
-  });
+  const scorers = showScore
+    ? groupGoalScorers({
+        homeTeamId: match.homeTeamId,
+        awayTeamId: match.awayTeamId,
+        lineup: [...match.homePlayers, ...match.awayPlayers].map((p) => ({
+          playerId: p.playerId,
+          teamId: p.teamId,
+        })),
+        events: match.events,
+      })
+    : { home: [], away: [] };
 
   return (
     <div className="flex flex-col gap-2">
@@ -35,7 +40,9 @@ export function MatchScoreHeader({
         <ScoreSide name={match.homeTeamName} color={match.homeTeamColor} scorers={scorers.home} />
         <div className="flex flex-col items-center gap-0.5 text-center">
           <span className="font-display text-4xl tracking-wide text-accent">
-            {match.score.homeGoals}–{match.score.awayGoals}
+            {showScore
+              ? `${match.score.homeGoals}–${match.score.awayGoals}`
+              : formatKickoffTime(match.kickoffTime)}
           </span>
         </div>
         <ScoreSide name={match.awayTeamName} color={match.awayTeamColor} scorers={scorers.away} />

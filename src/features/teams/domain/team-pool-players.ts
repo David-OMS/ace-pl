@@ -1,11 +1,10 @@
 import type { KeeperMode } from "@/config/tournament-rules";
 import type { PlayerSummary } from "@/features/players";
 
-/** Players you can put on a team right now. Shared mode keeps GKs out of squads. */
+/** Players you can put on a team. Shared mode still allows a fixed GK on a squad. */
 export function teamPoolPlayers(
   unassigned: readonly PlayerSummary[],
-  keeperMode: KeeperMode,
+  _keeperMode: KeeperMode,
 ): PlayerSummary[] {
-  if (keeperMode !== "shared") return [...unassigned];
-  return unassigned.filter((player) => player.position !== "GK");
+  return [...unassigned];
 }
