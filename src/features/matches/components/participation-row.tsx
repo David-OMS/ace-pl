@@ -64,6 +64,11 @@ export function ParticipationRow({
 function PlayerTags({ player }: { player: MatchPlayer }): React.JSX.Element {
   return (
     <>
+      {player.isCaptain ? (
+        <span className="text-xs font-bold text-accent" title={matchesCopy.captain}>
+          {matchesCopy.captainMark}
+        </span>
+      ) : null}
       {player.isBorrowed ? (
         <span className="bg-hot px-1 py-0.5 text-[8px] font-extrabold text-on-hot uppercase">
           {matchesCopy.loan}

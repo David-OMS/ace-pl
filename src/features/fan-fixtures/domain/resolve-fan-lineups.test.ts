@@ -12,6 +12,7 @@ function player(id: string, status: MatchPlayer["status"]): MatchPlayer {
     status,
     isGoalkeeper: false,
     isBorrowed: false,
+    isCaptain: false,
   };
 }
 

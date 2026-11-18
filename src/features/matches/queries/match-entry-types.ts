@@ -11,6 +11,7 @@ export type MatchPlayer = {
   status: ParticipationStatus;
   isGoalkeeper: boolean;
   isBorrowed: boolean;
+  isCaptain: boolean;
 };
 
 export type MatchEventRow = {

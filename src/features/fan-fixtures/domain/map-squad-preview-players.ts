@@ -7,6 +7,7 @@ type SquadMember = {
   teamId: string;
   name: string;
   position: PlayerPosition;
+  isCaptain: boolean;
 };
 
 /** Registered team lists shaped like match players for the fan preview. */
@@ -25,6 +26,7 @@ export function mapSquadPreviewPlayers(
       status: "played",
       isGoalkeeper: row.position === "GK",
       isBorrowed: false,
+      isCaptain: row.isCaptain,
     }));
   return sortPlayers(mapped);
 }

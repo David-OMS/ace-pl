@@ -16,6 +16,8 @@ export const matchesCopy = {
   borrowSubmit: "Add",
   loan: "Loan",
   keeper: "Goalkeeper",
+  captain: "Captain",
+  captainMark: "C",
   events: "Events",
   noEvents: "No events yet.",
   publish: "Publish result",

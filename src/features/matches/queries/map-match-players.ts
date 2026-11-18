@@ -19,6 +19,7 @@ type MapMatchPlayersInput = {
     is_active: boolean;
   }[];
   registered: ReadonlyMap<string, string>;
+  captainIds: ReadonlySet<string>;
   homeTeamId: string;
   awayTeamId: string;
 };
@@ -27,6 +28,7 @@ export function mapMatchPlayers({
   participations,
   players,
   registered,
+  captainIds,
   homeTeamId,
   awayTeamId,
 }: MapMatchPlayersInput): { homePlayers: MatchPlayer[]; awayPlayers: MatchPlayer[] } {
@@ -45,6 +47,7 @@ export function mapMatchPlayers({
         status: row.status,
         isGoalkeeper: row.is_goalkeeper,
         isBorrowed: registeredTeamId !== undefined && registeredTeamId !== row.team_id,
+        isCaptain: captainIds.has(row.player_id) && registeredTeamId === row.team_id,
       },
     ];
   });

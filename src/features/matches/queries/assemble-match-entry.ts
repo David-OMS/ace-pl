@@ -38,7 +38,7 @@ export type AssembleMatchEntryInput = {
     quantity: number;
     sort_order: number;
   }[];
-  memberships: { player_id: string; team_id: string }[];
+  memberships: { player_id: string; team_id: string; is_captain: boolean }[];
   players: { id: string; name: string; position: PlayerPosition; is_active: boolean }[];
   keeperMode: KeeperMode;
   sharedKeeperIds: readonly string[];
@@ -55,6 +55,7 @@ export function assembleMatchEntry(input: AssembleMatchEntryInput): MatchEntry {
     participations,
     players,
     registered: new Map(memberships.map((m) => [m.player_id, m.team_id])),
+    captainIds: new Set(memberships.filter((m) => m.is_captain).map((m) => m.player_id)),
     homeTeamId: fixture.home_team_id,
     awayTeamId: fixture.away_team_id,
   });

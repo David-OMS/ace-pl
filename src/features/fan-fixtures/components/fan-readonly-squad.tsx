@@ -41,13 +41,12 @@ export function FanReadonlySquad({
                 {player.position}
               </span>
               <span className="flex-1 truncate">{player.name}</span>
-              {preview ? null : (
-                <PlayerLabels
-                  player={player}
-                  fromTeam={borrowFrom.get(player.playerId)}
-                  forTeam={teamName}
-                />
-              )}
+              <PlayerLabels
+                player={player}
+                fromTeam={borrowFrom.get(player.playerId)}
+                forTeam={teamName}
+                preview={preview}
+              />
             </li>
           ))}
         </ul>
@@ -60,14 +59,21 @@ function PlayerLabels({
   player,
   fromTeam,
   forTeam,
+  preview,
 }: {
   player: MatchPlayer;
   fromTeam: string | undefined;
   forTeam: string;
+  preview: boolean;
 }): React.JSX.Element {
   return (
     <>
-      {player.isBorrowed && fromTeam ? (
+      {player.isCaptain ? (
+        <span className="text-xs font-bold text-accent" title={fanFixturesCopy.captain}>
+          {fanFixturesCopy.captainMark}
+        </span>
+      ) : null}
+      {!preview && player.isBorrowed && fromTeam ? (
         <span
           className="max-w-[5.5rem] truncate text-[9px] font-bold text-muted"
           title={fanFixturesCopy.borrowNote(player.name, fromTeam, forTeam)}
@@ -75,7 +81,7 @@ function PlayerLabels({
           {fanFixturesCopy.loan}
         </span>
       ) : null}
-      {player.isGoalkeeper ? (
+      {!preview && player.isGoalkeeper ? (
         <span className="text-xs font-bold text-accent" title={fanFixturesCopy.keeper}>
           GK
         </span>

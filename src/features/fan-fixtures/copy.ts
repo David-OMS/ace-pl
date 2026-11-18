@@ -26,6 +26,8 @@ export const fanFixturesCopy = {
   emptySquad: "No players listed yet.",
   loan: "Loan",
   keeper: "Goalkeeper",
+  captain: "Captain",
+  captainMark: "C",
   borrowNote: (playerName: string, fromTeam: string, forTeam: string): string =>
     `${playerName} — borrowed from ${fromTeam}, played for ${forTeam}`,
   participation: {

@@ -56,7 +56,7 @@ async function loadMatchEntryBundle(supabase: SupabaseClient<Database>, fixture:
         .order("sort_order"),
       supabase
         .from("team_memberships")
-        .select("player_id, team_id")
+        .select("player_id, team_id, is_captain")
         .eq("tournament_id", fixture.tournament_id)
         .in("team_id", teamIds)
         .is("left_on", null),

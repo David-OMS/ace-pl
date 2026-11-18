@@ -15,7 +15,7 @@ export async function loadFixtureTeamSquads(input: {
   const [memberships, players] = await Promise.all([
     supabase
       .from("team_memberships")
-      .select("player_id, team_id")
+      .select("player_id, team_id, is_captain")
       .eq("tournament_id", tournamentId)
       .in("team_id", [homeTeamId, awayTeamId])
       .is("left_on", null),
@@ -34,6 +34,7 @@ export async function loadFixtureTeamSquads(input: {
         teamId: row.team_id,
         name: player.name,
         position: player.position,
+        isCaptain: row.is_captain,
       },
     ];
   });
