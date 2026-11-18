@@ -2,6 +2,7 @@ import { FANTASY_SQUAD_SIZE, type FantasyFormation } from "@/config/fantasy";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
+import { pitchSlotIndex } from "../domain/map-picks-to-pitch-slots";
 import { isFantasyFormation } from "../domain/parse-formation";
 import { reseatPicksForFormation } from "../domain/reseat-picks-for-formation";
 import type { PickablePlayer } from "../queries/list-pickable-players";
@@ -31,7 +32,12 @@ export async function reseatAndRewritePicks(args: {
     return "save_failed";
   }
 
-  return writeReseatedPicks(args.teamId, reseated, loaded.priceById);
+  return writeReseatedPicks({
+    teamId: args.teamId,
+    formation: args.formation,
+    reseated,
+    priceById: loaded.priceById,
+  });
 }
 
 async function loadPicksForReseat(teamId: string, pool: readonly PickablePlayer[]) {
@@ -63,35 +69,50 @@ async function loadPicksForReseat(teamId: string, pool: readonly PickablePlayer[
   return { input, priceById, count: freshPicks.length };
 }
 
-async function writeReseatedPicks(
-  teamId: string,
+async function writeReseatedPicks(args: {
+  teamId: string;
+  formation: FantasyFormation;
   reseated: readonly {
     playerId: string;
     price: number;
     isBench: boolean;
     isCaptain: boolean;
     isVice: boolean;
-  }[],
-  priceById: ReadonlyMap<string, number>,
-): Promise<"ok" | "save_failed"> {
+    slotKey: string;
+  }[];
+  priceById: ReadonlyMap<string, number>;
+}): Promise<"ok" | "save_failed"> {
   const supabase = await createSupabaseServerClient();
-  const { error: clearError } = await supabase.from("fantasy_picks").delete().eq("team_id", teamId);
+  const { error: clearError } = await supabase
+    .from("fantasy_picks")
+    .delete()
+    .eq("team_id", args.teamId);
   if (clearError) {
     logger.error("transfer_reseat_clear_failed", { error: clearError });
     return "save_failed";
   }
 
-  const { error: insertError } = await supabase.from("fantasy_picks").insert(
-    reseated.map((pick, slot) => ({
-      team_id: teamId,
-      player_id: pick.playerId,
-      slot,
-      is_bench: pick.isBench,
-      is_captain: pick.isCaptain,
-      is_vice: pick.isVice,
-      purchase_price: priceById.get(pick.playerId) ?? pick.price,
-    })),
-  );
+  const rows = args.reseated.flatMap((pick) => {
+    const slot = pitchSlotIndex(args.formation, pick.slotKey);
+    if (slot < 0) return [];
+    return [
+      {
+        team_id: args.teamId,
+        player_id: pick.playerId,
+        slot,
+        is_bench: pick.isBench,
+        is_captain: pick.isCaptain,
+        is_vice: pick.isVice,
+        purchase_price: args.priceById.get(pick.playerId) ?? pick.price,
+      },
+    ];
+  });
+  if (rows.length !== args.reseated.length) {
+    logger.error("transfer_reseat_slot_map_failed", { teamId: args.teamId });
+    return "save_failed";
+  }
+
+  const { error: insertError } = await supabase.from("fantasy_picks").insert(rows);
   if (insertError) {
     logger.error("transfer_reseat_insert_failed", { error: insertError });
     return "save_failed";

@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 type PickInput = {
   playerId: string;
+  slot: number;
   isBench: boolean;
   isCaptain: boolean;
   isVice: boolean;
@@ -42,10 +43,10 @@ export async function insertFantasyTeamRow(args: {
 
   const teamId = team.id;
   const { error: picksError } = await supabase.from("fantasy_picks").insert(
-    args.picks.map((pick, slot) => ({
+    args.picks.map((pick) => ({
       team_id: teamId,
       player_id: pick.playerId,
-      slot,
+      slot: pick.slot,
       is_bench: pick.isBench,
       is_captain: pick.isCaptain,
       is_vice: pick.isVice,
