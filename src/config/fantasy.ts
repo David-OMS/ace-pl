@@ -48,4 +48,9 @@ export const FANTASY_DEADLINE_WEEKDAY = 4;
 export const FANTASY_DEADLINE_HOUR = 23;
 export const FANTASY_DEADLINE_MINUTE = 59;
 
+/** How many times an owner may rename their fantasy team after creating it. */
+export const FANTASY_TEAM_NAME_MAX_CHANGES = 2;
+
+export const FANTASY_TEAM_NAME_MAX_LENGTH = 40;
+
 export const PLAYER_PHOTO_BUCKET = "player-photos";

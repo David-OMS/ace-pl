@@ -8,9 +8,11 @@ import { getCurrentUser } from "@/features/auth";
 import { fail, type ActionResult } from "@/lib/action-result";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
+import { normalizeFantasyTeamName } from "../domain/fantasy-team-name";
 import { listPickablePlayers } from "../queries/list-pickable-players";
 import { FANTASY_CREATE_PATH, FANTASY_PATH } from "../routes";
 import { createFantasyTeamSchema, readCreateFantasyTeamForm } from "../schemas/create-team-schema";
+import { assertFantasyTeamCreate } from "./assert-fantasy-team-create";
 import { buildValidatedSquadPicks } from "./build-squad-picks";
 import { insertFantasyTeamRow } from "./insert-fantasy-team-row";
 
@@ -22,29 +24,34 @@ export async function createFantasyTeam(
 ): Promise<CreateFantasyTeamState> {
   const parsed = createFantasyTeamSchema.safeParse(readCreateFantasyTeamForm(formData));
   if (!parsed.success) return fail("invalid_input");
-
   const user = await getCurrentUser();
   if (!user) return fail("unauthenticated");
 
-  const { tournamentId, name, formation, picks } = parsed.data;
+  const { tournamentId, formation, picks } = parsed.data;
+  const name = normalizeFantasyTeamName(parsed.data.name);
   const supabase = await createSupabaseServerClient();
   const { data: tournament, error: tournamentError } = await supabase
     .from("tournaments")
     .select("id, fantasy_budget")
     .eq("id", tournamentId)
     .maybeSingle();
-
   if (tournamentError) throw tournamentError;
   if (!tournament) return fail("not_found");
 
-  const budget = Number(tournament.fantasy_budget ?? FANTASY_DEFAULT_BUDGET);
+  const blocked = await assertFantasyTeamCreate(supabase, {
+    tournamentId,
+    userId: user.id,
+    name,
+  });
+  if (blocked) return fail(blocked);
+
   const pool = await listPickablePlayers(tournamentId);
   const validated = buildValidatedSquadPicks({
     picks,
     pool,
     formation,
     squadSize: FANTASY_SQUAD_SIZE,
-    budget,
+    budget: Number(tournament.fantasy_budget ?? FANTASY_DEFAULT_BUDGET),
   });
   if (!validated.ok) return fail("invalid_input");
 
@@ -54,16 +61,12 @@ export async function createFantasyTeam(
     name,
     formation,
     bank: validated.value.bank,
-    picks: picks.map((pick) => {
-      const priced = pool.find((p) => p.id === pick.playerId);
-      return {
-        ...pick,
-        purchasePrice: priced?.price ?? 0,
-      };
-    }),
+    picks: picks.map((pick) => ({
+      ...pick,
+      purchasePrice: pool.find((p) => p.id === pick.playerId)?.price ?? 0,
+    })),
   });
   if (!saved.ok) return saved;
-
   revalidatePath(FANTASY_PATH);
   revalidatePath(FANTASY_CREATE_PATH);
   redirect(FANTASY_PATH);

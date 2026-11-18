@@ -5,14 +5,16 @@ import { fantasyCopy } from "../copy";
 type CreateStepFormationProps = {
   formation: FantasyFormation;
   onChange: (formation: FantasyFormation) => void;
-  /** When set, other shapes are disabled (position lock). */
+  /** When set, shapes outside this set look locked; tap still fires onBlocked. */
   allowed?: ReadonlySet<FantasyFormation> | undefined;
+  onBlocked?: (formation: FantasyFormation) => void;
 };
 
 export function CreateStepFormation({
   formation,
   onChange,
   allowed,
+  onBlocked,
 }: CreateStepFormationProps): React.JSX.Element {
   return (
     <fieldset className="flex flex-col gap-2">
@@ -28,18 +30,24 @@ export function CreateStepFormation({
             <button
               key={option}
               type="button"
-              disabled={locked}
-              onClick={() => onChange(option)}
-              className={`min-h-11 rounded-card border-2 border-line px-3 font-display text-lg disabled:cursor-not-allowed disabled:opacity-40 ${
-                selected ? "bg-accent text-on-accent" : "bg-surface"
-              }`}
+              aria-disabled={locked}
+              onClick={() => {
+                // Keep the current shape tappable so a messy squad can re-snap into place.
+                if (locked && option !== formation) {
+                  onBlocked?.(option);
+                  return;
+                }
+                onChange(option);
+              }}
+              className={`min-h-11 rounded-card border-2 border-line px-3 font-display text-lg ${
+                locked ? "cursor-pointer opacity-40" : ""
+              } ${selected ? "bg-accent text-on-accent" : "bg-surface"}`}
             >
               {option}
             </button>
           );
         })}
       </div>
-      {allowed ? <p className="text-xs text-muted">{fantasyCopy.formationLockedHint}</p> : null}
     </fieldset>
   );
 }

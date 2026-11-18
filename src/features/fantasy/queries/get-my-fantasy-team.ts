@@ -23,6 +23,7 @@ export type MyFantasyTeam = {
   id: string;
   tournamentId: string;
   name: string;
+  nameChangeCount: number;
   formation: string;
   bank: number;
   totalPoints: number;
@@ -37,7 +38,9 @@ export async function getMyFantasyTeam(args: {
   const supabase = await createSupabaseServerClient();
   const { data: team, error } = await supabase
     .from("fantasy_teams")
-    .select("id, tournament_id, name, formation, bank, total_points, free_transfers")
+    .select(
+      "id, tournament_id, name, name_change_count, formation, bank, total_points, free_transfers",
+    )
     .eq("tournament_id", args.tournamentId)
     .eq("user_id", args.userId)
     .maybeSingle();
@@ -61,6 +64,7 @@ export async function getMyFantasyTeam(args: {
     id: team.id,
     tournamentId: team.tournament_id,
     name: team.name,
+    nameChangeCount: team.name_change_count,
     formation: team.formation,
     bank: Number(team.bank),
     totalPoints: team.total_points,

@@ -8,6 +8,11 @@ export const authCopy = {
   emailLabel: "Email",
   emailPlaceholder: "you@example.com",
   nameLabel: "Name",
+  displayNameLabel: "Display name",
+  saveDisplayName: "Save name",
+  savingDisplayName: "Saving…",
+  displayNameSaved: "Display name updated.",
+  displayNameInvalid: "Use 1–40 characters.",
   passwordLabel: "Password",
   showPassword: "Show password",
   hidePassword: "Hide password",
@@ -44,9 +49,10 @@ export const authCopy = {
   actionErrors: {
     invalid_input: "Check the email and password. Use at least 8 characters.",
     conflict: "That email already has an account. Sign in with it.",
-    unauthenticated: "That reset link has expired. Request a new one.",
+    unauthenticated: "Sign in first.",
     rate_limited: "Too many tries. Wait a minute, then try once.",
     request_failed: "Couldn't do that. Try again in a minute.",
+    save_failed: "Couldn't save. Try again.",
   } satisfies Partial<Record<ActionErrorCode, string>>,
   fallbackError: "Something went wrong. Try again.",
   pageErrors: {

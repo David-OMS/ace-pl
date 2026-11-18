@@ -383,6 +383,7 @@ export type Database = {
           free_transfers: number
           id: string
           name: string
+          name_change_count: number
           total_points: number
           tournament_id: string
           updated_at: string
@@ -395,6 +396,7 @@ export type Database = {
           free_transfers?: number
           id?: string
           name: string
+          name_change_count?: number
           total_points?: number
           tournament_id: string
           updated_at?: string
@@ -407,6 +409,7 @@ export type Database = {
           free_transfers?: number
           id?: string
           name?: string
+          name_change_count?: number
           total_points?: number
           tournament_id?: string
           updated_at?: string

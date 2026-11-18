@@ -5,6 +5,7 @@ export { ForgotPasswordPanel } from "./components/forgot-password-panel";
 export { NewPasswordPanel } from "./components/new-password-panel";
 export { SignUpOptions } from "./components/sign-up-options";
 export { SignOutButton } from "./components/sign-out-button";
+export { DisplayNameForm } from "./components/display-name-form";
 export { authCopy } from "./copy";
 export { PASSWORD_RESET_COOKIE } from "./domain/password-reset-cookie";
 export { toSafeRedirectPath } from "./domain/safe-redirect-path";

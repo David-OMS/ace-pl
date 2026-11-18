@@ -16,7 +16,7 @@ export async function getFantasyTeamById(teamId: string): Promise<PublicFantasyT
   const { data: team, error } = await supabase
     .from("fantasy_teams")
     .select(
-      "id, tournament_id, name, formation, bank, total_points, free_transfers, user_id, profiles!inner(display_name)",
+      "id, tournament_id, name, name_change_count, formation, bank, total_points, free_transfers, user_id, profiles!inner(display_name)",
     )
     .eq("id", teamId)
     .maybeSingle();
@@ -40,6 +40,7 @@ export async function getFantasyTeamById(teamId: string): Promise<PublicFantasyT
     id: team.id,
     tournamentId: team.tournament_id,
     name: team.name,
+    nameChangeCount: team.name_change_count,
     formation: team.formation,
     bank: Number(team.bank),
     totalPoints: team.total_points,

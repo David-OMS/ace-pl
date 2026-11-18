@@ -14,10 +14,10 @@ export function HomeScreen({ snapshot }: HomeScreenProps): React.JSX.Element {
     <div className="flex flex-col gap-6">
       <HomeHero hero={snapshot.hero} />
       <div className="flex flex-col gap-6 px-4">
-        <HomeFraudWatch entries={snapshot.fraudWatch} />
         <HomeCompactTable rows={snapshot.tableRows} />
         <HomeNextFixtures fixtures={snapshot.nextFixtures} />
         <HomeRotatingStats boards={snapshot.statBoards} />
+        <HomeFraudWatch entries={snapshot.fraudWatch} />
         <HomeFantasyCard fantasy={snapshot.fantasy} />
       </div>
     </div>

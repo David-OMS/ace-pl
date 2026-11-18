@@ -2,15 +2,18 @@
 
 import { useMemo, useState } from "react";
 
-import { FANTASY_FORMATIONS, type FantasyFormation } from "@/config/fantasy";
+import { FANTASY_SQUAD_SIZE, type FantasyFormation } from "@/config/fantasy";
 
 import { affordableReplacements } from "../domain/affordable-replacements";
+import { allowedFantasyFormations } from "../domain/allowed-fantasy-formations";
 import { applyTransferBatch } from "../domain/apply-transfer";
+import { blockedFormationMessage } from "../domain/blocked-formation-message";
 import type { PitchSlot } from "../domain/build-pitch-slots";
 import { canSwapPitchPicks } from "../domain/can-swap-pitch-picks";
-import { formationFitsSquad } from "../domain/formation-fits-squad";
 import { listSwapTargets } from "../domain/list-swap-targets";
+import { pitchSlotIndex } from "../domain/map-picks-to-pitch-slots";
 import { isFantasyFormation } from "../domain/parse-formation";
+import { picksFingerprint } from "../domain/picks-fingerprint";
 import { setPickRole } from "../domain/set-pick-role";
 import { swapPitchPicks } from "../domain/swap-pitch-picks";
 import type { FantasyPickView, MyFantasyTeam } from "../queries/get-my-fantasy-team";
@@ -22,6 +25,9 @@ export type SwapDraft = { playerOutId: string; playerInId: string };
 export type TransferDraft = {
   formation: FantasyFormation;
   setFormation: (formation: FantasyFormation) => void;
+  reportBlockedFormation: (formation: FantasyFormation) => void;
+  clearFormationError: () => void;
+  formationError: string | null;
   allowedFormations: ReadonlySet<FantasyFormation>;
   picks: FantasyPickView[];
   swaps: SwapDraft[];
@@ -48,7 +54,6 @@ export type TransferDraft = {
   lineupDirty: boolean;
 };
 
-// One draft state machine — splitting handlers scatters related pitch/transfer logic.
 // eslint-disable-next-line max-lines-per-function, complexity -- transfer draft actions stay together
 export function useTransferDraft(args: {
   team: MyFantasyTeam;
@@ -65,6 +70,7 @@ export function useTransferDraft(args: {
   const [activeEmpty, setActiveEmpty] = useState<PitchSlot | null>(null);
   const [replacing, setReplacing] = useState(false);
   const [lastSwapFlash, setLastSwapFlash] = useState<string | null>(null);
+  const [formationError, setFormationError] = useState<string | null>(null);
 
   const priceById = useMemo(() => new Map(pool.map((p) => [p.id, p.price])), [pool]);
   const nameById = useMemo(() => {
@@ -86,19 +92,26 @@ export function useTransferDraft(args: {
 
   const ownedIds = useMemo(() => new Set(picks.map((p) => p.playerId)), [picks]);
   const positions = picks.map((p) => p.position);
-  const allowedFormations = useMemo(() => {
-    if (isUnlimited) return new Set<FantasyFormation>(FANTASY_FORMATIONS);
-    return new Set(
-      FANTASY_FORMATIONS.filter((shape) => formationFitsSquad({ formation: shape, positions })),
-    );
-  }, [isUnlimited, positions]);
+  // Grey only when the squad is full; empty slots = still building (like create).
+  const allowedFormations = useMemo(
+    () => allowedFantasyFormations(positions, FANTASY_SQUAD_SIZE),
+    [positions],
+  );
 
   const selecting = Boolean((activeOut && replacing) || activeEmpty);
   const maxPrice = activeOut ? bank + activeOut.price : bank;
   const outPosition = activeOut?.position ?? activeEmpty?.position ?? "MID";
   const isBench = activeOut?.isBench ?? activeEmpty?.isBench ?? false;
+  // Starter holes = that position only (same as create). Bench = any outfield.
   const inOptions = selecting
-    ? affordableReplacements({ pool, ownedIds, outPosition, isBench, maxPrice })
+    ? affordableReplacements({
+        pool,
+        ownedIds,
+        outPosition,
+        maxPrice,
+        samePositionOnly: !isBench,
+        excludeGoalkeepers: isBench,
+      })
     : [];
 
   const lineupDirty = picksFingerprint(picks) !== picksFingerprint(team.picks);
@@ -110,12 +123,21 @@ export function useTransferDraft(args: {
     formation,
     setFormation: (next) => {
       if (!allowedFormations.has(next)) return;
+      setFormationError(null);
       setFormationState(next);
       setPicks(applyDraftFormation({ next, picks, nameById }));
       setActiveOut(null);
       setActiveEmpty(null);
       setReplacing(false);
     },
+    reportBlockedFormation: (next) => {
+      setFormationError(blockedFormationMessage(next, positions));
+      setActiveOut(null);
+      setActiveEmpty(null);
+      setReplacing(false);
+    },
+    clearFormationError: () => setFormationError(null),
+    formationError,
     allowedFormations,
     picks,
     swaps,
@@ -151,6 +173,7 @@ export function useTransferDraft(args: {
     },
     openEmpty: (slot) => {
       if (!isUnlimited) return;
+      setFormationError(null);
       setActiveOut(null);
       setReplacing(false);
       setActiveEmpty(slot);
@@ -166,6 +189,7 @@ export function useTransferDraft(args: {
     },
     removeOut: () => {
       if (!isUnlimited || !activeOut) return;
+      setFormationError(null);
       setPicks(picks.filter((p) => p.playerId !== activeOut.playerId));
       setActiveOut(null);
       setReplacing(false);
@@ -185,27 +209,27 @@ export function useTransferDraft(args: {
       setActiveOut(next.find((p) => p.playerId === activeOut.playerId) ?? null);
     },
     pickIn: (player) => {
+      let next = picks;
       if (activeOut) {
         if (!isUnlimited) {
           setSwaps([...swaps, { playerOutId: activeOut.playerId, playerInId: player.id }]);
         }
-        setPicks(
-          picks.map((p) =>
-            p.playerId === activeOut.playerId
-              ? {
-                  ...p,
-                  playerId: player.id,
-                  name: player.name,
-                  position: player.position,
-                  photoUrl: player.photoUrl,
-                  rank: player.rank,
-                  price: player.price,
-                }
-              : p,
-          ),
+        next = picks.map((p) =>
+          p.playerId === activeOut.playerId
+            ? {
+                ...p,
+                playerId: player.id,
+                name: player.name,
+                position: player.position,
+                photoUrl: player.photoUrl,
+                rank: player.rank,
+                price: player.price,
+              }
+            : p,
         );
       } else if (activeEmpty && isUnlimited) {
-        setPicks([
+        const slot = pitchSlotIndex(formation, activeEmpty.key);
+        next = [
           ...picks,
           {
             playerId: player.id,
@@ -214,13 +238,18 @@ export function useTransferDraft(args: {
             photoUrl: player.photoUrl,
             rank: player.rank,
             price: player.price,
-            slot: picks.length,
+            slot: slot >= 0 ? slot : picks.length,
             isBench: activeEmpty.isBench,
             isCaptain: false,
             isVice: false,
           },
-        ]);
+        ];
       }
+      // Full pre-deadline squad: snap everyone onto the real formation lines.
+      if (isUnlimited && next.length >= FANTASY_SQUAD_SIZE) {
+        next = applyDraftFormation({ next: formation, picks: next, nameById });
+      }
+      setPicks(next);
       setActiveOut(null);
       setActiveEmpty(null);
       setReplacing(false);
@@ -231,11 +260,4 @@ export function useTransferDraft(args: {
     isUnlimited,
     lineupDirty,
   };
-}
-
-function picksFingerprint(picks: readonly FantasyPickView[]): string {
-  return picks
-    .map((p) => `${p.playerId}:${p.isBench ? 1 : 0}:${p.isCaptain ? 1 : 0}:${p.isVice ? 1 : 0}`)
-    .sort()
-    .join("|");
 }

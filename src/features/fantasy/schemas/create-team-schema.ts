@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { FANTASY_FORMATIONS } from "@/config/fantasy";
+import { FANTASY_FORMATIONS, FANTASY_TEAM_NAME_MAX_LENGTH } from "@/config/fantasy";
 
 const pickSchema = z.object({
   playerId: z.uuid(),
@@ -11,7 +11,7 @@ const pickSchema = z.object({
 
 export const createFantasyTeamSchema = z.object({
   tournamentId: z.uuid(),
-  name: z.string().trim().min(1).max(40),
+  name: z.string().trim().min(1).max(FANTASY_TEAM_NAME_MAX_LENGTH),
   formation: z.enum(FANTASY_FORMATIONS),
   picks: z.array(pickSchema).min(1),
 });

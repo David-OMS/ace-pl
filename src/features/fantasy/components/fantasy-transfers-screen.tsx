@@ -111,11 +111,14 @@ export function FantasyTransfersScreen({
       <CreateStepFormation
         formation={draft.formation}
         onChange={draft.setFormation}
-        allowed={beforeFirstDeadline ? undefined : draft.allowedFormations}
+        allowed={draft.allowedFormations}
+        onBlocked={draft.reportBlockedFormation}
       />
-      <p className="text-xs text-muted">
-        {beforeFirstDeadline ? fantasyCopy.tapToTransfer : fantasyCopy.tapToTransferLocked}
-      </p>
+      {draft.formationError ? (
+        <p role="alert" className="text-sm font-bold text-hot">
+          {draft.formationError}
+        </p>
+      ) : null}
       {swapFlash ? (
         <p className="rounded-card border-2 border-accent bg-surface px-3 py-2 text-sm font-bold">
           {swapFlash}

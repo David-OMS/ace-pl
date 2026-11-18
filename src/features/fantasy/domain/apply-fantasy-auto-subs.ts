@@ -9,7 +9,7 @@ export type AutoSubPick = {
 };
 
 /**
- * Outfield starter who did not play → first bench outfielder who did.
+ * Outfield starter who did not play → first bench outfielder who did (any outfield position).
  * GK never auto-subs.
  */
 export function applyFantasyAutoSubs(

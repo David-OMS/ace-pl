@@ -6,6 +6,7 @@ export { syncTournamentFantasyScores } from "./actions/sync-tournament-fantasy-s
 export { upsertFantasyRank } from "./actions/upsert-fantasy-rank";
 export { FantasyCreateWizard } from "./components/fantasy-create-wizard";
 export { FantasyEmptyCta } from "./components/fantasy-empty-cta";
+export { FantasyTeamNameForm } from "./components/fantasy-team-name-form";
 export { FantasyLeaderboardScreen } from "./components/fantasy-leaderboard-screen";
 export { FantasyRanksAdminScreen } from "./components/fantasy-ranks-admin-screen";
 export { FantasyTeamScreen } from "./components/fantasy-team-screen";
@@ -22,7 +23,7 @@ export { parseFormation } from "./domain/parse-formation";
 export { sellPrice } from "./domain/sell-price";
 export { validateSquad } from "./domain/validate-squad";
 export { ensureDefaultRanks } from "./queries/ensure-default-ranks";
-export { getMyFantasyTeam } from "./queries/get-my-fantasy-team";
+export { getMyFantasyTeam, type MyFantasyTeam } from "./queries/get-my-fantasy-team";
 export { getFantasyTeamById } from "./queries/get-fantasy-team-by-id";
 export { isUnlimitedTransferPeriod } from "./queries/is-unlimited-transfer-period";
 export { listFantasyLeaderboard } from "./queries/list-fantasy-leaderboard";

@@ -24,12 +24,23 @@ export const fantasyCopy = {
 
   teamName: "Team name",
   teamNamePlaceholder: "Fraud Busters FC",
+  renameTeamLabel: "Fantasy team name",
+  renameTeamSave: "Save team name",
+  renamingTeam: "Saving…",
+  renameTeamSaved: "Team name updated.",
+  renameTeamHint: (left: number, max: number): string =>
+    `${left} of ${max} name changes left. Must be unique in this tournament.`,
+  renameTeamExhausted: "You've used both name changes.",
   next: "Next",
   back: "Back",
   submit: "Save team",
   saving: "Saving…",
   formationLabel: "Formation",
   formationHint: "DEF–MID–FWD plus one GK",
+  formationBlocked: (formation: string, position: string, have: number): string =>
+    `You can't switch to ${formation}. You only have ${have} ${position} in your squad. Transfer in another ${position} first.`,
+  formationBlockedGeneric: (formation: string): string =>
+    `You can't switch to ${formation}. Your squad doesn't have the right positions for it.`,
   budgetLabel: "Budget",
   bankLabel: "Bank",
   spentLabel: "Spent",
@@ -61,18 +72,12 @@ export const fantasyCopy = {
   squadIncomplete: "Fill all 9 spots (with captain and vice) before saving.",
   viewSquad: "View squad",
   pointsMeta: (n: number): string => `${n} pts`,
-  tapToTransfer:
-    "Tap a player, then a same-position bench/starter to swap — or set captain / Replace below.",
-  tapToTransferLocked:
-    "Tap to select. Same-position starter ↔ bench swaps are free. Replace uses a transfer.",
   replacePlayer: "Replace",
   addPlayer: "Add player",
   replaceHint: (outName: string, budget: string): string =>
     `Out: ${outName}. Max ${budget} (bank + sell).`,
   addHint: (budget: string): string => `Max ${budget} from bank.`,
   removeFromSquad: "Remove from squad",
-  removeHint: "Money goes back to your bank. Only before the first deadline.",
-  swapHint: "Highlighted players pulse — tap one to swap (same position, starter ↔ bench).",
   swapHintWithTargets: (selected: string, names: readonly string[]): string =>
     names.length > 0
       ? `${selected} selected. Tap ${names.join(" or ")} to swap.`
@@ -80,7 +85,6 @@ export const fantasyCopy = {
   swappedFlash: (a: string, b: string): string => `Swapped ${a} ↔ ${b}. Save when you're done.`,
   noAffordable: "Nobody fits that budget for this spot.",
   broke: "You're broke. Rearrange your squad to free up funds.",
-  formationLockedHint: "Only shapes your current positions can fill.",
   formationOnly: "Formation change only",
   confirmTransfers: "Save changes",
   noChanges: "No changes from your saved squad.",
@@ -108,8 +112,8 @@ export const fantasyCopy = {
     unauthenticated: "Sign in first.",
     forbidden: "You can't do that.",
     not_found: "Not found.",
-    conflict: "You already have a team for this tournament.",
-    rate_limited: "Too many tries. Wait a moment.",
+    conflict: "That team name is taken.",
+    rate_limited: "You've used both name changes.",
     request_failed: "Something went wrong.",
     save_failed: "Couldn't save. Try again.",
     insufficient_funds: "Not enough bank for that swap.",

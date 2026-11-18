@@ -16,6 +16,7 @@ export function filterPoolForSlot<T extends PricedPoolPlayer>(
   return pool
     .filter((player) => {
       if (takenIds.has(player.id)) return false;
+      // Bench: any outfield. Starter slots stay position-locked while building.
       if (slot.isBench) return player.position !== "GK";
       return player.position === slot.position;
     })

@@ -5,16 +5,18 @@ const pool = [
   { id: "b", name: "Bravo", position: "MID" as const, price: 12 },
   { id: "c", name: "Charlie", position: "FWD" as const, price: 7 },
   { id: "d", name: "Delta", position: "GK" as const, price: 5 },
+  { id: "e", name: "Echo", position: "DEF" as const, price: 6 },
 ];
 
 describe("affordableReplacements", () => {
-  it("keeps same position, within budget, highest price first", () => {
+  it("locks starters to the same position after the first deadline", () => {
     const result = affordableReplacements({
       pool,
       ownedIds: new Set(["owned"]),
       outPosition: "MID",
-      isBench: false,
       maxPrice: 10,
+      samePositionOnly: true,
+      excludeGoalkeepers: false,
     });
     expect(result.map((p) => p.id)).toEqual(["a"]);
   });
@@ -24,9 +26,22 @@ describe("affordableReplacements", () => {
       pool,
       ownedIds: new Set(),
       outPosition: "MID",
-      isBench: true,
       maxPrice: 20,
+      samePositionOnly: false,
+      excludeGoalkeepers: true,
     });
-    expect(result.map((p) => p.id)).toEqual(["b", "a", "c"]);
+    expect(result.map((p) => p.id)).toEqual(["b", "a", "c", "e"]);
+  });
+
+  it("starter holes only accept that position", () => {
+    const result = affordableReplacements({
+      pool,
+      ownedIds: new Set(),
+      outPosition: "DEF",
+      maxPrice: 8,
+      samePositionOnly: true,
+      excludeGoalkeepers: false,
+    });
+    expect(result.map((p) => p.id)).toEqual(["e"]);
   });
 });

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ADMIN_HOME_PATH } from "@/features/admin";
-import { buildSignInHref, getCurrentUser, SIGN_IN_PATH, SignOutButton } from "@/features/auth";
+import { buildSignInHref, getCurrentUser, SIGN_IN_PATH } from "@/features/auth";
 import { FAN_HOME_PATH, FAN_PROFILE_PATH, fanCopy } from "@/features/fan";
+import { getMyFantasyTeam } from "@/features/fantasy";
+import { resolveFanTournament } from "@/features/home";
 import { getMyLinkedPlayer, PlayerPhotoForm } from "@/features/players";
+import { SignedInProfile } from "@/features/profile";
 import { ButtonLink } from "@/ui/button-link";
 import { Card } from "@/ui/card";
 
@@ -19,6 +21,7 @@ export default async function ProfilePage({
 }: ProfilePageProps): Promise<React.JSX.Element> {
   const [{ setup }, user] = await Promise.all([searchParams, getCurrentUser()]);
   const player = user ? await getMyLinkedPlayer(user.id) : null;
+  const fantasyTeam = user ? await loadFantasyTeamForProfile(user.id) : null;
 
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
@@ -33,15 +36,7 @@ export default async function ProfilePage({
         </Card>
       ) : null}
       {user ? (
-        <Card className="flex flex-col gap-3">
-          <p className="font-bold">{user.displayName}</p>
-          {user.isAdmin ? (
-            <Link href={ADMIN_HOME_PATH} className="text-sm font-bold underline">
-              Admin
-            </Link>
-          ) : null}
-          <SignOutButton />
-        </Card>
+        <SignedInProfile user={user} fantasyTeam={fantasyTeam} />
       ) : (
         <Card className="flex flex-col gap-3">
           <p className="text-sm text-muted">{fanCopy.signIn}</p>
@@ -56,4 +51,10 @@ export default async function ProfilePage({
       )}
     </div>
   );
+}
+
+async function loadFantasyTeamForProfile(userId: string) {
+  const tournament = await resolveFanTournament();
+  if (!tournament) return null;
+  return getMyFantasyTeam({ tournamentId: tournament.id, userId });
 }
