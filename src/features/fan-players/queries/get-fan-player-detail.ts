@@ -9,6 +9,7 @@ import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 import { resolveFantasyPrice } from "../domain/resolve-fantasy-price";
 import type { FanPlayerDetail } from "./fan-player-detail-model";
 import { loadFanStatScope } from "./load-fan-stat-scope";
+import { loadPlayerTeamName } from "./load-player-team-name";
 import { mapFanPlayerDetail } from "./map-fan-player-detail";
 
 export type { FanPlayerDetail } from "./fan-player-detail-model";
@@ -29,17 +30,8 @@ async function readFanPlayerDetail(playerId: string): Promise<FanPlayerDetail | 
   if (!player) return null;
 
   const tournament = await resolveFanTournament();
-  const emptyScope = { totals: [], goalsConceded: new Map<string, number>() };
-  const [tournamentScope, allTimeScope, roster, priceMillions] = await Promise.all([
-    tournament ? loadFanStatScope(tournament.id) : Promise.resolve(emptyScope),
-    loadFanStatScope(null),
-    supabase.from("players").select("id, name, position, photo_path").eq("is_active", true),
-    loadPlayerPrice(tournament?.id ?? null, playerId),
-  ]);
-
-  if (roster.error) throw roster.error;
-
-  const rosterRows = (roster.data ?? []).map((p) => ({
+  const loaded = await loadDetailScopes(tournament?.id ?? null, playerId);
+  const rosterRows = loaded.roster.map((p) => ({
     id: p.id,
     name: p.name,
     position: p.position as PlayerPosition,
@@ -49,12 +41,33 @@ async function readFanPlayerDetail(playerId: string): Promise<FanPlayerDetail | 
   return mapFanPlayerDetail({
     player: { ...player, position: player.position as PlayerPosition },
     photoUrl: playerPhotoUrl(player.photo_path),
-    priceMillions,
+    priceMillions: loaded.priceMillions,
+    teamName: loaded.teamName,
     tournamentName: tournament?.name ?? null,
-    tournamentScope,
-    allTimeScope,
+    tournamentScope: loaded.tournamentScope,
+    allTimeScope: loaded.allTimeScope,
     roster: rosterRows,
   });
+}
+
+async function loadDetailScopes(tournamentId: string | null, playerId: string) {
+  const supabase = createPublicSupabaseClient();
+  const emptyScope = { totals: [], goalsConceded: new Map<string, number>() };
+  const [tournamentScope, allTimeScope, roster, priceMillions, teamName] = await Promise.all([
+    tournamentId ? loadFanStatScope(tournamentId) : Promise.resolve(emptyScope),
+    loadFanStatScope(null),
+    supabase.from("players").select("id, name, position, photo_path").eq("is_active", true),
+    loadPlayerPrice(tournamentId, playerId),
+    tournamentId ? loadPlayerTeamName(tournamentId, playerId) : Promise.resolve(null),
+  ]);
+  if (roster.error) throw roster.error;
+  return {
+    tournamentScope,
+    allTimeScope,
+    roster: roster.data ?? [],
+    priceMillions,
+    teamName,
+  };
 }
 
 async function loadPlayerPrice(tournamentId: string | null, playerId: string): Promise<number> {

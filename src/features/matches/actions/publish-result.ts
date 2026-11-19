@@ -8,8 +8,11 @@ import { z } from "zod";
 import { ADMIN_HOME_PATH } from "@/features/admin";
 import { checkAdminAccess } from "@/features/auth";
 import {
+  countUnfinishedFixtures,
   FANTASY_LEADERBOARD_PATH,
   FANTASY_PATH,
+  FANTASY_TRANSFERS_PATH,
+  openTransferWindowIfComplete,
   recalculateFantasyGameweek,
 } from "@/features/fantasy";
 import { adminFixturePath } from "@/features/fixtures";
@@ -18,6 +21,8 @@ import { syncTournamentStatus } from "@/features/tournaments/server";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+
+import { loadFixtureGameDayId } from "./load-fixture-game-day";
 
 export type PublishResultState = ActionResult<{ savedAt: number }> | null;
 
@@ -40,6 +45,10 @@ export async function publishResult(
   if (accessError) return fail(accessError);
 
   const { tournamentId, fixtureId } = parsed.data;
+  const gameDayId = await loadFixtureGameDayId(fixtureId);
+  if (!gameDayId) return fail("save_failed");
+
+  const unfinishedBefore = await countUnfinishedFixtures(gameDayId);
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from("fixtures")
@@ -53,11 +62,13 @@ export async function publishResult(
   }
   await syncTournamentStatus(supabase, tournamentId);
   await recalculateFantasyGameweek(fixtureId);
+  await openTransferWindowIfComplete({ gameDayId, tournamentId, unfinishedBefore });
   revalidatePath(adminFixturePath(tournamentId, fixtureId));
   revalidatePath(adminTournamentFixturesPath(tournamentId));
   revalidatePath(adminTournamentPath(tournamentId));
   revalidatePath(ADMIN_HOME_PATH);
   revalidatePath(FANTASY_PATH);
+  revalidatePath(FANTASY_TRANSFERS_PATH);
   revalidatePath(FANTASY_LEADERBOARD_PATH);
   revalidateFanPublic();
   return ok({ savedAt: Date.now() });

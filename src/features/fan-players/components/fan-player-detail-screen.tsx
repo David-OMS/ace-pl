@@ -32,6 +32,7 @@ export function FanPlayerDetailScreen({ detail }: FanPlayerDetailScreenProps): R
         position={detail.position}
         photoUrl={detail.photoUrl}
         priceMillions={detail.priceMillions}
+        teamName={detail.teamName}
       />
       <PlayerScopeChips
         scope={scope}

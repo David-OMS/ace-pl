@@ -9,6 +9,8 @@ export type FanPlayerDetail = {
   position: PlayerPosition;
   photoUrl: string | null;
   priceMillions: number;
+  /** Club in the current fan tournament; null if unassigned. */
+  teamName: string | null;
   tournamentName: string | null;
   tournament: FanPlayerStatSnapshot;
   allTime: FanPlayerStatSnapshot;

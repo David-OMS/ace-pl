@@ -1,11 +1,12 @@
 import { fantasyCopy } from "../copy";
 import { formatFantasyPrice } from "../domain/format-fantasy-price";
+import type { TransferWindowMode } from "../queries/get-transfer-window";
 
 type FantasyStatRowProps = {
   totalPoints: number;
   bank: number;
   freeTransfers: number;
-  beforeFirstDeadline: boolean;
+  transferWindow: TransferWindowMode;
   gwPoints: number | null;
 };
 
@@ -17,13 +18,19 @@ export function FantasyStatRow(props: FantasyStatRowProps): React.JSX.Element {
         label={props.gwPoints !== null ? fantasyCopy.gameweekPoints : fantasyCopy.bankLabel}
         value={props.gwPoints !== null ? String(props.gwPoints) : formatFantasyPrice(props.bank)}
       />
-      {props.beforeFirstDeadline ? (
-        <StatBox label={fantasyCopy.squadEditsLabel} value={fantasyCopy.squadEditsOpen} />
-      ) : (
-        <StatBox label={fantasyCopy.freeTransfers} value={String(props.freeTransfers)} />
-      )}
+      <ThirdStat window={props.transferWindow} freeTransfers={props.freeTransfers} />
     </div>
   );
+}
+
+function ThirdStat(args: { window: TransferWindowMode; freeTransfers: number }): React.JSX.Element {
+  if (args.window === "unlimited") {
+    return <StatBox label={fantasyCopy.squadEditsLabel} value={fantasyCopy.squadEditsOpen} />;
+  }
+  if (args.window === "locked") {
+    return <StatBox label={fantasyCopy.squadEditsLabel} value={fantasyCopy.squadEditsLocked} />;
+  }
+  return <StatBox label={fantasyCopy.freeTransfers} value={String(args.freeTransfers)} />;
 }
 
 function StatBox({ label, value }: { label: string; value: string }): React.JSX.Element {

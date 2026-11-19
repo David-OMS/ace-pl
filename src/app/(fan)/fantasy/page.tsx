@@ -7,7 +7,7 @@ import {
   FantasyTheme,
   fantasyCopy,
   getMyFantasyTeam,
-  isUnlimitedTransferPeriod,
+  getTransferWindow,
   listFantasyGameDays,
   listFantasyLeaderboard,
   listGameDayTopPlayers,
@@ -33,10 +33,10 @@ export default async function FantasyPage({
   if (!user) return emptyCta("signed_out");
   if (!tournament) return emptyCta("no_tournament");
 
-  const [team, leaderboard, beforeFirstDeadline, gameDays] = await Promise.all([
+  const [team, leaderboard, transferWindow, gameDays] = await Promise.all([
     getMyFantasyTeam({ tournamentId: tournament.id, userId: user.id }),
     listFantasyLeaderboard(tournament.id),
-    isUnlimitedTransferPeriod(tournament.id),
+    getTransferWindow(tournament.id),
     listFantasyGameDays(tournament.id),
   ]);
   if (!team) return emptyCta("no_team");
@@ -54,7 +54,7 @@ export default async function FantasyPage({
       leaderboard={leaderboard}
       userId={user.id}
       myRank={myRank}
-      beforeFirstDeadline={beforeFirstDeadline}
+      transferWindow={transferWindow}
       gameDays={gameDays}
       gameweeks={gameweeks}
       selectedGameDayId={selectedGameDayId}

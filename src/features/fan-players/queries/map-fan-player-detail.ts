@@ -22,6 +22,7 @@ export function mapFanPlayerDetail(input: {
   player: PlayerRow;
   photoUrl: string | null;
   priceMillions: number;
+  teamName: string | null;
   tournamentName: string | null;
   tournamentScope: AssembledStats;
   allTimeScope: AssembledStats;
@@ -37,6 +38,7 @@ export function mapFanPlayerDetail(input: {
     position,
     photoUrl: input.photoUrl,
     priceMillions: input.priceMillions,
+    teamName: input.teamName,
     tournamentName: input.tournamentName,
     tournament: buildPlayerStatSnapshot(
       position,

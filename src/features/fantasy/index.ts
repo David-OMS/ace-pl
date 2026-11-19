@@ -2,6 +2,10 @@ export { createFantasyTeam } from "./actions/create-fantasy-team";
 export { applyFantasyTransfers } from "./actions/apply-fantasy-transfers";
 export { recalculateFantasyGameDay } from "./actions/recalculate-fantasy-game-day";
 export { recalculateFantasyGameweek } from "./actions/recalculate-fantasy-gameweek";
+export {
+  countUnfinishedFixtures,
+  openTransferWindowIfComplete,
+} from "./actions/open-transfer-window-if-complete";
 export { syncTournamentFantasyScores } from "./actions/sync-tournament-fantasy-scores";
 export { upsertFantasyRank } from "./actions/upsert-fantasy-rank";
 export { FantasyCreateWizard } from "./components/fantasy-create-wizard";
@@ -27,6 +31,7 @@ export { getMyFantasyTeam, type MyFantasyTeam } from "./queries/get-my-fantasy-t
 export { getFantasyTeamById } from "./queries/get-fantasy-team-by-id";
 export { getFantasyTeamPublicHeader } from "./queries/get-fantasy-team-public";
 export { isUnlimitedTransferPeriod } from "./queries/is-unlimited-transfer-period";
+export { getTransferWindow, type TransferWindowMode } from "./queries/get-transfer-window";
 export { listFantasyLeaderboard } from "./queries/list-fantasy-leaderboard";
 export { listFantasyGameDays } from "./queries/list-fantasy-game-days";
 export { getFantasyTeamGameweek } from "./queries/get-fantasy-team-gameweek";

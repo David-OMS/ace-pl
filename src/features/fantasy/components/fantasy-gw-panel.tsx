@@ -7,6 +7,7 @@ import type { FantasyPickView } from "../queries/get-my-fantasy-team";
 import type { FantasyGameweekView } from "../queries/get-fantasy-team-gameweek";
 import type { FantasyGameDayOption } from "../queries/list-fantasy-game-days";
 import type { GameDayTopPlayer } from "../queries/list-game-day-top-players";
+import type { TransferWindowMode } from "../queries/get-transfer-window";
 import { FantasyGwChips } from "./fantasy-gw-chips";
 import { FantasyGwTopPlayers } from "./fantasy-gw-top-players";
 import { FantasyPitchView } from "./fantasy-pitch-view";
@@ -25,7 +26,7 @@ type FantasyGwPanelProps = {
     totalPoints: number;
     bank: number;
     freeTransfers: number;
-    beforeFirstDeadline: boolean;
+    transferWindow: TransferWindowMode;
   };
   showSquadTitle?: boolean;
   showTopPlayers?: boolean;

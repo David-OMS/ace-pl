@@ -8,12 +8,15 @@ import {
   FantasyTransfersScreen,
   fantasyCopy,
   FANTASY_CREATE_PATH,
+  FANTASY_PATH,
   FANTASY_TRANSFERS_PATH,
   getMyFantasyTeam,
-  isUnlimitedTransferPeriod,
+  getTransferWindow,
   listPickablePlayers,
 } from "@/features/fantasy";
 import { resolveFanTournament } from "@/features/home";
+import { ButtonLink } from "@/ui/button-link";
+import { PageHeader } from "@/ui/page-header";
 
 export const metadata: Metadata = { title: fantasyCopy.transfersTitle };
 
@@ -36,17 +39,35 @@ export default async function FantasyTransfersPage(): Promise<React.JSX.Element>
   });
   if (!team) redirect(FANTASY_CREATE_PATH);
 
-  const [pool, beforeFirstDeadline] = await Promise.all([
+  const [pool, transferWindow] = await Promise.all([
     listPickablePlayers(tournament.id),
-    isUnlimitedTransferPeriod(tournament.id),
+    getTransferWindow(tournament.id),
   ]);
+
+  if (transferWindow === "locked") {
+    return (
+      <FantasyTheme className="flex flex-col gap-4 px-4 py-4">
+        <PageHeader
+          title={fantasyCopy.transfersTitle}
+          back={{ href: FANTASY_PATH, label: fantasyCopy.backToFantasy }}
+        />
+        <p className="text-sm">
+          <span className="font-bold">{fantasyCopy.transfersLockedTitle}. </span>
+          {fantasyCopy.transfersLockedBody}
+        </p>
+        <ButtonLink href={FANTASY_PATH} fullWidth>
+          {fantasyCopy.backToFantasy}
+        </ButtonLink>
+      </FantasyTheme>
+    );
+  }
 
   return (
     <FantasyTransfersScreen
       team={team}
       pool={pool}
       budget={tournament.fantasyBudget}
-      beforeFirstDeadline={beforeFirstDeadline}
+      beforeFirstDeadline={transferWindow === "unlimited"}
     />
   );
 }

@@ -3,7 +3,7 @@ import "server-only";
 import { fail, type ActionResult } from "@/lib/action-result";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
-import { isUnlimitedTransferPeriod } from "../queries/is-unlimited-transfer-period";
+import { getTransferWindow, type TransferWindowMode } from "../queries/get-transfer-window";
 import { listPickablePlayers, type PickablePlayer } from "../queries/list-pickable-players";
 
 export type TransferContext = {
@@ -23,6 +23,7 @@ export type TransferContext = {
     is_vice: boolean;
   }[];
   pool: PickablePlayer[];
+  transferWindow: TransferWindowMode;
   isUnlimited: boolean;
 };
 
@@ -48,9 +49,9 @@ export async function loadTransferContext(
 
   if (picksError) throw picksError;
 
-  const [pool, isUnlimited] = await Promise.all([
+  const [pool, transferWindow] = await Promise.all([
     listPickablePlayers(team.tournament_id),
-    isUnlimitedTransferPeriod(team.tournament_id),
+    getTransferWindow(team.tournament_id),
   ]);
 
   return {
@@ -66,7 +67,8 @@ export async function loadTransferContext(
       },
       picks: picks ?? [],
       pool,
-      isUnlimited,
+      transferWindow,
+      isUnlimited: transferWindow === "unlimited",
     },
   };
 }

@@ -10,6 +10,7 @@ import type { FantasyGameDayOption } from "../queries/list-fantasy-game-days";
 import type { FantasyLeaderboardRow } from "../queries/list-fantasy-leaderboard";
 import type { GameDayTopPlayer } from "../queries/list-game-day-top-players";
 import type { FantasyTransferLogRow } from "../queries/list-my-fantasy-transfers";
+import type { TransferWindowMode } from "../queries/get-transfer-window";
 import { FANTASY_TRANSFERS_PATH } from "../routes";
 import { FantasyGwPanel } from "./fantasy-gw-panel";
 import { FantasyLeaderboardMini } from "./fantasy-leaderboard-mini";
@@ -22,7 +23,7 @@ type FantasyTeamScreenProps = {
   leaderboard: readonly FantasyLeaderboardRow[];
   userId: string;
   myRank: number;
-  beforeFirstDeadline: boolean;
+  transferWindow: TransferWindowMode;
   gameDays: readonly FantasyGameDayOption[];
   gameweeks: readonly FantasyGameweekView[];
   selectedGameDayId: string | null;
@@ -32,6 +33,7 @@ type FantasyTeamScreenProps = {
 
 export function FantasyTeamScreen(props: FantasyTeamScreenProps): React.JSX.Element {
   const liveFormation = isFantasyFormation(props.team.formation) ? props.team.formation : "2-2-2";
+  const locked = props.transferWindow === "locked";
 
   return (
     <FantasyTheme className="flex flex-col gap-4 px-4 py-4 pb-8">
@@ -55,12 +57,19 @@ export function FantasyTeamScreen(props: FantasyTeamScreenProps): React.JSX.Elem
           totalPoints: props.team.totalPoints,
           bank: props.team.bank,
           freeTransfers: props.team.freeTransfers,
-          beforeFirstDeadline: props.beforeFirstDeadline,
+          transferWindow: props.transferWindow,
         }}
       />
-      <ButtonLink href={FANTASY_TRANSFERS_PATH} fullWidth>
-        {fantasyCopy.makeTransfers}
-      </ButtonLink>
+      {locked ? (
+        <p className="rounded-card border-2 border-line bg-surface px-3 py-3 text-sm">
+          <span className="font-bold">{fantasyCopy.transfersLockedTitle}. </span>
+          {fantasyCopy.transfersLockedBody}
+        </p>
+      ) : (
+        <ButtonLink href={FANTASY_TRANSFERS_PATH} fullWidth>
+          {fantasyCopy.makeTransfers}
+        </ButtonLink>
+      )}
       <FantasyLeaderboardMini rows={props.leaderboard} highlightUserId={props.userId} />
       <FantasyTransferLog rows={props.transfers} />
       <FantasyScoringTable />

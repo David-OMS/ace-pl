@@ -33,6 +33,8 @@ export async function applyFantasyTransfers(
   const context = await loadTransferContext(teamId, user.id);
   if (!context.ok) return context;
 
+  if (context.data.transferWindow === "locked") return fail("forbidden");
+
   // Unlimited edits, or free lineup/captain/pitch-swap with no market transfers.
   if (context.data.isUnlimited || swaps.length === 0) {
     if (!squad) return fail("invalid_input");
