@@ -136,7 +136,7 @@ Not tracked: shots, tackles, interceptions, big chances, etc.
 
 - Prices shown as **₦12.0m** (naira).
 - Each tournament's fantasy league is separate. No all-time fantasy leaderboard (for now).
-- Late joiners allowed. They start on 0 points. — assumed, change if wrong.
+- Late joiners allowed. Create stays open after a deadline, but that team scores **0 for every GW whose deadline already passed** at create time — first points from the next GW (FPL-strict). No snapshot / no points for missed weeks.
 
 ## 7. Awards
 
@@ -282,6 +282,7 @@ Tunde wins: the most popular, with strong stats. David had the best stats but no
 - 2026-11-18: Formation grey-out + error if squad can’t fill; bench transfers any outfield; auto-subs any outfield position.
 - 2026-11-18: Rival squads always clickable; no LIVE; GW visible after a match that week is recorded.
 - 2026-11-20: Fantasy squad locks from each GW deadline until every fixture that week is finished; free transfer refreshes when the week opens again.
+- 2026-11-20: Late fantasy create allowed, but no points for any GW whose deadline already passed at create time (start from next GW).
 - 2026-11-16: Admin IA locked — Home / Tournaments / Players / Fixtures nav; tournament workspace vs settings; explicit tournament squad; fixtures tab separate; start+end dates plus game days.
 - 2026-11-16: Player “Still plays” / inactive not used in admin; tournament roster is who plays.
 - 2026-11-16: Fixtures — create = scheduled; postpone after; auto-gen with no back-to-back; match entry matches mockup (tap absent, borrow).
