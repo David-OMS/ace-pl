@@ -52,7 +52,12 @@ async function readFanPlayerDetail(playerId: string): Promise<FanPlayerDetail | 
 
 async function loadDetailScopes(tournamentId: string | null, playerId: string) {
   const supabase = createPublicSupabaseClient();
-  const emptyScope = { totals: [], goalsConceded: new Map<string, number>() };
+  const emptyScope = {
+    totals: [],
+    goalsConceded: new Map<string, number>(),
+    fantasyCleanSheets: new Map<string, number>(),
+    fantasyPoints: new Map<string, number>(),
+  };
   const [tournamentScope, allTimeScope, roster, priceMillions, teamName] = await Promise.all([
     tournamentId ? loadFanStatScope(tournamentId) : Promise.resolve(emptyScope),
     loadFanStatScope(null),

@@ -2,7 +2,7 @@ import type { PlayerPosition } from "@/config/player-positions";
 import { FANTASY_SCORING } from "@/config/fantasy-scoring";
 import type { PlayerStatTotals } from "@/features/leaderboards";
 
-type FantasyInput = Pick<
+export type FantasyPointsInput = Pick<
   PlayerStatTotals,
   | "apps"
   | "goals"
@@ -16,10 +16,10 @@ type FantasyInput = Pick<
   | "penaltySaves"
 > & { goalsConceded: number };
 
-/** Tournament stats score from aggregated totals (no captaincy). */
+/** Points for one match (no captaincy). Multi-match totals must sum this per match. */
 export function calculatePlayerFantasyPoints(
   position: PlayerPosition,
-  stats: FantasyInput,
+  stats: FantasyPointsInput,
 ): number {
   const table = FANTASY_SCORING;
   const saveBlocks = Math.floor(stats.saves / table.savesPerPoint);

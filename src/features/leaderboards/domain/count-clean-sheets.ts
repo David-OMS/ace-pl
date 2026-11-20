@@ -18,15 +18,34 @@ export type CleanSheetAppearance = {
   isGoalkeeper: boolean;
 };
 
-/** GK / DEF / MID who played for a side that conceded 0 in a completed match. */
+const STATS_POSITIONS: ReadonlySet<PlayerPosition> = new Set(["GK", "DEF"]);
+const FANTASY_POSITIONS: ReadonlySet<PlayerPosition> = new Set(["GK", "DEF", "MID"]);
+
+/** Stats leaderboards: only GK and DEF (DECISIONS). */
 export function countCleanSheets(
   fixtures: readonly CleanSheetFixture[],
   appearances: readonly CleanSheetAppearance[],
 ): Map<string, number> {
+  return countCleanSheetsForPositions(fixtures, appearances, STATS_POSITIONS);
+}
+
+/** Fantasy points: GK/DEF/MID still get clean-sheet points. */
+export function countFantasyCleanSheets(
+  fixtures: readonly CleanSheetFixture[],
+  appearances: readonly CleanSheetAppearance[],
+): Map<string, number> {
+  return countCleanSheetsForPositions(fixtures, appearances, FANTASY_POSITIONS);
+}
+
+function countCleanSheetsForPositions(
+  fixtures: readonly CleanSheetFixture[],
+  appearances: readonly CleanSheetAppearance[],
+  positions: ReadonlySet<PlayerPosition>,
+): Map<string, number> {
   const cleanTeamByFixture = shutoutTeamsByFixture(fixtures);
   const counts = new Map<string, number>();
   for (const row of appearances) {
-    if (!countsTowardCleanSheet(row, cleanTeamByFixture)) continue;
+    if (!countsTowardCleanSheet(row, cleanTeamByFixture, positions)) continue;
     counts.set(row.playerId, (counts.get(row.playerId) ?? 0) + 1);
   }
   return counts;
@@ -47,10 +66,11 @@ function shutoutTeamsByFixture(fixtures: readonly CleanSheetFixture[]): Map<stri
 function countsTowardCleanSheet(
   row: CleanSheetAppearance,
   cleanTeamByFixture: Map<string, Set<string>>,
+  positions: ReadonlySet<PlayerPosition>,
 ): boolean {
   if (row.status !== "played") return false;
   const teams = cleanTeamByFixture.get(row.fixtureId);
   if (!teams?.has(row.teamId)) return false;
   if (row.isGoalkeeper) return true;
-  return row.position === "GK" || row.position === "DEF" || row.position === "MID";
+  return row.position !== null && positions.has(row.position);
 }

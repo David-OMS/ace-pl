@@ -4,8 +4,6 @@ import {
   type LeaderboardMetric,
   type PlayerStatTotals,
 } from "@/features/leaderboards";
-import { calculatePlayerFantasyPoints } from "../domain/calculate-player-fantasy-points";
-
 export type FanPlayerStatSnapshot = {
   apps: number;
   goals: number;
@@ -44,24 +42,10 @@ const LEADERBOARD_METRICS: readonly LeaderboardMetric[] = [
 const TOP_N = 10;
 
 export function buildPlayerStatSnapshot(
-  position: PlayerPosition,
   row: PlayerStatTotals | undefined,
-  goalsConceded: number,
+  fantasyPoints: number,
 ): FanPlayerStatSnapshot {
   const base: PlayerStatTotals = row ?? emptyTotals("");
-  const fantasyPoints = calculatePlayerFantasyPoints(position, {
-    apps: base.apps,
-    goals: base.goals,
-    assists: base.assists,
-    cleanSheets: base.cleanSheets,
-    yellowCards: base.yellowCards,
-    redCards: base.redCards,
-    saves: base.saves,
-    motm: base.motm,
-    ownGoals: base.ownGoals,
-    penaltySaves: base.penaltySaves,
-    goalsConceded,
-  });
   return {
     apps: base.apps,
     goals: base.goals,

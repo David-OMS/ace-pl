@@ -41,14 +41,12 @@ export function mapFanPlayerDetail(input: {
     teamName: input.teamName,
     tournamentName: input.tournamentName,
     tournament: buildPlayerStatSnapshot(
-      position,
       tournamentRow,
-      input.tournamentScope.goalsConceded.get(input.player.id) ?? 0,
+      input.tournamentScope.fantasyPoints.get(input.player.id) ?? 0,
     ),
     allTime: buildPlayerStatSnapshot(
-      position,
       allRow,
-      input.allTimeScope.goalsConceded.get(input.player.id) ?? 0,
+      input.allTimeScope.fantasyPoints.get(input.player.id) ?? 0,
     ),
     leaderboardTournament: buildLeaderboardBoards(input.tournamentScope.totals, input.roster),
     leaderboardAllTime: buildLeaderboardBoards(input.allTimeScope.totals, input.roster),

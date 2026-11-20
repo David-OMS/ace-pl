@@ -7,5 +7,5 @@ export {
   type AppearanceRow,
 } from "./domain/aggregate-player-stats";
 export { countAssistsFromEvents } from "./domain/count-assists-from-events";
-export { countCleanSheets } from "./domain/count-clean-sheets";
+export { countCleanSheets, countFantasyCleanSheets } from "./domain/count-clean-sheets";
 export { mergeStatExtras } from "./domain/merge-stat-extras";

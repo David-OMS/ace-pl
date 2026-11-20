@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { PlayerPosition } from "@/config/player-positions";
-import { calculatePlayerFantasyPoints, loadFanStatScope } from "@/features/fan-players";
+import { loadFanStatScope } from "@/features/fan-players";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 import { ballonShortlist } from "../domain/ballon-shortlist";
@@ -79,10 +79,7 @@ export async function loadAwardsAdminSnapshot(
       ...base,
       name: player.name,
       goalsConceded,
-      statsScore: calculatePlayerFantasyPoints(player.position, {
-        ...base,
-        goalsConceded,
-      }),
+      statsScore: scope.fantasyPoints.get(player.id) ?? 0,
     };
   });
 

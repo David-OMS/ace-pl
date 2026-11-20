@@ -2,6 +2,7 @@ export { FanPlayersListScreen } from "./components/fan-players-list-screen";
 export { FanPlayerDetailScreen } from "./components/fan-player-detail-screen";
 export { fanPlayersCopy } from "./copy";
 export { calculatePlayerFantasyPoints } from "./domain/calculate-player-fantasy-points";
+export { sumMatchFantasyPoints } from "./domain/sum-match-fantasy-points";
 export { assembleStatTotals } from "./queries/assemble-stat-totals";
 export { listFanPlayers } from "./queries/list-fan-players";
 export { getFanPlayerDetail, type FanPlayerDetail } from "./queries/get-fan-player-detail";

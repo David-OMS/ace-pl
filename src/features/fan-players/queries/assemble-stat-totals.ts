@@ -4,11 +4,13 @@ import {
   aggregatePlayerStats,
   countAssistsFromEvents,
   countCleanSheets,
+  countFantasyCleanSheets,
   mergeStatExtras,
   type PlayerStatTotals,
 } from "@/features/leaderboards";
 import { buildStandingFixtures } from "@/features/standings";
 import { countGoalsConceded } from "../domain/count-goals-conceded";
+import { scoreFantasyPointsPerMatch } from "./score-fantasy-points-per-match";
 
 type ParticipationRow = {
   player_id: string;
@@ -38,6 +40,10 @@ type FixtureRow = {
 export type AssembledStats = {
   totals: PlayerStatTotals[];
   goalsConceded: Map<string, number>;
+  /** Includes MID; stats boards use totals.cleanSheets (GK/DEF only). */
+  fantasyCleanSheets: Map<string, number>;
+  /** Per-match fantasy score summed (saves / conceded pairs floored each match). */
+  fantasyPoints: Map<string, number>;
 };
 
 function buildFixtureMeta(
@@ -71,8 +77,13 @@ function buildFixtureMeta(
 export function assembleStatTotals(
   participations: readonly ParticipationRow[],
   events: readonly EventRow[],
-  fixtures: readonly FixtureRow[],
+  args: {
+    fixtures: readonly FixtureRow[];
+    positionByPlayerId?: ReadonlyMap<string, PlayerPosition>;
+  },
 ): AssembledStats {
+  const fixtures = args.fixtures;
+  const positionByPlayerId = args.positionByPlayerId ?? new Map<string, PlayerPosition>();
   const appearanceRows = participations.map((row) => ({
     playerId: row.player_id,
     status: row.status,
@@ -95,11 +106,22 @@ export function assembleStatTotals(
     isGoalkeeper: a.is_goalkeeper,
   }));
   const cleanSheets = countCleanSheets(fixtureMeta, appearanceMeta);
+  const fantasyCleanSheets = countFantasyCleanSheets(fixtureMeta, appearanceMeta);
   const goalsConceded = countGoalsConceded(fixtureMeta, appearanceMeta);
   const totals = mergeStatExtras(
     aggregatePlayerStats(appearanceRows, eventRows),
     assists,
     cleanSheets,
   );
-  return { totals, goalsConceded };
+  // Single-fixture calls from scoreFantasyPointsPerMatch pass an empty map (no recursion).
+  const fantasyPoints =
+    positionByPlayerId.size > 0
+      ? scoreFantasyPointsPerMatch({
+          positionByPlayerId,
+          participations,
+          events,
+          fixtures,
+        })
+      : new Map<string, number>();
+  return { totals, goalsConceded, fantasyCleanSheets, fantasyPoints };
 }

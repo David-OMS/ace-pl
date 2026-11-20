@@ -52,5 +52,8 @@ export async function loadFanStatScope(
     position: row.position ?? positionById.get(row.player_id) ?? null,
   }));
 
-  return assembleStatTotals(enriched, events.data ?? [], fixtures.data ?? []);
+  return assembleStatTotals(enriched, events.data ?? [], {
+    fixtures: fixtures.data ?? [],
+    positionByPlayerId: positionById,
+  });
 }
