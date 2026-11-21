@@ -44,6 +44,8 @@ function toPickView(
     isBench: row.isBench,
     isCaptain: starter && row.playerId === args.captainId,
     isVice: starter && row.playerId === args.viceId,
+    clubTeamId: prior?.clubTeamId ?? null,
+    clubName: prior?.clubName ?? null,
   };
 }
 

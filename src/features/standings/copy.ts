@@ -3,6 +3,9 @@ export const standingsCopy = {
   empty: "No results yet.",
   noTournament: "No tournament to show.",
   formTitle: "Form",
+  squadTitle: "Squad",
+  squadEmpty: "No players assigned yet.",
+  teamPageTitle: "Team",
   gameweekOf: (current: number, total: number): string => `GW ${current} of ${total}`,
   columns: {
     pos: "#",

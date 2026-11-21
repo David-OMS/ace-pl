@@ -1,10 +1,10 @@
 import "server-only";
 
-import type { FantasyRank } from "@/config/fantasy";
 import type { PlayerPosition } from "@/config/player-positions";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 import type { FantasyPickView } from "./get-my-fantasy-team";
+import { loadFantasyPrices } from "./load-fantasy-prices";
 import { mapFantasyPicks } from "./map-fantasy-picks";
 
 export type FantasyGameweekPickView = FantasyPickView & {
@@ -27,7 +27,7 @@ export async function getFantasyTeamGameweek(args: {
 }): Promise<FantasyGameweekView | null> {
   const snap = await loadSnapshot(args.teamId, args.gameDayId);
   if (!snap) return null;
-  return mapGameweekView(snap, args.tournamentId);
+  return mapGameweekView(snap);
 }
 
 async function loadSnapshot(teamId: string, gameDayId: string) {
@@ -55,13 +55,9 @@ async function loadSnapshot(teamId: string, gameDayId: string) {
 
 async function mapGameweekView(
   snap: NonNullable<Awaited<ReturnType<typeof loadSnapshot>>>,
-  tournamentId: string,
 ): Promise<FantasyGameweekView> {
   const { gw, rows } = snap;
-  const ranks = await loadRanks(
-    tournamentId,
-    rows.map((p) => p.player_id),
-  );
+  const ranks = await loadFantasyPrices(rows.map((p) => p.player_id));
   const mapped = mapFantasyPicks(
     rows.map((row) => ({
       player_id: row.player_id,
@@ -93,22 +89,4 @@ async function mapGameweekView(
       };
     }),
   };
-}
-
-async function loadRanks(
-  tournamentId: string,
-  playerIds: string[],
-): Promise<{ player_id: string; rank: FantasyRank; price: number }[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("fantasy_player_ranks")
-    .select("player_id, rank, price")
-    .eq("tournament_id", tournamentId)
-    .in("player_id", playerIds.length > 0 ? playerIds : ["00000000-0000-0000-0000-000000000000"]);
-  if (error) throw error;
-  return (data ?? []).map((r) => ({
-    player_id: r.player_id,
-    rank: r.rank as FantasyRank,
-    price: Number(r.price),
-  }));
 }

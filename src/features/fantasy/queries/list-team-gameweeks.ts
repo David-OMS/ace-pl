@@ -5,9 +5,8 @@ import type { PlayerPosition } from "@/config/player-positions";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 import type { FantasyGameweekView } from "./get-fantasy-team-gameweek";
+import { loadFantasyPrices } from "./load-fantasy-prices";
 import { mapFantasyPicks } from "./map-fantasy-picks";
-
-const EMPTY_UUID = "00000000-0000-0000-0000-000000000000";
 
 type SnapshotPick = {
   game_day_id: string;
@@ -67,20 +66,8 @@ async function loadSnapshots(teamId: string) {
   return { weeks: weeks.data ?? [], picks: (picks.data ?? []) as SnapshotPick[] };
 }
 
-async function loadRanks(tournamentId: string, playerIds: string[]) {
-  const supabase = await createSupabaseServerClient();
-  const unique = [...new Set(playerIds)];
-  const { data, error } = await supabase
-    .from("fantasy_player_ranks")
-    .select("player_id, rank, price")
-    .eq("tournament_id", tournamentId)
-    .in("player_id", unique.length > 0 ? unique : [EMPTY_UUID]);
-  if (error) throw error;
-  return (data ?? []).map((row) => ({
-    player_id: row.player_id,
-    rank: row.rank as FantasyRank,
-    price: Number(row.price),
-  }));
+async function loadRanks(_tournamentId: string, playerIds: string[]) {
+  return loadFantasyPrices(playerIds);
 }
 
 function toGameweekView(

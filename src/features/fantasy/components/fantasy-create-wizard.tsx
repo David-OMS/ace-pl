@@ -10,6 +10,8 @@ import { fantasyCopy } from "../copy";
 import type { DraftSlotPick } from "../domain/assign-slot-pick";
 import { canAdvanceWizard } from "../domain/can-advance-wizard";
 import type { PickablePlayer } from "../queries/list-pickable-players";
+import { ClubLimitBanner } from "./club-limit-banner";
+import { draftClubBannerPicks } from "./draft-club-banner-picks";
 import { FantasyTheme } from "./fantasy-theme";
 import { WizardNav } from "./wizard-nav";
 import { WizardStepBody } from "./wizard-step-body";
@@ -23,6 +25,7 @@ type FantasyCreateWizardProps = {
 
 const STEPS = ["name", "squad", "captain"] as const;
 
+// eslint-disable-next-line max-lines-per-function -- wizard state + chrome stay together
 export function FantasyCreateWizard({
   tournamentId,
   squadSize,
@@ -39,13 +42,15 @@ export function FantasyCreateWizard({
   );
 
   const canNext = canAdvanceWizard({ step, name, formation, picks, squadSize, budget });
+  const stepLabel = fantasyCopy.steps[STEPS[step] ?? "name"];
 
   return (
     <FantasyTheme className="flex flex-col gap-4 px-4 py-4 pb-8">
       <h1 className="font-display text-2xl uppercase">{fantasyCopy.createTitle}</h1>
       <p className="text-xs font-bold tracking-wide text-muted uppercase">
-        {fantasyCopy.steps[STEPS[step] ?? "name"]} · {step + 1}/{STEPS.length}
+        {stepLabel} · {step + 1}/{STEPS.length}
       </p>
+      <ClubLimitBanner picks={draftClubBannerPicks(picks, pool)} />
       <WizardStepBody
         step={step}
         name={name}

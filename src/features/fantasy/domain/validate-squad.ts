@@ -1,4 +1,5 @@
 import { remainingBank } from "./fantasy-budget";
+import { squadRespectsClubLimit } from "./count-club-players";
 import { parseFormation } from "./parse-formation";
 import { checkCaptains, checkShape } from "./validate-squad-checks";
 import type { PlayerPosition } from "@/config/player-positions";
@@ -10,6 +11,7 @@ export type SquadPickInput = {
   isBench: boolean;
   isCaptain: boolean;
   isVice: boolean;
+  clubTeamId?: string | null;
 };
 
 export type ValidateSquadInput = {
@@ -29,7 +31,8 @@ export type ValidateSquadError =
   | "bench_captain"
   | "wrong_gk"
   | "wrong_outfield"
-  | "over_budget";
+  | "over_budget"
+  | "club_limit";
 
 export type ValidateSquadOk = {
   bank: number;
@@ -55,6 +58,9 @@ export function validateSquad(input: ValidateSquadInput): ValidateSquadResult {
 
   const shapeError = checkShape(input.picks, formation, input.squadSize);
   if (shapeError) return { ok: false, error: shapeError };
+
+  const clubIds = input.picks.map((p) => p.clubTeamId);
+  if (!squadRespectsClubLimit(clubIds)) return { ok: false, error: "club_limit" };
 
   const spent = input.picks.reduce((sum, p) => sum + p.price, 0);
   if (spent > input.budget) return { ok: false, error: "over_budget" };

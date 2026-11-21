@@ -13,6 +13,7 @@ import { formatFantasyPrice } from "../domain/format-fantasy-price";
 import type { MyFantasyTeam } from "../queries/get-my-fantasy-team";
 import type { PickablePlayer } from "../queries/list-pickable-players";
 import { FANTASY_PATH } from "../routes";
+import { ClubLimitBanner } from "./club-limit-banner";
 import { CreateStepFormation } from "./create-step-formation";
 import { FantasyPitchView } from "./fantasy-pitch-view";
 import { FantasyTheme } from "./fantasy-theme";
@@ -124,11 +125,12 @@ export function FantasyTransfersScreen({
           {swapFlash}
         </p>
       ) : null}
+      <ClubLimitBanner picks={draft.picks} />
       <FantasyPitchView
         formation={draft.formation}
         picks={draft.picks}
         onSelect={draft.openOut}
-        onSelectEmpty={beforeFirstDeadline ? draft.openEmpty : undefined}
+        onSelectEmpty={draft.openEmpty}
         selectedId={draft.activeOut?.playerId ?? null}
         swapTargetIds={draft.swapTargetIds}
       />
@@ -136,7 +138,6 @@ export function FantasyTransfersScreen({
         <TransferSelectionBar
           pick={draft.activeOut}
           swapTargetNames={draft.swapTargetNames}
-          beforeFirstDeadline={beforeFirstDeadline}
           onReplace={draft.openReplace}
           onRemove={draft.removeOut}
           onCaptain={draft.setCaptain}

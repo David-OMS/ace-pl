@@ -10,6 +10,7 @@ export type DraftPick = {
   isBench: boolean;
   isCaptain: boolean;
   isVice: boolean;
+  clubTeamId?: string | null;
 };
 
 export function starterNeeds(formation: FantasyFormation): Record<PlayerPosition, number> {

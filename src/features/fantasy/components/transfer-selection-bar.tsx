@@ -6,7 +6,6 @@ import type { FantasyPickView } from "../queries/get-my-fantasy-team";
 type TransferSelectionBarProps = {
   pick: FantasyPickView;
   swapTargetNames: readonly string[];
-  beforeFirstDeadline: boolean;
   onReplace: () => void;
   onRemove: () => void;
   onCaptain: () => void;
@@ -14,11 +13,9 @@ type TransferSelectionBarProps = {
   onClear: () => void;
 };
 
-// eslint-disable-next-line max-lines-per-function -- selection actions bar
 export function TransferSelectionBar({
   pick,
   swapTargetNames,
-  beforeFirstDeadline,
   onReplace,
   onRemove,
   onCaptain,
@@ -54,15 +51,13 @@ export function TransferSelectionBar({
         <Button type="button" variant="secondary" onClick={onReplace}>
           {fantasyCopy.replacePlayer}
         </Button>
-        {beforeFirstDeadline ? (
-          <button
-            type="button"
-            onClick={onRemove}
-            className="min-h-11 px-2 text-sm font-bold text-hot underline"
-          >
-            {fantasyCopy.removeFromSquad}
-          </button>
-        ) : null}
+        <button
+          type="button"
+          onClick={onRemove}
+          className="min-h-11 px-2 text-sm font-bold text-hot underline"
+        >
+          {fantasyCopy.removeFromSquad}
+        </button>
       </div>
     </div>
   );

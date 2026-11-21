@@ -19,6 +19,7 @@ export function buildValidatedSquadPicks(args: {
       isBench: pick.isBench,
       isCaptain: pick.isCaptain,
       isVice: pick.isVice,
+      clubTeamId: player?.clubTeamId ?? null,
       known: Boolean(player),
     };
   });

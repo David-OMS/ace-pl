@@ -8,9 +8,9 @@ import { fail, ok, type ActionErrorCode, type ActionResult } from "@/lib/action-
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
-import { canEditFantasyPrices } from "../domain/can-edit-fantasy-prices";
 import { adminFantasyRanksPath } from "../routes";
 import { readUpsertRankForm, upsertFantasyRankSchema } from "../schemas/upsert-rank-schema";
+import { isFantasyPriceAdmin } from "../server/is-fantasy-price-admin";
 
 export type UpsertFantasyRankState = ActionResult<{ savedAt: number }> | null;
 
@@ -27,14 +27,13 @@ export async function upsertFantasyRank(
   const { tournamentId, playerId, price } = parsed.data;
 
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("fantasy_player_ranks").upsert(
+  const { error } = await supabase.from("fantasy_player_prices").upsert(
     {
-      tournament_id: tournamentId,
       player_id: playerId,
       rank: rankFromPrice(price),
       price,
     },
-    { onConflict: "tournament_id,player_id" },
+    { onConflict: "player_id" },
   );
 
   if (error) {
@@ -49,6 +48,6 @@ export async function upsertFantasyRank(
 async function priceAdminError(): Promise<ActionErrorCode | null> {
   const user = await getCurrentUser();
   if (!user) return "unauthenticated";
-  if (!user.isAdmin || !canEditFantasyPrices(user.id)) return "forbidden";
+  if (!user.isAdmin || !isFantasyPriceAdmin(user.id)) return "forbidden";
   return null;
 }

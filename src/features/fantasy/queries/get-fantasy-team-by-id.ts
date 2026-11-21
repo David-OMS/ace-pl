@@ -1,9 +1,9 @@
 import "server-only";
 
-import type { FantasyRank } from "@/config/fantasy";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 import type { FantasyPickView, MyFantasyTeam } from "./get-my-fantasy-team";
+import { loadFantasyPrices } from "./load-fantasy-prices";
 import { mapFantasyPicks } from "./map-fantasy-picks";
 
 export type PublicFantasyTeam = MyFantasyTeam & {
@@ -33,7 +33,7 @@ export async function getFantasyTeamById(teamId: string): Promise<PublicFantasyT
   if (picksError) throw picksError;
 
   const playerIds = (pickRows ?? []).map((p) => p.player_id);
-  const ranks = await loadRanks(team.tournament_id, playerIds);
+  const ranks = await loadFantasyPrices(playerIds);
   const picks: FantasyPickView[] = mapFantasyPicks(pickRows ?? [], ranks);
 
   return {
@@ -49,22 +49,4 @@ export async function getFantasyTeamById(teamId: string): Promise<PublicFantasyT
     ownerName: team.profiles.display_name,
     userId: team.user_id,
   };
-}
-
-async function loadRanks(
-  tournamentId: string,
-  playerIds: string[],
-): Promise<{ player_id: string; rank: FantasyRank; price: number }[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("fantasy_player_ranks")
-    .select("player_id, rank, price")
-    .eq("tournament_id", tournamentId)
-    .in("player_id", playerIds.length > 0 ? playerIds : ["00000000-0000-0000-0000-000000000000"]);
-  if (error) throw error;
-  return (data ?? []).map((r) => ({
-    player_id: r.player_id,
-    rank: r.rank as FantasyRank,
-    price: Number(r.price),
-  }));
 }

@@ -24,7 +24,12 @@ export function AdminAwardsScreen({
       {snapshot ? (
         <p className="text-xs font-bold text-muted uppercase">{snapshot.tournamentName}</p>
       ) : null}
-      <AdminAwardsFraud open={fraud.open} history={fraud.history} roster={fraud.players} />
+      <AdminAwardsFraud
+        open={fraud.open}
+        history={fraud.history}
+        roster={fraud.players}
+        teams={fraud.teams}
+      />
       {snapshot ? (
         <>
           <AdminAwardsBaller

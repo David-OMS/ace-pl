@@ -12,6 +12,7 @@ import type { GameDayTopPlayer } from "../queries/list-game-day-top-players";
 import type { FantasyTransferLogRow } from "../queries/list-my-fantasy-transfers";
 import type { TransferWindowMode } from "../queries/get-transfer-window";
 import { FANTASY_TRANSFERS_PATH } from "../routes";
+import { ClubLimitBanner } from "./club-limit-banner";
 import { FantasyGwPanel } from "./fantasy-gw-panel";
 import { FantasyLeaderboardMini } from "./fantasy-leaderboard-mini";
 import { FantasyScoringTable } from "./fantasy-scoring-table";
@@ -44,6 +45,7 @@ export function FantasyTeamScreen(props: FantasyTeamScreenProps): React.JSX.Elem
         myRank={props.myRank}
         total={props.leaderboard.length || 1}
       />
+      <ClubLimitBanner picks={props.team.picks} />
       <FantasyGwPanel
         days={props.gameDays}
         gameweeks={props.gameweeks}

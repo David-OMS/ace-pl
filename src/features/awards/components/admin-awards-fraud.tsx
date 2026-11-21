@@ -9,12 +9,17 @@ import { SelectField } from "@/ui/select-field";
 import { addFraudWatch, type AddFraudWatchState } from "../actions/add-fraud-watch";
 import { endFraudWatch, type EndFraudWatchState } from "../actions/end-fraud-watch";
 import { awardsCopy } from "../copy";
-import type { AwardsPlayerOption, FraudWatchRow } from "../queries/awards-admin-types";
+import type {
+  AwardsPlayerOption,
+  AwardsTeamOption,
+  FraudWatchRow,
+} from "../queries/awards-admin-types";
 
 type AdminAwardsFraudProps = {
   open: readonly FraudWatchRow[];
   history: readonly FraudWatchRow[];
   roster: readonly AwardsPlayerOption[];
+  teams: readonly AwardsTeamOption[];
 };
 
 // eslint-disable-next-line max-lines-per-function, complexity -- awards admin panel UI
@@ -22,6 +27,7 @@ export function AdminAwardsFraud({
   open,
   history,
   roster,
+  teams,
 }: AdminAwardsFraudProps): React.JSX.Element {
   const [addState, addAction, addPending] = useActionState<AddFraudWatchState, FormData>(
     addFraudWatch,
@@ -31,10 +37,16 @@ export function AdminAwardsFraud({
     endFraudWatch,
     null,
   );
-  const openIds = new Set(open.map((r) => r.playerId));
-  const options = roster
-    .filter((p) => !openIds.has(p.id))
-    .map((p) => ({ value: p.id, label: p.name }));
+  const openPlayerIds = new Set(open.map((r) => r.playerId).filter(Boolean));
+  const openTeamIds = new Set(open.map((r) => r.teamId).filter(Boolean));
+  const options = [
+    ...roster
+      .filter((p) => !openPlayerIds.has(p.id))
+      .map((p) => ({ value: `player:${p.id}`, label: p.name })),
+    ...teams
+      .filter((t) => !openTeamIds.has(t.id))
+      .map((t) => ({ value: `team:${t.id}`, label: `${t.name} (team)` })),
+  ];
 
   return (
     <section className="flex flex-col gap-2">
@@ -55,7 +67,7 @@ export function AdminAwardsFraud({
                 className="flex items-center gap-2 border-2 border-line bg-surface px-3 py-2"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-bold">{row.playerName}</p>
+                  <p className="truncate font-bold">{row.subjectName}</p>
                   {row.caption ? <p className="text-xs text-muted">{row.caption}</p> : null}
                 </div>
                 <form action={endAction}>
@@ -71,7 +83,7 @@ export function AdminAwardsFraud({
       </div>
       {open.length < 2 && options.length > 0 ? (
         <form action={addAction} className="flex flex-col gap-2">
-          <SelectField label={awardsCopy.pickPlayer} name="playerId" options={options} />
+          <SelectField label={awardsCopy.pickSubject} name="subject" options={options} />
           <label className="flex flex-col gap-1">
             <span className="text-[10px] font-extrabold tracking-wide text-muted uppercase">
               {awardsCopy.captionLabel}
@@ -99,7 +111,9 @@ export function AdminAwardsFraud({
         success={addState?.ok ? awardsCopy.fraudAdded : endState?.ok ? awardsCopy.fraudEnded : null}
       />
       {history.length > 0 ? (
-        <p className="text-xs text-muted">Past: {history.map((h) => h.playerName).join(", ")}</p>
+        <p className="text-xs text-muted">
+          Past: {history.map((h) => h.subjectName).join(", ")}
+        </p>
       ) : null}
     </section>
   );

@@ -1,4 +1,6 @@
+import { DEFAULT_TEAM_COLOR } from "@/config/team-colors";
 import { PlayerAvatar } from "@/ui/player-avatar";
+import { TeamCrest } from "@/ui/team-crest";
 
 import { fraudWatchCopy } from "../copy";
 import type { HomeFraudWatchEntry } from "../queries/load-home-fraud-watch";
@@ -20,9 +22,17 @@ export function HomeFraudWatch({ entries }: HomeFraudWatchProps): React.JSX.Elem
               key={entry.id}
               className="flex items-center gap-3 border-2 border-line bg-surface p-3"
             >
-              <PlayerAvatar name={entry.playerName} photoUrl={entry.photoUrl} size="xl" />
+              {entry.kind === "team" ? (
+                <TeamCrest
+                  name={entry.subjectName}
+                  color={entry.teamColor ?? DEFAULT_TEAM_COLOR}
+                  size="md"
+                />
+              ) : (
+                <PlayerAvatar name={entry.subjectName} photoUrl={entry.photoUrl} size="xl" />
+              )}
               <div className="min-w-0 flex-1">
-                <p className="truncate font-display text-xl uppercase">{entry.playerName}</p>
+                <p className="truncate font-display text-xl uppercase">{entry.subjectName}</p>
                 {entry.caption ? (
                   <p className="truncate text-sm text-muted">{entry.caption}</p>
                 ) : null}

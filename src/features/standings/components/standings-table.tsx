@@ -1,7 +1,10 @@
+import Link from "next/link";
+
 import { TeamCrest } from "@/ui/team-crest";
 
 import { standingsCopy } from "../copy";
 import type { StandingTeamRow } from "../queries/get-tournament-standings";
+import { standingsTeamPath } from "../routes";
 
 type StandingsTableProps = { rows: readonly StandingTeamRow[] };
 
@@ -33,10 +36,13 @@ export function StandingsTable({ rows }: StandingsTableProps): React.JSX.Element
             <tr key={row.teamId} className="border-b border-line-soft last:border-b-0">
               <td className="px-2 py-3 font-bold">{row.position}</td>
               <td className="px-2 py-3">
-                <span className="inline-flex items-center gap-2 font-bold">
+                <Link
+                  href={standingsTeamPath(row.teamId)}
+                  className="inline-flex items-center gap-2 font-bold hover:underline"
+                >
                   <TeamCrest name={row.teamName} color={row.teamColor} />
                   {row.teamName}
-                </span>
+                </Link>
               </td>
               <td className="px-2 py-3 text-center">{row.played}</td>
               <td className="px-2 py-3 text-center">{row.won}</td>

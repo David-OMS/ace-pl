@@ -4,26 +4,25 @@ import { FANTASY_PRICE_FLOOR, rankFromPrice } from "@/config/fantasy";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
-/** Insert floor price for roster players missing a rank row. */
+/** Insert floor price for roster players missing a global price row. */
 export async function ensureDefaultRanks(tournamentId: string): Promise<void> {
   const supabase = await createSupabaseServerClient();
-  const [roster, ranks] = await Promise.all([
+  const [roster, prices] = await Promise.all([
     supabase.from("tournament_players").select("player_id").eq("tournament_id", tournamentId),
-    supabase.from("fantasy_player_ranks").select("player_id").eq("tournament_id", tournamentId),
+    supabase.from("fantasy_player_prices").select("player_id"),
   ]);
 
   if (roster.error) throw roster.error;
-  if (ranks.error) throw ranks.error;
+  if (prices.error) throw prices.error;
 
-  const ranked = new Set((ranks.data ?? []).map((r) => r.player_id));
-  const missing = (roster.data ?? []).map((r) => r.player_id).filter((id) => !ranked.has(id));
+  const priced = new Set((prices.data ?? []).map((r) => r.player_id));
+  const missing = (roster.data ?? []).map((r) => r.player_id).filter((id) => !priced.has(id));
 
   if (missing.length === 0) return;
 
   const price = FANTASY_PRICE_FLOOR;
-  const { error } = await supabase.from("fantasy_player_ranks").insert(
+  const { error } = await supabase.from("fantasy_player_prices").insert(
     missing.map((playerId) => ({
-      tournament_id: tournamentId,
       player_id: playerId,
       rank: rankFromPrice(price),
       price,

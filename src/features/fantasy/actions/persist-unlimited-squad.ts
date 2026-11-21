@@ -32,6 +32,7 @@ export async function persistUnlimitedSquad(args: {
         isBench: pick.isBench,
         isCaptain: pick.isCaptain,
         isVice: pick.isVice,
+        clubTeamId: player.clubTeamId,
       },
     ];
   });

@@ -19,6 +19,7 @@ export function unlimitedSquadValid(args: {
       isBench: p.isBench,
       isCaptain: p.isCaptain,
       isVice: p.isVice,
+      clubTeamId: p.clubTeamId,
     })),
   }).ok;
 }

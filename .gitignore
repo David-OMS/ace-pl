@@ -1,4 +1,4 @@
-# dependencies
+﻿# dependencies
 node_modules/
 
 # next.js
@@ -9,10 +9,14 @@ out/
 build/
 dist/
 
-# testing
+# testing (local only)
 coverage/
 playwright-report/
 test-results/
+**/*.test.ts
+**/*.test.tsx
+vitest.config.ts
+vitest.setup.ts
 
 # environment
 .env
@@ -36,3 +40,18 @@ npm-debug.log*
 # os / editor
 .DS_Store
 Thumbs.db
+
+# local only (not for GitHub / collaborators)
+.cursor/
+AGENTS.md
+.husky/
+commitlint.config.mjs
+mockups/
+docs/
+README.md
+DECISIONS.md
+scripts/
+.env.example
+.github/pull_request_template.md
+tournament-claim-links.csv
+*.claim-links.csv

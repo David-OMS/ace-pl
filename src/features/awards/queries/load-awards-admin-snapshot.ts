@@ -25,7 +25,7 @@ export async function loadAwardsAdminSnapshot(
   const [fraud, roster, scope, round] = await Promise.all([
     supabase
       .from("fraud_watch_entries")
-      .select("id, player_id, caption, started_on, ended_on, players!inner(name)")
+      .select("id, player_id, team_id, caption, started_on, ended_on, players(name), teams(name)")
       .eq("tournament_id", tournamentId)
       .order("started_on", { ascending: false }),
     supabase
@@ -44,14 +44,21 @@ export async function loadAwardsAdminSnapshot(
   if (roster.error) throw roster.error;
   if (round.error) throw round.error;
 
-  const fraudRows: FraudWatchRow[] = (fraud.data ?? []).map((row) => ({
-    id: row.id,
-    playerId: row.player_id,
-    playerName: row.players.name,
-    caption: row.caption,
-    startedOn: row.started_on,
-    endedOn: row.ended_on,
-  }));
+  const fraudRows: FraudWatchRow[] = (fraud.data ?? []).map((row) => {
+    const playerName = row.players?.name ?? null;
+    const teamName = row.teams?.name ?? null;
+    return {
+      id: row.id,
+      playerId: row.player_id,
+      playerName,
+      teamId: row.team_id,
+      teamName,
+      subjectName: teamName ?? playerName ?? "?",
+      caption: row.caption,
+      startedOn: row.started_on,
+      endedOn: row.ended_on,
+    };
+  });
 
   const rosterPlayers = (roster.data ?? []).map((row) => ({
     id: row.players.id,

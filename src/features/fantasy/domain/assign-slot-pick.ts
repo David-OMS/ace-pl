@@ -9,6 +9,7 @@ export type SlotPickPlayer = {
   id: string;
   position: PlayerPosition;
   price: number;
+  clubTeamId?: string | null;
 };
 
 export type DraftSlotPick = DraftPick & { slotKey: string };
@@ -49,6 +50,7 @@ export function assignSlotPick(args: {
       isBench: args.slot.isBench,
       isCaptain: false,
       isVice: false,
+      clubTeamId: player.clubTeamId ?? null,
     },
   ];
 }

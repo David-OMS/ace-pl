@@ -291,6 +291,38 @@ export type Database = {
           },
         ]
       }
+      fantasy_player_prices: {
+        Row: {
+          created_at: string
+          player_id: string
+          price: number
+          rank: Database["public"]["Enums"]["fantasy_rank"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          player_id: string
+          price: number
+          rank?: Database["public"]["Enums"]["fantasy_rank"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          player_id?: string
+          price?: number
+          rank?: Database["public"]["Enums"]["fantasy_rank"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fantasy_player_prices_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: true
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fantasy_player_ranks: {
         Row: {
           created_at: string
@@ -608,8 +640,9 @@ export type Database = {
           created_at: string
           ended_on: string | null
           id: string
-          player_id: string
+          player_id: string | null
           started_on: string
+          team_id: string | null
           tournament_id: string | null
           updated_at: string
         }
@@ -618,8 +651,9 @@ export type Database = {
           created_at?: string
           ended_on?: string | null
           id?: string
-          player_id: string
+          player_id?: string | null
           started_on?: string
+          team_id?: string | null
           tournament_id?: string | null
           updated_at?: string
         }
@@ -628,8 +662,9 @@ export type Database = {
           created_at?: string
           ended_on?: string | null
           id?: string
-          player_id?: string
+          player_id?: string | null
           started_on?: string
+          team_id?: string | null
           tournament_id?: string | null
           updated_at?: string
         }
@@ -639,6 +674,13 @@ export type Database = {
             columns: ["player_id"]
             isOneToOne: false
             referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fraud_watch_entries_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
           {

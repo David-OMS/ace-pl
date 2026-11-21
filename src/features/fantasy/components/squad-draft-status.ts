@@ -20,6 +20,7 @@ export function squadDraftStatus(args: {
       isBench: p.isBench,
       isCaptain: p.isCaptain,
       isVice: p.isVice,
+      clubTeamId: p.clubTeamId,
     })),
   });
   if (result.ok) return { valid: true, reason: null };

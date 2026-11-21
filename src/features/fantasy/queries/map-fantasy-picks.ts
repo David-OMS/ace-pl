@@ -19,18 +19,22 @@ type PickRow = {
 };
 
 type RankRow = { player_id: string; rank: FantasyRank; price: number };
+type ClubRow = { player_id: string; clubTeamId: string; clubName: string };
 
 export function mapFantasyPicks(
   pickRows: readonly PickRow[],
   ranks: readonly RankRow[],
+  clubs: readonly ClubRow[] = [],
 ): FantasyPickView[] {
   const rankByPlayer = new Map(
     ranks.map((r) => [r.player_id, { rank: r.rank, price: Number(r.price) }]),
   );
+  const clubByPlayer = new Map(clubs.map((c) => [c.player_id, c]));
 
   return pickRows.map((row) => {
     const player = row.players;
     const ranked = rankByPlayer.get(player.id);
+    const club = clubByPlayer.get(player.id);
     return {
       playerId: player.id,
       name: player.name,
@@ -42,6 +46,8 @@ export function mapFantasyPicks(
       isBench: row.is_bench,
       isCaptain: row.is_captain,
       isVice: row.is_vice,
+      clubTeamId: club?.clubTeamId ?? null,
+      clubName: club?.clubName ?? null,
     };
   });
 }

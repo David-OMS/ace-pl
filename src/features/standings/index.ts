@@ -1,4 +1,5 @@
 export { FormDots } from "./components/form-dots";
+export { PublicTeamScreen } from "./components/public-team-screen";
 export { StandingsScreen } from "./components/standings-screen";
 export { StandingsTable } from "./components/standings-table";
 export { standingsCopy } from "./copy";
@@ -13,6 +14,11 @@ export {
 export { buildStandingFixtures } from "./queries/build-standing-fixtures";
 export { getTournamentForm, type FormDisplayRow } from "./queries/get-tournament-form";
 export {
+  getPublicTeamPage,
+  type PublicTeamPage,
+} from "./queries/get-public-team-page";
+export {
   listStandingsTournaments,
   type StandingsTournamentChip,
 } from "./queries/list-standings-tournaments";
+export { standingsTeamPath } from "./routes";

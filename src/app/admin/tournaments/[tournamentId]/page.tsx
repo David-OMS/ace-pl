@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { requireAdmin, getCurrentUser } from "@/features/auth";
-import { canEditFantasyPrices } from "@/features/fantasy";
+import { isFantasyPriceAdmin } from "@/features/fantasy/server/is-fantasy-price-admin";
 import {
   ADMIN_TOURNAMENTS_PATH,
   getTournament,
@@ -32,7 +32,7 @@ export default async function TournamentHubPage({
       unassigned={hub.unassigned}
       rosterCount={tournament.rosterPlayerIds.length}
       hasFixtures={hub.hasFixtures}
-      showPrices={user !== null && canEditFantasyPrices(user.id)}
+      showPrices={user !== null && isFantasyPriceAdmin(user.id)}
     >
       {tournament.keeperMode === "shared" && tournament.rosterPlayerIds.length > 0 ? (
         <SharedKeepersPanel

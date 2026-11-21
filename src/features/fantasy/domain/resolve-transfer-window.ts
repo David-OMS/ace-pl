@@ -1,3 +1,4 @@
+import { FANTASY_UNLIMITED_THROUGH_GAMEWEEK } from "@/config/fantasy";
 import type { FixtureStatus } from "@/config/fixture-status";
 
 import { gameDayFixturesFinished } from "./fixture-finished-for-transfers";
@@ -11,9 +12,9 @@ export type TransferWindowGameDay = {
 };
 
 /**
- * Unlimited until the first GW Thursday deadline.
- * After a GW deadline: locked until every fixture that week is finished,
- * then open (1 free transfer) until the next deadline.
+ * Unlimited until the configured GW deadline (default through GW2).
+ * Mid-GW after that week's deadline: locked until fixtures finish.
+ * After the unlimited period: open (1 free) between finished weeks.
  */
 export function resolveTransferWindow(args: {
   nowMs: number;
@@ -22,16 +23,18 @@ export function resolveTransferWindow(args: {
   const days = [...args.gameDays].sort((a, b) => a.playedOn.localeCompare(b.playedOn));
   if (days.length === 0) return "unlimited";
 
-  const first = days[0];
-  if (!first) return "unlimited";
-  if (args.nowMs < gameweekDeadlineMs(first.playedOn)) return "unlimited";
-
   let active: TransferWindowGameDay | null = null;
   for (const day of days) {
     if (args.nowMs >= gameweekDeadlineMs(day.playedOn)) active = day;
     else break;
   }
-  if (!active) return "unlimited";
-  if (!gameDayFixturesFinished(active.fixtures)) return "locked";
+  if (active && !gameDayFixturesFinished(active.fixtures)) return "locked";
+
+  const unlimitedIndex = Math.max(0, FANTASY_UNLIMITED_THROUGH_GAMEWEEK - 1);
+  const unlimitedUntil = days[unlimitedIndex] ?? days[days.length - 1];
+  if (unlimitedUntil && args.nowMs < gameweekDeadlineMs(unlimitedUntil.playedOn)) {
+    return "unlimited";
+  }
+
   return "open";
 }

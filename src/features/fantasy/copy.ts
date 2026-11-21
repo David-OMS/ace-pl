@@ -109,7 +109,7 @@ export const fantasyCopy = {
   rankOf: (rank: number, total: number): string => `Rank ${rank} / ${total}`,
   prices: "Prices",
   adminRanksTitle: "Player prices",
-  adminRanksHint: "Opening price for this tournament, in millions. 5.0 to 20.0, steps of 0.5.",
+  adminRanksHint: "Global player price in millions. 5.0 to 20.0, steps of 0.5. Applies to every tournament.",
   adminRanksSave: "Save price",
   adminRanksLink: "Player prices",
   errors: {
@@ -134,5 +134,9 @@ export const fantasyCopy = {
     wrong_gk: "Start exactly one goalkeeper.",
     wrong_outfield: "Starters must match the formation.",
     over_budget: "Squad is over budget.",
+    club_limit: "Max 3 players from one club.",
   } satisfies Record<ValidateSquadError, string>,
+  clubLimitBanner: (count: number, clubName: string): string =>
+    `This squad has ${count} players from ${clubName}. Fix it or the team will be invalid for the next gameweek.`,
+  clubLimitBannerGeneric: "Too many players from one club. Fix your squad before you can save.",
 } as const;

@@ -8,6 +8,8 @@ export const TEAM_COLOR_PALETTE = [
   "#6a4c93",
   "#ff3d00",
   "#1a8a3a",
+  /** Near-white — readable on light canvas via crest ink contrast. */
+  "#ebe8e0",
 ] as const;
 
 export type TeamColor = (typeof TEAM_COLOR_PALETTE)[number];

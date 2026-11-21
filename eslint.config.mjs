@@ -3,7 +3,7 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier/flat";
 
-// Limits come from docs/ENGINEERING_STANDARDS.md section 2. Change them there first.
+// File / function size limits for the app codebase.
 const sizeLimits = {
   "max-lines": ["error", { max: 250, skipBlankLines: true, skipComments: true }],
   "max-lines-per-function": [

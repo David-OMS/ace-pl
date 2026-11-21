@@ -75,13 +75,11 @@ async function loadDetailScopes(tournamentId: string | null, playerId: string) {
   };
 }
 
-async function loadPlayerPrice(tournamentId: string | null, playerId: string): Promise<number> {
-  if (!tournamentId) return resolveFantasyPrice(null);
+async function loadPlayerPrice(_tournamentId: string | null, playerId: string): Promise<number> {
   const supabase = createPublicSupabaseClient();
   const { data, error } = await supabase
-    .from("fantasy_player_ranks")
+    .from("fantasy_player_prices")
     .select("price")
-    .eq("tournament_id", tournamentId)
     .eq("player_id", playerId)
     .maybeSingle();
   if (error) throw error;
