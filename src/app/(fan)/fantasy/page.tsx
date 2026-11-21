@@ -10,6 +10,7 @@ import {
   getTransferWindow,
   listFantasyGameDays,
   listFantasyLeaderboard,
+  listGameDayPointSummaries,
   listGameDayTopPlayers,
   listMyFantasyTransfers,
   listTeamGameweeks,
@@ -25,6 +26,9 @@ type FantasyPageProps = {
 export default async function FantasyPage({
   searchParams,
 }: FantasyPageProps): Promise<React.JSX.Element> {
+  // Request time for cutting off future gameweeks in the GW browser.
+  // eslint-disable-next-line react-hooks/purity -- server request clock
+  const nowMs = Date.now();
   const user = await getCurrentUser();
   const tournament = await resolveFanTournament();
   const params = await searchParams;
@@ -33,11 +37,12 @@ export default async function FantasyPage({
   if (!user) return emptyCta("signed_out");
   if (!tournament) return emptyCta("no_tournament");
 
-  const [team, leaderboard, transferWindow, gameDays] = await Promise.all([
+  const [team, leaderboard, transferWindow, gameDays, summaries] = await Promise.all([
     getMyFantasyTeam({ tournamentId: tournament.id, userId: user.id }),
     listFantasyLeaderboard(tournament.id),
     getTransferWindow(tournament.id),
     listFantasyGameDays(tournament.id),
+    listGameDayPointSummaries(tournament.id),
   ]);
   if (!team) return emptyCta("no_team");
 
@@ -51,6 +56,7 @@ export default async function FantasyPage({
   return (
     <FantasyTeamScreen
       team={team}
+      ownerName={user.displayName}
       leaderboard={leaderboard}
       userId={user.id}
       myRank={myRank}
@@ -59,7 +65,9 @@ export default async function FantasyPage({
       gameweeks={gameweeks}
       selectedGameDayId={selectedGameDayId}
       topPlayers={topPlayers}
+      summaries={summaries}
       transfers={transfers}
+      nowMs={nowMs}
     />
   );
 }

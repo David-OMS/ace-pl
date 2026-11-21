@@ -33,6 +33,7 @@ export { isUnlimitedTransferPeriod } from "./queries/is-unlimited-transfer-perio
 export { getTransferWindow, type TransferWindowMode } from "./queries/get-transfer-window";
 export { listFantasyLeaderboard } from "./queries/list-fantasy-leaderboard";
 export { listFantasyGameDays } from "./queries/list-fantasy-game-days";
+export { listGameDayPointSummaries } from "./queries/list-game-day-point-summaries";
 export { getFantasyTeamGameweek } from "./queries/get-fantasy-team-gameweek";
 export { listGameDayTopPlayers } from "./queries/list-game-day-top-players";
 export { listTeamGameweeks } from "./queries/list-team-gameweeks";

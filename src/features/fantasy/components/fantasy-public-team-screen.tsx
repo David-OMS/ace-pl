@@ -1,10 +1,10 @@
-import { Card } from "@/ui/card";
-import { PageHeader } from "@/ui/page-header";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import { fantasyCopy } from "../copy";
 import type { FantasyGameweekView } from "../queries/get-fantasy-team-gameweek";
 import type { FantasyTeamPublicHeader } from "../queries/get-fantasy-team-public";
 import type { FantasyGameDayOption } from "../queries/list-fantasy-game-days";
+import type { GameDayPointsSummary } from "../queries/list-game-day-point-summaries";
 import type { GameDayTopPlayer } from "../queries/list-game-day-top-players";
 import { FANTASY_LEADERBOARD_PATH } from "../routes";
 import { FantasyGwPanel } from "./fantasy-gw-panel";
@@ -16,6 +16,8 @@ type FantasyPublicTeamScreenProps = {
   gameweeks: readonly FantasyGameweekView[];
   selectedGameDayId: string | null;
   topPlayers: readonly GameDayTopPlayer[];
+  summaries: readonly GameDayPointsSummary[];
+  nowMs: number;
 };
 
 export function FantasyPublicTeamScreen({
@@ -24,6 +26,8 @@ export function FantasyPublicTeamScreen({
   gameweeks,
   selectedGameDayId,
   topPlayers,
+  summaries,
+  nowMs,
 }: FantasyPublicTeamScreenProps): React.JSX.Element {
   const lockedIds = new Set(gameweeks.map((week) => week.gameDayId));
   const latestLocked = [...gameDays].reverse().find((day) => lockedIds.has(day.id));
@@ -34,17 +38,16 @@ export function FantasyPublicTeamScreen({
 
   return (
     <FantasyTheme className="flex flex-col gap-4 px-4 py-4 pb-8">
-      <PageHeader
-        title={team.name}
-        back={{ href: FANTASY_LEADERBOARD_PATH, label: fantasyCopy.leaderboard }}
-      />
-      <Card>
-        <p className="text-sm text-muted">{team.ownerName}</p>
-        <p className="text-xs text-muted">
+      <SoftNavLink href={FANTASY_LEADERBOARD_PATH} className="text-xs font-bold text-muted">
+        {fantasyCopy.backToFantasy}
+      </SoftNavLink>
+      <header className="flex flex-col gap-1">
+        <p className="text-sm font-bold text-muted">{team.ownerName}</p>
+        <h1 className="truncate font-display text-2xl uppercase">{team.name}</h1>
+        <p className="text-xs font-bold text-muted">
           {fantasyCopy.totalPoints} {team.totalPoints}
         </p>
-      </Card>
-      <h2 className="font-display text-lg uppercase">{fantasyCopy.theirSquad}</h2>
+      </header>
       <FantasyGwPanel
         days={gameDays}
         gameweeks={gameweeks}
@@ -52,8 +55,10 @@ export function FantasyPublicTeamScreen({
         liveFormation={team.formation}
         initialGameDayId={initialGw}
         initialTopPlayers={topPlayers}
+        summaries={summaries}
         hideLive
         showTopPlayers
+        nowMs={nowMs}
       />
     </FantasyTheme>
   );

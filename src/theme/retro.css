@@ -29,20 +29,27 @@
   --ace-border-width: 2px;
 }
 
+/* Mode lives on <html>; fantasy scopes theme on a child wrapper.
+   Surfaces match street dark (near-black); keep red accent + pitch green. */
+html[data-mode="dark"] [data-theme="retro"],
 [data-theme="retro"][data-mode="dark"] {
-  --ace-canvas: #0d1730;
-  --ace-surface: #15224a;
-  --ace-surface-alt: #1c2c5a;
-  --ace-line: #fdf0d5;
-  --ace-line-soft: #2a3a6a;
-  --ace-ink: #fdf0d5;
-  --ace-muted: #a9b0c7;
+  --ace-canvas: #0b0b0b;
+  --ace-surface: #161616;
+  --ace-surface-alt: #222222;
+  --ace-line: #f1f1ee;
+  --ace-line-soft: #333333;
+  --ace-ink: #f1f1ee;
+  --ace-muted: #9a9a9a;
   --ace-accent: #e63946;
+  --ace-on-accent: #f1f1ee;
   --ace-hot: #e63946;
-  --ace-hero: #091124;
+  --ace-on-hot: #f1f1ee;
+  --ace-hero: #000000;
+  --ace-on-hero: #f1f1ee;
   --ace-win: #5fc27a;
+  --ace-draw: #6a6a6a;
   --ace-loss: #e63946;
-  --ace-pitch: #2f6a33;
-  --ace-pitch-alt: #295f2d;
-  --ace-offset-shadow: #fdf0d5;
+  --ace-pitch: #1a3d1c;
+  --ace-pitch-alt: #163418;
+  --ace-offset-shadow: #e63946;
 }

@@ -9,6 +9,7 @@ import {
   FANTASY_PATH,
   getFantasyTeamPublicHeader,
   listFantasyGameDays,
+  listGameDayPointSummaries,
   listGameDayTopPlayers,
   listTeamGameweeks,
 } from "@/features/fantasy";
@@ -24,6 +25,9 @@ export default async function FantasyPublicTeamPage({
   params,
   searchParams,
 }: PublicTeamPageProps): Promise<React.JSX.Element> {
+  // Request time for cutting off future gameweeks in the GW browser.
+  // eslint-disable-next-line react-hooks/purity -- server request clock
+  const nowMs = Date.now();
   const { teamId } = await params;
   const { gw } = await searchParams;
   const team = await getFantasyTeamPublicHeader(teamId);
@@ -32,9 +36,10 @@ export default async function FantasyPublicTeamPage({
   const user = await getCurrentUser();
   if (user?.id === team.userId) redirect(FANTASY_PATH);
 
-  const [gameDays, gameweeks] = await Promise.all([
+  const [gameDays, gameweeks, summaries] = await Promise.all([
     listFantasyGameDays(team.tournamentId),
     listTeamGameweeks({ teamId: team.id, tournamentId: team.tournamentId }),
+    listGameDayPointSummaries(team.tournamentId),
   ]);
   const selectedGameDayId = gw ?? null;
   const topPlayers =
@@ -50,6 +55,8 @@ export default async function FantasyPublicTeamPage({
         gameweeks={gameweeks}
         selectedGameDayId={selectedGameDayId}
         topPlayers={topPlayers}
+        summaries={summaries}
+        nowMs={nowMs}
       />
     </FantasyTheme>
   );
