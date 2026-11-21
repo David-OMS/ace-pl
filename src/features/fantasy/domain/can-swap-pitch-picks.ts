@@ -6,10 +6,12 @@ export type PitchSwapPick = {
   isBench: boolean;
 };
 
-/** Free XI ↔ bench rearrange (FPL-style). Same position; GK never (no bench GK). */
+/**
+ * Free pitch rearrange: same outfield position.
+ * Starter↔bench, two starters, or two bench — GK never moves this way.
+ */
 export function canSwapPitchPicks(a: PitchSwapPick, b: PitchSwapPick): boolean {
   if (a.playerId === b.playerId) return false;
   if (a.position === "GK" || b.position === "GK") return false;
-  if (a.position !== b.position) return false;
-  return a.isBench !== b.isBench;
+  return a.position === b.position;
 }
