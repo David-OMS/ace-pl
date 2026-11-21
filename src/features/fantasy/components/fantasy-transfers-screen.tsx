@@ -9,6 +9,7 @@ import {
   type ApplyFantasyTransfersState,
 } from "../actions/apply-fantasy-transfers";
 import { fantasyCopy } from "../copy";
+import { formatFantasyPrice } from "../domain/format-fantasy-price";
 import type { MyFantasyTeam } from "../queries/get-my-fantasy-team";
 import type { PickablePlayer } from "../queries/list-pickable-players";
 import { FANTASY_PATH } from "../routes";
