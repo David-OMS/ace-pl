@@ -5,6 +5,7 @@ import { PlayerAvatar } from "@/ui/player-avatar";
 import { fantasyCopy } from "../copy";
 import { formatFantasyPrice } from "../domain/format-fantasy-price";
 import type { PickablePlayer } from "../queries/list-pickable-players";
+import { FantasyBottomSheet } from "./fantasy-bottom-sheet";
 
 type TransferInPickerProps = {
   title: string;
@@ -24,22 +25,19 @@ export function TransferInPicker({
   onRemove,
 }: TransferInPickerProps): React.JSX.Element {
   return (
-    <div className="fixed inset-0 z-40 flex flex-col justify-end bg-ink/40">
-      <button type="button" className="min-h-0 flex-1" aria-label="Close" onClick={onClose} />
-      <div className="max-h-[70vh] overflow-hidden rounded-t-card border-2 border-line bg-surface">
-        <PickerHeader title={title} hint={hint} onClose={onClose} />
-        {onRemove ? (
-          <button
-            type="button"
-            onClick={onRemove}
-            className="w-full border-b border-line-soft px-4 py-3 text-left text-sm font-bold text-hot"
-          >
-            {fantasyCopy.removeFromSquad}
-          </button>
-        ) : null}
-        <TransferOptionsList options={options} onPick={onPick} />
-      </div>
-    </div>
+    <FantasyBottomSheet onClose={onClose}>
+      <PickerHeader title={title} hint={hint} onClose={onClose} />
+      {onRemove ? (
+        <button
+          type="button"
+          onClick={onRemove}
+          className="w-full border-b border-line-soft px-4 py-3 text-left text-sm font-bold text-hot"
+        >
+          {fantasyCopy.removeFromSquad}
+        </button>
+      ) : null}
+      <TransferOptionsList options={options} onPick={onPick} />
+    </FantasyBottomSheet>
   );
 }
 
@@ -80,7 +78,10 @@ function TransferOptionsList(args: {
             <PlayerAvatar name={player.name} photoUrl={player.photoUrl} size="sm" />
             <span className="min-w-0 flex-1">
               <span className="block truncate font-bold">{player.name}</span>
-              <span className="block text-xs text-muted">{player.position}</span>
+              <span className="block text-xs text-muted">
+                {player.position}
+                {player.clubName ? ` · ${player.clubName}` : ""}
+              </span>
             </span>
             <span className="font-display text-lg">{formatFantasyPrice(player.price)}</span>
           </button>

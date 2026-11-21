@@ -86,6 +86,7 @@ export function FantasyTransfersScreen({
     (beforeFirstDeadline && draftIds !== originalIds);
 
   const canSave = hasChanges && status.valid;
+  const actionSheetOpen = Boolean(draft.activeOut && !draft.replacing);
   const pickerOpen = Boolean(draft.activeEmpty || (draft.activeOut && draft.replacing));
   const swapFlash = useMemo(() => {
     if (!draft.lastSwapFlash) return null;
@@ -101,7 +102,9 @@ export function FantasyTransfersScreen({
   }, [draft.lastSwapFlash]);
 
   return (
-    <FantasyTheme className="flex flex-col gap-4 px-4 py-4 pb-8">
+    <FantasyTheme
+      className={`flex flex-col gap-4 px-4 py-4 ${actionSheetOpen ? "pb-72" : "pb-8"}`}
+    >
       <PageHeader
         title={fantasyCopy.transfersTitle}
         back={{ href: FANTASY_PATH, label: fantasyCopy.backToFantasy }}
@@ -142,7 +145,7 @@ export function FantasyTransfersScreen({
         selectedId={draft.activeOut?.playerId ?? null}
         swapTargetIds={draft.swapTargetIds}
       />
-      {draft.activeOut && !draft.replacing ? (
+      {actionSheetOpen && draft.activeOut ? (
         <TransferSelectionBar
           pick={draft.activeOut}
           swapTargetNames={draft.swapTargetNames}
