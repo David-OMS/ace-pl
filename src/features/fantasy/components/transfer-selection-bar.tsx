@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/ui/button";
-
 import { fantasyCopy } from "../copy";
 import { formatFantasyPrice } from "../domain/format-fantasy-price";
 import type { FantasyPickView } from "../queries/get-my-fantasy-team";
@@ -17,74 +15,79 @@ type TransferSelectionBarProps = {
   onClear: () => void;
 };
 
+/** Slim dock under the pitch — actions in one tight strip. */
 export function TransferSelectionBar(props: TransferSelectionBarProps): React.JSX.Element {
   return (
-    <FantasyBottomSheet onClose={props.onClear} maxHeightClass="max-h-[45vh]" mode="dock">
-      <SheetHeader pick={props.pick} onClear={props.onClear} />
-      <div className="flex flex-col gap-3 overflow-y-auto px-4 py-4">
-        <p className="text-sm text-muted">
-          {fantasyCopy.swapHintWithTargets(props.pick.name, props.swapTargetNames)}
-        </p>
+    <FantasyBottomSheet onClose={props.onClear} maxHeightClass="max-h-[40vh]" mode="dock">
+      <div className="flex flex-col gap-2 px-3 py-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold">
+              {props.pick.name}
+              <span className="font-normal text-muted">
+                {" "}
+                · {props.pick.position} · {formatFantasyPrice(props.pick.price)}
+                {props.pick.isCaptain ? ` · ${fantasyCopy.captain}` : ""}
+                {props.pick.isVice ? ` · ${fantasyCopy.vice}` : ""}
+              </span>
+            </p>
+            <p className="truncate text-[11px] text-muted">
+              {fantasyCopy.swapHintCompact(props.swapTargetNames)}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="shrink-0 text-xs font-bold text-muted"
+            onClick={props.onClear}
+          >
+            {fantasyCopy.closePicker}
+          </button>
+        </div>
         <SheetActions {...props} />
       </div>
     </FantasyBottomSheet>
   );
 }
 
-function SheetHeader(args: {
-  pick: FantasyPickView;
-  onClear: () => void;
-}): React.JSX.Element {
-  const role = args.pick.isCaptain
-    ? ` · ${fantasyCopy.captain}`
-    : args.pick.isVice
-      ? ` · ${fantasyCopy.vice}`
-      : "";
+function SheetActions(props: TransferSelectionBarProps): React.JSX.Element {
   return (
-    <div className="flex items-start justify-between gap-3 border-b-2 border-line px-4 py-3">
-      <div className="min-w-0">
-        <p className="truncate font-display text-xl uppercase">{args.pick.name}</p>
-        <p className="text-xs font-bold text-muted">
-          {args.pick.position} · {formatFantasyPrice(args.pick.price)}
-          {role}
-        </p>
-      </div>
-      <button type="button" className="shrink-0 text-sm font-bold" onClick={args.onClear}>
-        {fantasyCopy.closePicker}
-      </button>
+    <div className="flex flex-wrap gap-1.5">
+      <Chip onClick={props.onReplace}>{fantasyCopy.replacePlayer}</Chip>
+      {!props.pick.isBench ? (
+        <>
+          <Chip active={props.pick.isCaptain} onClick={props.onCaptain}>
+            {fantasyCopy.captain}
+          </Chip>
+          <Chip active={props.pick.isVice} onClick={props.onVice}>
+            {fantasyCopy.vice}
+          </Chip>
+        </>
+      ) : null}
+      <Chip danger onClick={props.onRemove}>
+        {fantasyCopy.removePlayer}
+      </Chip>
     </div>
   );
 }
 
-function SheetActions(props: TransferSelectionBarProps): React.JSX.Element {
+function Chip(args: {
+  children: string;
+  onClick: () => void;
+  active?: boolean;
+  danger?: boolean;
+}): React.JSX.Element {
+  const tone = args.danger
+    ? "border-hot bg-surface text-hot"
+    : args.active
+      ? "border-accent bg-accent text-on-accent"
+      : "border-line bg-surface text-ink";
   return (
-    <div className="flex flex-col gap-2">
-      <Button type="button" fullWidth onClick={props.onReplace}>
-        {fantasyCopy.replacePlayer}
-      </Button>
-      {!props.pick.isBench ? (
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            type="button"
-            variant={props.pick.isCaptain ? "primary" : "secondary"}
-            fullWidth
-            onClick={props.onCaptain}
-          >
-            {fantasyCopy.setCaptain}
-          </Button>
-          <Button
-            type="button"
-            variant={props.pick.isVice ? "primary" : "secondary"}
-            fullWidth
-            onClick={props.onVice}
-          >
-            {fantasyCopy.setVice}
-          </Button>
-        </div>
-      ) : null}
-      <Button type="button" variant="danger" fullWidth onClick={props.onRemove}>
-        {fantasyCopy.removeFromSquad}
-      </Button>
-    </div>
+    <button
+      type="button"
+      onClick={args.onClick}
+      className={`min-h-9 rounded-card border px-3 text-xs font-bold ${tone}`}
+    >
+      {args.children}
+    </button>
   );
 }

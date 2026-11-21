@@ -36,6 +36,7 @@ export const fantasyCopy = {
   submit: "Save team",
   saving: "Saving…",
   formationLabel: "Formation",
+  pickFormation: "Pick formation",
   formationHint: "DEF–MID–FWD plus one GK",
   formationBlocked: (formation: string, position: string, have: number): string =>
     `You can't switch to ${formation}. You only have ${have} ${position} in your squad. Transfer in another ${position} first.`,
@@ -96,6 +97,10 @@ export const fantasyCopy = {
     names.length > 0
       ? `${selected} selected. Tap ${names.join(" or ")} to swap.`
       : `${selected} selected. No same-position player on the other side to swap with.`,
+  swapHintCompact: (names: readonly string[]): string =>
+    names.length > 0
+      ? `Tap ${names.join(" or ")} to swap`
+      : "No same-position swap on the other side",
   swappedFlash: (a: string, b: string): string => `Swapped ${a} ↔ ${b}. Save when you're done.`,
   noAffordable: "Nobody fits that budget for this spot.",
   broke: "You're broke. Rearrange your squad to free up funds.",

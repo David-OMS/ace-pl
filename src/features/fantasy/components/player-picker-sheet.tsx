@@ -34,7 +34,7 @@ export function PlayerPickerSheet({
   const affordable = eligible.filter((p) => p.price <= maxPrice);
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col justify-end bg-ink/40">
+    <div className="fixed inset-0 z-50 flex flex-col justify-end bg-ink/40">
       <button type="button" className="min-h-0 flex-1" aria-label="Close" onClick={onClose} />
       <div className="max-h-[70vh] overflow-hidden rounded-t-card border-2 border-line bg-surface">
         <PickerHeader slot={slot} onClose={onClose} />

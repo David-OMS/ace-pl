@@ -1,8 +1,11 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useRef } from "react";
+import { useActionState, useMemo, useState } from "react";
 
-import { PageHeader } from "@/ui/page-header";
+import { ChevronLeft } from "lucide-react";
+
+import { Icon } from "@/ui/icon";
+import { SoftNavLink } from "@/ui/soft-nav-link";
 
 import {
   applyFantasyTransfers,
@@ -14,7 +17,7 @@ import type { MyFantasyTeam } from "../queries/get-my-fantasy-team";
 import type { PickablePlayer } from "../queries/list-pickable-players";
 import { FANTASY_PATH } from "../routes";
 import { ClubLimitBanner } from "./club-limit-banner";
-import { CreateStepFormation } from "./create-step-formation";
+import { FormationPickerButton } from "./formation-picker-button";
 import { FantasyPitchView } from "./fantasy-pitch-view";
 import { FantasyTheme } from "./fantasy-theme";
 import { squadDraftStatus } from "./squad-draft-status";
@@ -22,6 +25,7 @@ import { TransferInPicker } from "./transfer-in-picker";
 import { TransferPreviewPanel } from "./transfer-preview-panel";
 import { TransferSelectionBar } from "./transfer-selection-bar";
 import { TransfersAllowance } from "./transfers-allowance";
+import { useSwapFlash } from "./use-swap-flash";
 import { useTransferDraft } from "./use-transfer-draft";
 
 type FantasyTransfersScreenProps = {
@@ -48,10 +52,8 @@ export function FantasyTransfersScreen({
     applyFantasyTransfers,
     null,
   );
-  const clearFlashRef = useRef(draft.clearSwapFlash);
-  useEffect(() => {
-    clearFlashRef.current = draft.clearSwapFlash;
-  });
+  const [formationOpen, setFormationOpen] = useState(false);
+  const swapFlash = useSwapFlash(draft.lastSwapFlash, draft.clearSwapFlash);
 
   const originalIds = useMemo(
     () =>
@@ -88,27 +90,21 @@ export function FantasyTransfersScreen({
   const canSave = hasChanges && status.valid;
   const actionSheetOpen = Boolean(draft.activeOut && !draft.replacing);
   const pickerOpen = Boolean(draft.activeEmpty || (draft.activeOut && draft.replacing));
-  const swapFlash = useMemo(() => {
-    if (!draft.lastSwapFlash) return null;
-    const [a, b] = draft.lastSwapFlash.split("|");
-    if (!a || !b) return null;
-    return fantasyCopy.swappedFlash(a, b);
-  }, [draft.lastSwapFlash]);
-
-  useEffect(() => {
-    if (!draft.lastSwapFlash) return;
-    const timer = window.setTimeout(() => clearFlashRef.current(), 2500);
-    return () => window.clearTimeout(timer);
-  }, [draft.lastSwapFlash]);
 
   return (
     <FantasyTheme
-      className={`flex flex-col gap-4 px-4 py-4 ${actionSheetOpen ? "pb-72" : "pb-8"}`}
+      className={`flex flex-col gap-3 px-4 py-3 ${actionSheetOpen ? "pb-36" : "pb-8"}`}
     >
-      <PageHeader
-        title={fantasyCopy.transfersTitle}
-        back={{ href: FANTASY_PATH, label: fantasyCopy.backToFantasy }}
-      />
+      <header className="flex items-center gap-2">
+        <SoftNavLink
+          href={FANTASY_PATH}
+          className="inline-flex min-h-10 items-center gap-1 text-sm font-bold text-muted"
+        >
+          <Icon icon={ChevronLeft} size="sm" />
+          {fantasyCopy.backToFantasy}
+        </SoftNavLink>
+        <h1 className="truncate font-display text-lg uppercase">{fantasyCopy.transfersTitle}</h1>
+      </header>
       <TransfersAllowance
         bank={draft.bank}
         unlimited={beforeFirstDeadline}
@@ -120,17 +116,22 @@ export function FantasyTransfersScreen({
               : team.freeTransfers
         }
       />
-      <CreateStepFormation
+      <FormationPickerButton
         formation={draft.formation}
         onChange={draft.setFormation}
         allowed={draft.allowedFormations}
         onBlocked={draft.reportBlockedFormation}
+        error={draft.formationError}
+        open={formationOpen}
+        onOpenChange={(open) => {
+          if (open) {
+            draft.clearOut();
+            setFormationOpen(true);
+            return;
+          }
+          setFormationOpen(false);
+        }}
       />
-      {draft.formationError ? (
-        <p role="alert" className="text-sm font-bold text-hot">
-          {draft.formationError}
-        </p>
-      ) : null}
       {swapFlash ? (
         <p className="rounded-card border-2 border-accent bg-surface px-3 py-2 text-sm font-bold">
           {swapFlash}
@@ -140,8 +141,14 @@ export function FantasyTransfersScreen({
       <FantasyPitchView
         formation={draft.formation}
         picks={draft.picks}
-        onSelect={draft.openOut}
-        onSelectEmpty={draft.openEmpty}
+        onSelect={(pick) => {
+          setFormationOpen(false);
+          draft.openOut(pick);
+        }}
+        onSelectEmpty={(slot) => {
+          setFormationOpen(false);
+          draft.openEmpty(slot);
+        }}
         selectedId={draft.activeOut?.playerId ?? null}
         swapTargetIds={draft.swapTargetIds}
       />
