@@ -6,6 +6,7 @@ import { fanPlayerPath } from "@/features/fan";
 import type { LeaderboardMetric } from "@/features/leaderboards";
 import { PlayerAvatar } from "@/ui/player-avatar";
 import { SoftNavLink } from "@/ui/soft-nav-link";
+import { TeamNameBadge } from "@/ui/team-name-badge";
 import { TextField } from "@/ui/text-field";
 
 import { fanPlayersCopy } from "../copy";
@@ -104,9 +105,14 @@ function RosterList(args: {
                 className="flex items-center gap-3 border-2 border-line-soft bg-surface px-3 py-2.5"
               >
                 <PlayerAvatar name={player.name} photoUrl={player.photoUrl} size="md" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold">{player.name}</p>
-                  <p className="text-xs text-muted">{fanPlayersCopy.position(player.position)}</p>
+                <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold">{player.name}</p>
+                    <p className="text-xs text-muted">{fanPlayersCopy.position(player.position)}</p>
+                  </div>
+                  {player.teamName && player.teamColor ? (
+                    <TeamNameBadge name={player.teamName} color={player.teamColor} />
+                  ) : null}
                 </div>
               </SoftNavLink>
             </li>

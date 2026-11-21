@@ -1,6 +1,7 @@
 import type { PlayerPosition } from "@/config/player-positions";
 import { PlayerAvatar } from "@/ui/player-avatar";
 import { Card } from "@/ui/card";
+import { TeamNameBadge } from "@/ui/team-name-badge";
 
 import { fanPlayersCopy } from "../copy";
 import { formatFantasyPrice } from "../domain/format-fantasy-price";
@@ -11,6 +12,7 @@ type PlayerDetailHeroProps = {
   photoUrl: string | null;
   priceMillions: number;
   teamName?: string | null;
+  teamColor?: string | null;
 };
 
 export function PlayerDetailHero({
@@ -19,6 +21,7 @@ export function PlayerDetailHero({
   photoUrl,
   priceMillions,
   teamName = null,
+  teamColor = null,
 }: PlayerDetailHeroProps): React.JSX.Element {
   return (
     <Card className="flex items-center gap-4 p-4">
@@ -29,11 +32,7 @@ export function PlayerDetailHero({
           <p className="text-sm text-muted">{fanPlayersCopy.position(position)}</p>
           <p className="text-sm font-bold">{formatFantasyPrice(priceMillions)}</p>
         </div>
-        {teamName ? (
-          <p className="max-w-[45%] shrink-0 truncate text-right font-display text-lg tracking-wide text-ink uppercase">
-            {teamName}
-          </p>
-        ) : null}
+        {teamName && teamColor ? <TeamNameBadge name={teamName} color={teamColor} /> : null}
       </div>
     </Card>
   );

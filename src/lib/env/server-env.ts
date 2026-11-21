@@ -10,8 +10,6 @@ const optionalString = z
 const serverEnvSchema = z.object({
   SUPABASE_SECRET_KEY: z.string().min(1),
   SUPABASE_PROJECT_REF: z.string().min(1),
-  /** Only this user id may open or edit global fantasy prices. */
-  FANTASY_PRICE_ADMIN_ID: z.string().uuid(),
   VAPID_PRIVATE_KEY: optionalString,
   VAPID_SUBJECT: optionalString,
   CRON_SECRET: optionalString,

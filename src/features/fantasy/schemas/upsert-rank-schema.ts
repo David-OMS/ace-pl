@@ -4,7 +4,6 @@ import { z } from "zod";
 const priceStep = FANTASY_PRICE_STEP;
 
 export const upsertFantasyRankSchema = z.object({
-  tournamentId: z.uuid(),
   playerId: z.uuid(),
   price: z.coerce
     .number()
@@ -17,7 +16,6 @@ export type UpsertFantasyRankInput = z.infer<typeof upsertFantasyRankSchema>;
 
 export function readUpsertRankForm(formData: FormData): unknown {
   return {
-    tournamentId: formData.get("tournamentId"),
     playerId: formData.get("playerId"),
     price: formData.get("price"),
   };

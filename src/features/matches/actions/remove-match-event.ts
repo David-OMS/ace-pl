@@ -1,13 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { checkAdminAccess } from "@/features/auth";
-import { adminFixturePath } from "@/features/fixtures";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+
+import { revalidateAfterMatchEdit } from "./revalidate-after-match-edit";
 
 export type RemoveMatchEventState = ActionResult<{ savedAt: number }> | null;
 
@@ -39,6 +39,6 @@ export async function removeMatchEvent(
     logger.error("remove_match_event_failed", { eventId, error });
     return fail("save_failed");
   }
-  revalidatePath(adminFixturePath(tournamentId, fixtureId));
+  await revalidateAfterMatchEdit({ tournamentId, fixtureId });
   return ok({ savedAt: Date.now() });
 }

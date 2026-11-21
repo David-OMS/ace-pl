@@ -47,7 +47,10 @@ export function MatchScoreHeader({
         </div>
         <ScoreSide name={match.awayTeamName} color={match.awayTeamColor} scorers={scorers.away} />
       </div>
-      {showLockedNote && match.isLocked ? (
+      {showLockedNote && match.status === "completed" && match.canEditResult ? (
+        <p className="text-sm font-bold text-muted">{matchesCopy.publishedEditable}</p>
+      ) : null}
+      {showLockedNote && !match.canEditResult ? (
         <p className="text-sm font-bold text-muted">{matchesCopy.locked}</p>
       ) : null}
     </div>

@@ -9,6 +9,12 @@ export const playersCopy = {
   backToPlayers: "All players",
   emptyList: "No players yet. Add the regulars first; borrowed players can be added on match day.",
   claimed: "Linked",
+  tabs: {
+    aria: "Players sections",
+    list: "List",
+    prices: "Prices",
+  },
+  pricesTitle: "Player prices",
   filter: {
     position: "Position",
     all: "All positions",

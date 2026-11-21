@@ -8,15 +8,15 @@ import { Icon } from "@/ui/icon";
 import { THEME_MODE_COOKIE } from "../mode-cookie";
 import { DEFAULT_MODE, MODES, type ThemeMode } from "../theme-config";
 
-function readDomMode(): ThemeMode {
-  if (typeof document === "undefined") return DEFAULT_MODE;
-  const value = document.documentElement.getAttribute("data-mode");
-  return MODES.includes(value as ThemeMode) ? (value as ThemeMode) : DEFAULT_MODE;
-}
+type ThemeModeToggleProps = {
+  initialMode?: ThemeMode;
+};
 
-/** Toggle only — initial mode comes from `<html data-mode>` set in the root layout. */
-export function ThemeModeToggle(): React.JSX.Element {
-  const [mode, setMode] = useState<ThemeMode>(readDomMode);
+/** Toggle only — `initialMode` must match `<html data-mode>` from the root layout. */
+export function ThemeModeToggle({
+  initialMode = DEFAULT_MODE,
+}: ThemeModeToggleProps): React.JSX.Element {
+  const [mode, setMode] = useState<ThemeMode>(initialMode);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-mode", mode);

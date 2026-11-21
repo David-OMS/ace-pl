@@ -11,6 +11,7 @@ export type FanPlayerDetail = {
   priceMillions: number;
   /** Club in the current fan tournament; null if unassigned. */
   teamName: string | null;
+  teamColor: string | null;
   tournamentName: string | null;
   tournament: FanPlayerStatSnapshot;
   allTime: FanPlayerStatSnapshot;

@@ -64,9 +64,7 @@ async function insertFraudWatch(
   return { ok: true, id: data.id };
 }
 
-function parseFraudSubject(
-  raw: string,
-): { playerId: string | null; teamId: string | null } | null {
+function parseFraudSubject(raw: string): { playerId: string | null; teamId: string | null } | null {
   if (raw.startsWith("player:")) {
     const playerId = raw.slice("player:".length);
     return playerId ? { playerId, teamId: null } : null;

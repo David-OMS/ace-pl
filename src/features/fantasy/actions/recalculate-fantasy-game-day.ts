@@ -1,5 +1,6 @@
 import "server-only";
 
+import { mapPool } from "@/lib/async/map-pool";
 import { logger } from "@/lib/logger";
 
 import { teamScoresGameweek } from "../domain/team-scores-gameweek";
@@ -7,6 +8,8 @@ import { loadGameDayPlayerPoints } from "../queries/load-game-day-player-points"
 import { fantasyScoringDb } from "./fantasy-scoring-db";
 import { refreshFantasyTotalPoints } from "./refresh-fantasy-total-points";
 import { scoreOneFantasyTeam } from "./score-one-fantasy-team";
+
+const SCORE_CONCURRENCY = 8;
 
 /** Re-score every fantasy team for one Friday. */
 export async function recalculateFantasyGameDay(gameDayId: string): Promise<void> {
@@ -31,23 +34,21 @@ export async function recalculateFantasyGameDay(gameDayId: string): Promise<void
   }
 
   const dayPoints = await loadGameDayPlayerPoints(gameDayId);
-  for (const team of teams ?? []) {
-    // Created after this GW's deadline → no points until the next GW.
-    if (
-      !teamScoresGameweek({
-        createdAtMs: Date.parse(team.created_at),
-        playedOn: day.played_on,
-      })
-    ) {
-      continue;
-    }
+  const eligible = (teams ?? []).filter((team) =>
+    teamScoresGameweek({
+      createdAtMs: Date.parse(team.created_at),
+      playedOn: day.played_on,
+    }),
+  );
+
+  await mapPool(eligible, SCORE_CONCURRENCY, async (team) => {
     await scoreOneFantasyTeam({
       teamId: team.id,
       formation: team.formation,
       gameDayId,
       dayPoints,
     });
-  }
+  });
 
   await refreshFantasyTotalPoints(day.tournament_id);
 }

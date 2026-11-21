@@ -13,6 +13,7 @@ export type MyRosterPlayer = {
   photoUrl: string | null;
   priceMillions: number;
   teamName: string | null;
+  teamColor: string | null;
   stats: FanPlayerStatSnapshot;
 };
 
@@ -26,6 +27,7 @@ export function MyRosterCard({ player }: { player: MyRosterPlayer }): React.JSX.
         photoUrl={player.photoUrl}
         priceMillions={player.priceMillions}
         teamName={player.teamName}
+        teamColor={player.teamColor}
       />
       <Card className="p-3">
         <PlayerStatGrid stats={player.stats} />

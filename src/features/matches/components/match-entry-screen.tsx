@@ -7,6 +7,7 @@ import type { MatchEntry } from "../queries/get-match-entry";
 import { MatchActionsBar } from "./match-actions-bar";
 import { MatchEventsCard } from "./match-events-card";
 import { MatchScoreHeader } from "./match-score-header";
+import { PublishResultUpdateBar } from "./publish-result-update-bar";
 import { WhoPlayedSection } from "./who-played-section";
 
 type MatchEntryScreenProps = { match: MatchEntry };
@@ -17,6 +18,8 @@ export function MatchEntryScreen({ match }: MatchEntryScreenProps): React.JSX.El
     name: p.name,
     teamId: p.teamId,
   }));
+  const showPublishActions = match.status === "draft" || match.status === "published";
+  const showUpdateActions = match.status === "completed" && match.canEditResult;
 
   return (
     <main className="mx-auto flex w-full max-w-xl flex-col gap-4 px-4 pb-4">
@@ -36,7 +39,7 @@ export function MatchEntryScreen({ match }: MatchEntryScreenProps): React.JSX.El
       />
       <WhoPlayedSection match={match} />
       <MatchEventsCard match={match} players={allPlayers} />
-      {match.isLocked ? null : (
+      {showPublishActions ? (
         <MatchActionsBar
           tournamentId={match.tournamentId}
           fixtureId={match.fixtureId}
@@ -45,7 +48,10 @@ export function MatchEntryScreen({ match }: MatchEntryScreenProps): React.JSX.El
           homeTeamName={match.homeTeamName}
           awayTeamName={match.awayTeamName}
         />
-      )}
+      ) : null}
+      {showUpdateActions ? (
+        <PublishResultUpdateBar tournamentId={match.tournamentId} fixtureId={match.fixtureId} />
+      ) : null}
     </main>
   );
 }

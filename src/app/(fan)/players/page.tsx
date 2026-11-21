@@ -42,6 +42,7 @@ export default async function PlayersPage({
               photoUrl: detail.photoUrl,
               priceMillions: detail.priceMillions,
               teamName: detail.teamName,
+              teamColor: detail.teamColor,
               stats: detail.tournament,
             }
           : null

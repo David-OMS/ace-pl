@@ -1,14 +1,15 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { PARTICIPATION_STATUSES } from "@/config/match-events";
 import { checkAdminAccess } from "@/features/auth";
-import { adminFixturePath } from "@/features/fixtures";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+
+import { clearPlayerMatchEvents } from "./clear-player-match-events";
+import { revalidateAfterMatchEdit } from "./revalidate-after-match-edit";
 
 export type SetParticipationState = ActionResult<{ savedAt: number }> | null;
 
@@ -36,6 +37,17 @@ export async function setParticipation(
 
   const { participationId, tournamentId, fixtureId, status } = parsed.data;
   const supabase = await createSupabaseServerClient();
+  const { data: row, error: loadError } = await supabase
+    .from("match_participations")
+    .select("player_id")
+    .eq("id", participationId)
+    .maybeSingle();
+
+  if (loadError || !row) {
+    logger.error("set_participation_load_failed", { participationId, error: loadError });
+    return fail("save_failed");
+  }
+
   const { error } = await supabase
     .from("match_participations")
     .update({ status })
@@ -45,6 +57,21 @@ export async function setParticipation(
     logger.error("set_participation_failed", { participationId, error });
     return fail("save_failed");
   }
-  revalidatePath(adminFixturePath(tournamentId, fixtureId));
+
+  if (status === "absent") {
+    const cleared = await clearPlayerMatchEvents(supabase, {
+      fixtureId,
+      playerId: row.player_id,
+    });
+    if (cleared.error) {
+      logger.error("set_participation_clear_events_failed", {
+        participationId,
+        error: cleared.error,
+      });
+      return fail("save_failed");
+    }
+  }
+
+  await revalidateAfterMatchEdit({ tournamentId, fixtureId });
   return ok({ savedAt: Date.now() });
 }

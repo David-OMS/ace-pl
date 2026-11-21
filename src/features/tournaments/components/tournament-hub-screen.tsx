@@ -1,7 +1,5 @@
 import { Settings } from "lucide-react";
 
-import { adminFantasyRanksPath, fantasyCopy } from "@/features/fantasy";
-import { ButtonLink } from "@/ui/button-link";
 import { Icon } from "@/ui/icon";
 import { PageHeader } from "@/ui/page-header";
 import { SoftNavLink } from "@/ui/soft-nav-link";
@@ -21,7 +19,6 @@ type TournamentHubScreenProps = {
   unassigned: readonly HubPlayer[];
   rosterCount: number;
   hasFixtures: boolean;
-  showPrices: boolean;
   children?: React.ReactNode;
 };
 
@@ -31,7 +28,6 @@ export function TournamentHubScreen({
   unassigned,
   rosterCount,
   hasFixtures,
-  showPrices,
   children,
 }: TournamentHubScreenProps): React.JSX.Element {
   const needsRoster = rosterCount === 0;
@@ -62,11 +58,6 @@ export function TournamentHubScreen({
         needsTeams={needsTeams}
         needsFixtures={needsFixtures}
       />
-      {showPrices ? (
-        <ButtonLink href={adminFantasyRanksPath(tournament.id)} variant="secondary" fullWidth>
-          {fantasyCopy.adminRanksLink}
-        </ButtonLink>
-      ) : null}
       <HubTeamList tournamentId={tournament.id} squadSize={tournament.squadSize} teams={teams} />
       <HubUnassignedList players={unassigned} />
       {children}

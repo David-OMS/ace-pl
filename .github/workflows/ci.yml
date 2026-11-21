@@ -19,7 +19,6 @@ jobs:
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ci-placeholder
       SUPABASE_SECRET_KEY: ci-placeholder
       SUPABASE_PROJECT_REF: ci-placeholder
-      FANTASY_PRICE_ADMIN_ID: 00000000-0000-4000-8000-000000000001
     steps:
       - uses: actions/checkout@v4
 

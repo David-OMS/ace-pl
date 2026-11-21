@@ -1,6 +1,9 @@
 <h2>Sign in to ACE PL</h2>
 <p>Your code is {{ .Token }}</p>
 <p>
-  <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&redirect_to={{ .RedirectTo | urlquery }}">Sign in</a>
+  <a
+    href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&redirect_to={{ .RedirectTo | urlquery }}"
+    >Sign in</a
+  >
 </p>
 <p>That link opens a page. Tap Sign in there. Opening this email is not enough.</p>

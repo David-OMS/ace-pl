@@ -43,5 +43,8 @@ export type MatchEntry = {
   awayBorrowPool: { id: string; name: string; position: PlayerPosition }[];
   events: MatchEventRow[];
   score: { homeGoals: number; awayGoals: number };
+  /** Fan: result is final (completed / void / walkover). */
   isLocked: boolean;
+  /** Admin: lineup and events can still be changed (not void / walkover). */
+  canEditResult: boolean;
 };

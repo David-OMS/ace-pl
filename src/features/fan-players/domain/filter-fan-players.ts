@@ -5,6 +5,8 @@ export type FanPlayerListItem = {
   name: string;
   position: PlayerPosition;
   photoUrl: string | null;
+  teamName: string | null;
+  teamColor: string | null;
 };
 
 export function filterFanPlayers(
@@ -15,6 +17,8 @@ export function filterFanPlayers(
   if (!needle) return [...players];
   return players.filter(
     (player) =>
-      player.name.toLowerCase().includes(needle) || player.position.toLowerCase().includes(needle),
+      player.name.toLowerCase().includes(needle) ||
+      player.position.toLowerCase().includes(needle) ||
+      (player.teamName?.toLowerCase().includes(needle) ?? false),
   );
 }

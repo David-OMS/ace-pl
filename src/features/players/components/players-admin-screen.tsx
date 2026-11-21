@@ -8,6 +8,7 @@ import { playersCopy } from "../copy";
 import type { PlayerSummary } from "../queries/list-players";
 import { NEW_PLAYER_PATH } from "../routes";
 import { PlayerList } from "./player-list";
+import { PlayersAdminTabs } from "./players-admin-tabs";
 
 type PlayersAdminScreenProps = { players: readonly PlayerSummary[] };
 
@@ -23,6 +24,7 @@ export function PlayersAdminScreen({ players }: PlayersAdminScreenProps): React.
           </ButtonLink>
         }
       />
+      <PlayersAdminTabs active="list" />
       <PlayerList players={players} />
     </main>
   );

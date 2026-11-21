@@ -2,11 +2,7 @@ import "server-only";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
-import type {
-  AwardsPlayerOption,
-  AwardsTeamOption,
-  FraudWatchRow,
-} from "./awards-admin-types";
+import type { AwardsPlayerOption, AwardsTeamOption, FraudWatchRow } from "./awards-admin-types";
 
 export type FraudWatchAdmin = {
   open: FraudWatchRow[];

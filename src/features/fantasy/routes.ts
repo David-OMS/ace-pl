@@ -14,7 +14,3 @@ export function fantasyTeamPath(teamId: string): Route {
 export function fantasyGwPlayersPath(gameDayId: string): Route {
   return `/fantasy/gameweeks/${gameDayId}/players` as Route;
 }
-
-export function adminFantasyRanksPath(tournamentId: string): Route {
-  return `/admin/tournaments/${tournamentId}/fantasy-ranks` as Route;
-}

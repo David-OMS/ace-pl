@@ -1,14 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { checkAdminAccess } from "@/features/auth";
-import { adminFixturePath } from "@/features/fixtures";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
+import { revalidateAfterMatchEdit } from "./revalidate-after-match-edit";
 import { sharedKeeperBlocked } from "./shared-keeper-blocked";
 
 export type BorrowPlayerState = ActionResult<{ savedAt: number }> | null;
@@ -59,6 +58,6 @@ export async function borrowPlayer(
     logger.error("borrow_player_failed", { fixtureId, playerId, error });
     return fail("save_failed");
   }
-  revalidatePath(adminFixturePath(tournamentId, fixtureId));
+  await revalidateAfterMatchEdit({ tournamentId, fixtureId });
   return ok({ savedAt: Date.now() });
 }

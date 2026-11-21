@@ -45,6 +45,7 @@ export type AssembleMatchEntryInput = {
 };
 
 const LOCKED: ReadonlySet<FixtureStatus> = new Set(["completed", "void", "walkover"]);
+const RESULT_EDIT_BLOCKED: ReadonlySet<FixtureStatus> = new Set(["void", "walkover"]);
 
 export function assembleMatchEntry(input: AssembleMatchEntryInput): MatchEntry {
   const { fixture, teams, gameDayPlayedOn, participations, events, memberships, players } = input;
@@ -84,6 +85,7 @@ export function assembleMatchEntry(input: AssembleMatchEntryInput): MatchEntry {
       lineup: [...homePlayers, ...awayPlayers],
     }),
     isLocked: LOCKED.has(fixture.status),
+    canEditResult: !RESULT_EDIT_BLOCKED.has(fixture.status),
   };
 }
 

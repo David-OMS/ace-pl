@@ -23,6 +23,7 @@ export function mapFanPlayerDetail(input: {
   photoUrl: string | null;
   priceMillions: number;
   teamName: string | null;
+  teamColor: string | null;
   tournamentName: string | null;
   tournamentScope: AssembledStats;
   allTimeScope: AssembledStats;
@@ -39,6 +40,7 @@ export function mapFanPlayerDetail(input: {
     photoUrl: input.photoUrl,
     priceMillions: input.priceMillions,
     teamName: input.teamName,
+    teamColor: input.teamColor,
     tournamentName: input.tournamentName,
     tournament: buildPlayerStatSnapshot(
       tournamentRow,

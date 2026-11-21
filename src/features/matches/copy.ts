@@ -23,8 +23,13 @@ export const matchesCopy = {
   publish: "Publish result",
   publishing: "Publishing…",
   published: "Result published.",
+  publishUpdate: "Publish update",
+  publishingUpdate: "Publishing update…",
+  updated: "Update published.",
   walkover: "Walkover 3–0",
   locked: "This match is locked.",
+  publishedEditable:
+    "Result is published. Edit lineups and events, then publish the update to refresh stats and fantasy.",
   participation: {
     played: "Played",
     unused_sub: "Sub",

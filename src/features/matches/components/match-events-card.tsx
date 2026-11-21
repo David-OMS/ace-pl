@@ -19,15 +19,15 @@ export function MatchEventsCard({ match, players }: MatchEventsCardProps): React
         tournamentId={match.tournamentId}
         fixtureId={match.fixtureId}
         events={match.events}
-        locked={match.isLocked}
+        locked={!match.canEditResult}
       />
-      {match.isLocked ? null : (
+      {match.canEditResult ? (
         <AddEventForm
           tournamentId={match.tournamentId}
           fixtureId={match.fixtureId}
           players={players}
         />
-      )}
+      ) : null}
     </Card>
   );
 }

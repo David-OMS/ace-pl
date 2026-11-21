@@ -1,8 +1,11 @@
 import "server-only";
 
+import { mapPool } from "@/lib/async/map-pool";
 import { logger } from "@/lib/logger";
 
 import { fantasyScoringDb } from "./fantasy-scoring-db";
+
+const TOTAL_CONCURRENCY = 8;
 
 /** Season total = Σ gameweek points − Σ transfer hits. */
 export async function refreshFantasyTotalPoints(tournamentId: string): Promise<"ok" | "failed"> {
@@ -16,7 +19,9 @@ export async function refreshFantasyTotalPoints(tournamentId: string): Promise<"
     return "failed";
   }
 
-  for (const team of teams ?? []) {
+  let failed = false;
+  await mapPool(teams ?? [], TOTAL_CONCURRENCY, async (team) => {
+    if (failed) return;
     const [gw, transfers] = await Promise.all([
       supabase.from("fantasy_team_gameweeks").select("points").eq("team_id", team.id),
       supabase.from("fantasy_transfers").select("point_cost").eq("team_id", team.id),
@@ -25,7 +30,8 @@ export async function refreshFantasyTotalPoints(tournamentId: string): Promise<"
       logger.error("fantasy_total_sum_failed", {
         error: gw.error ?? transfers.error,
       });
-      return "failed";
+      failed = true;
+      return;
     }
     const gwSum = (gw.data ?? []).reduce((sum, row) => sum + row.points, 0);
     const hitSum = (transfers.data ?? []).reduce((sum, row) => sum + row.point_cost, 0);
@@ -35,8 +41,9 @@ export async function refreshFantasyTotalPoints(tournamentId: string): Promise<"
       .eq("id", team.id);
     if (updateError) {
       logger.error("fantasy_total_update_failed", { error: updateError });
-      return "failed";
+      failed = true;
     }
-  }
-  return "ok";
+  });
+
+  return failed ? "failed" : "ok";
 }

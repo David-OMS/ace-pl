@@ -21,21 +21,24 @@ export async function persistGameweekScores(args: {
     return "failed";
   }
 
-  for (const pick of args.scored.picks) {
-    const { error } = await supabase
-      .from("fantasy_gameweek_picks")
-      .update({
-        raw_points: pick.rawPoints,
-        applied_points: pick.appliedPoints,
-        in_xi: pick.inXi,
-      })
-      .eq("team_id", args.teamId)
-      .eq("game_day_id", args.gameDayId)
-      .eq("player_id", pick.playerId);
-    if (error) {
-      logger.error("fantasy_gw_pick_score_failed", { error });
-      return "failed";
-    }
+  const results = await Promise.all(
+    args.scored.picks.map((pick) =>
+      supabase
+        .from("fantasy_gameweek_picks")
+        .update({
+          raw_points: pick.rawPoints,
+          applied_points: pick.appliedPoints,
+          in_xi: pick.inXi,
+        })
+        .eq("team_id", args.teamId)
+        .eq("game_day_id", args.gameDayId)
+        .eq("player_id", pick.playerId),
+    ),
+  );
+  const failed = results.find((result) => result.error);
+  if (failed?.error) {
+    logger.error("fantasy_gw_pick_score_failed", { error: failed.error });
+    return "failed";
   }
   return "ok";
 }

@@ -111,9 +111,7 @@ export function AdminAwardsFraud({
         success={addState?.ok ? awardsCopy.fraudAdded : endState?.ok ? awardsCopy.fraudEnded : null}
       />
       {history.length > 0 ? (
-        <p className="text-xs text-muted">
-          Past: {history.map((h) => h.subjectName).join(", ")}
-        </p>
+        <p className="text-xs text-muted">Past: {history.map((h) => h.subjectName).join(", ")}</p>
       ) : null}
     </section>
   );

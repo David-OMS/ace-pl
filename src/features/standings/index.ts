@@ -13,10 +13,7 @@ export {
 } from "./queries/get-tournament-standings";
 export { buildStandingFixtures } from "./queries/build-standing-fixtures";
 export { getTournamentForm, type FormDisplayRow } from "./queries/get-tournament-form";
-export {
-  getPublicTeamPage,
-  type PublicTeamPage,
-} from "./queries/get-public-team-page";
+export { getPublicTeamPage, type PublicTeamPage } from "./queries/get-public-team-page";
 export {
   listStandingsTournaments,
   type StandingsTournamentChip,

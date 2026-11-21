@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { requireAdmin, getCurrentUser } from "@/features/auth";
-import { isFantasyPriceAdmin } from "@/features/fantasy/server/is-fantasy-price-admin";
+import { requireAdmin } from "@/features/auth";
 import {
   ADMIN_TOURNAMENTS_PATH,
   getTournament,
@@ -23,7 +22,7 @@ export default async function TournamentHubPage({
   const tournament = await getTournament(tournamentId);
   if (!tournament) notFound();
 
-  const [hub, user] = await Promise.all([loadTournamentHub(tournament), getCurrentUser()]);
+  const hub = await loadTournamentHub(tournament);
 
   return (
     <TournamentHubScreen
@@ -32,7 +31,6 @@ export default async function TournamentHubPage({
       unassigned={hub.unassigned}
       rosterCount={tournament.rosterPlayerIds.length}
       hasFixtures={hub.hasFixtures}
-      showPrices={user !== null && isFantasyPriceAdmin(user.id)}
     >
       {tournament.keeperMode === "shared" && tournament.rosterPlayerIds.length > 0 ? (
         <SharedKeepersPanel

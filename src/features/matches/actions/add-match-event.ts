@@ -1,15 +1,14 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { MATCH_EVENT_TYPES } from "@/config/match-events";
 import { checkAdminAccess } from "@/features/auth";
-import { adminFixturePath } from "@/features/fixtures";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
 import { logger } from "@/lib/logger";
 
 import { insertMatchEvent } from "./insert-match-event";
+import { revalidateAfterMatchEdit } from "./revalidate-after-match-edit";
 
 export type AddMatchEventState = ActionResult<{ savedAt: number }> | null;
 
@@ -59,6 +58,9 @@ export async function addMatchEvent(
     logger.error("add_match_event_failed", { fixtureId: data.fixtureId, error });
     return fail("save_failed");
   }
-  revalidatePath(adminFixturePath(data.tournamentId, data.fixtureId));
+  await revalidateAfterMatchEdit({
+    tournamentId: data.tournamentId,
+    fixtureId: data.fixtureId,
+  });
   return ok({ savedAt: Date.now() });
 }

@@ -16,10 +16,7 @@ type PublicTeamScreenProps = {
 export function PublicTeamScreen({ team, backHref }: PublicTeamScreenProps): React.JSX.Element {
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
-      <PageHeader
-        title={team.teamName}
-        back={{ href: backHref, label: standingsCopy.title }}
-      />
+      <PageHeader title={team.teamName} back={{ href: backHref, label: standingsCopy.title }} />
       <div className="flex items-center gap-3">
         <TeamCrest name={team.teamName} color={team.teamColor} size="md" />
         <div className="min-w-0">
@@ -43,9 +40,7 @@ export function PublicTeamScreen({ team, backHref }: PublicTeamScreenProps): Rea
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold">
                     {player.name}
-                    {player.isCaptain ? (
-                      <span className="ml-1 text-xs text-muted">(C)</span>
-                    ) : null}
+                    {player.isCaptain ? <span className="ml-1 text-xs text-muted">(C)</span> : null}
                   </p>
                   <p className="text-xs text-muted">{player.position}</p>
                 </div>
