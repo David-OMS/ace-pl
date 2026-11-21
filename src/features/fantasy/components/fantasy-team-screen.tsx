@@ -53,6 +53,7 @@ export function FantasyTeamScreen(props: FantasyTeamScreenProps): React.JSX.Elem
         initialTopPlayers={props.topPlayers}
         summaries={props.summaries}
         transferWindow={props.transferWindow}
+        freeTransfers={props.team.freeTransfers}
         showEditActions
         showDeadline
         showTopPlayers

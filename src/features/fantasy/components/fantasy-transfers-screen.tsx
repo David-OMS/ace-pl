@@ -9,7 +9,6 @@ import {
   type ApplyFantasyTransfersState,
 } from "../actions/apply-fantasy-transfers";
 import { fantasyCopy } from "../copy";
-import { formatFantasyPrice } from "../domain/format-fantasy-price";
 import type { MyFantasyTeam } from "../queries/get-my-fantasy-team";
 import type { PickablePlayer } from "../queries/list-pickable-players";
 import { FANTASY_PATH } from "../routes";
@@ -21,6 +20,7 @@ import { squadDraftStatus } from "./squad-draft-status";
 import { TransferInPicker } from "./transfer-in-picker";
 import { TransferPreviewPanel } from "./transfer-preview-panel";
 import { TransferSelectionBar } from "./transfer-selection-bar";
+import { TransfersAllowance } from "./transfers-allowance";
 import { useTransferDraft } from "./use-transfer-draft";
 
 type FantasyTransfersScreenProps = {
@@ -105,10 +105,17 @@ export function FantasyTransfersScreen({
         title={fantasyCopy.transfersTitle}
         back={{ href: FANTASY_PATH, label: fantasyCopy.backToFantasy }}
       />
-      <p className="text-sm text-muted">
-        {fantasyCopy.bankLabel} {formatFantasyPrice(draft.bank)}
-        {beforeFirstDeadline ? null : ` · ${fantasyCopy.freeTransfers} ${team.freeTransfers}`}
-      </p>
+      <TransfersAllowance
+        bank={draft.bank}
+        unlimited={beforeFirstDeadline}
+        freeLeft={
+          beforeFirstDeadline
+            ? team.freeTransfers
+            : draft.preview.ok
+              ? draft.preview.value.freeTransfers
+              : team.freeTransfers
+        }
+      />
       <CreateStepFormation
         formation={draft.formation}
         onChange={draft.setFormation}
@@ -168,6 +175,7 @@ export function FantasyTransfersScreen({
         swaps={draft.swaps}
         picks={draft.picks}
         bank={draft.bank}
+        freeTransfers={team.freeTransfers}
         beforeFirstDeadline={beforeFirstDeadline}
         nameById={draft.nameById}
         preview={draft.preview}

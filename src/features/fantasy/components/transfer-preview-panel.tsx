@@ -15,6 +15,7 @@ type TransferPreviewPanelProps = {
   swaps: readonly SwapDraft[];
   picks: readonly FantasyPickView[];
   bank: number;
+  freeTransfers: number;
   beforeFirstDeadline: boolean;
   nameById: Map<string, string>;
   preview: ReturnType<typeof applyTransferBatch>;
@@ -34,6 +35,7 @@ export function TransferPreviewPanel({
   swaps,
   picks,
   bank,
+  freeTransfers,
   beforeFirstDeadline,
   nameById,
   preview,
@@ -54,11 +56,11 @@ export function TransferPreviewPanel({
   }));
 
   const statusLine = beforeFirstDeadline
-    ? `${fantasyCopy.bankLabel} ${formatFantasyPrice(bank)}`
+    ? `${fantasyCopy.bankLabel} ${formatFantasyPrice(bank)} · ${fantasyCopy.freeTransfersUnlimited}`
     : preview.ok
-      ? `${fantasyCopy.bankLabel} ${formatFantasyPrice(preview.value.bank)} · ${fantasyCopy.transferHit(preview.value.pointCost)}`
+      ? `${fantasyCopy.bankLabel} ${formatFantasyPrice(preview.value.bank)} · ${fantasyCopy.freeTransfersLeft(preview.value.freeTransfers)} · ${fantasyCopy.transferHit(preview.value.pointCost)}`
       : swaps.length === 0
-        ? `${fantasyCopy.bankLabel} ${formatFantasyPrice(bank)} · ${fantasyCopy.formationOnly}`
+        ? `${fantasyCopy.bankLabel} ${formatFantasyPrice(bank)} · ${fantasyCopy.freeTransfersLeft(freeTransfers)} · ${fantasyCopy.formationOnly}`
         : fantasyCopy.errors.insufficient_funds;
 
   return (

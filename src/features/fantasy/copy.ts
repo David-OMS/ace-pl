@@ -58,6 +58,11 @@ export const fantasyCopy = {
   scoutingFailedBody: "Come back when the matches have started.",
   deadline: "Deadline Thu 23:59",
   freeTransfers: "Free transfers",
+  freeTransfersLeft: (n: number): string =>
+    n === 1 ? "1 free transfer left" : `${n} free transfers left`,
+  freeTransfersUnlimited: "Unlimited transfers",
+  editSquadWithFree: (n: number): string => `Edit squad · ${n} free`,
+  editSquadUnlimited: "Edit squad · Unlimited",
   squadEditsLabel: "Squad edits",
   squadEditsOpen: "Open",
   squadEditsLocked: "Locked",

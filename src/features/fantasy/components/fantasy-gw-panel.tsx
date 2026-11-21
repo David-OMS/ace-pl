@@ -1,5 +1,6 @@
 "use client";
 
+import type { FantasyFormation } from "@/config/fantasy";
 import { PageLoading } from "@/ui/page-loading";
 
 import { fantasyCopy } from "../copy";
@@ -13,6 +14,7 @@ import type { FantasyGameDayOption } from "../queries/list-fantasy-game-days";
 import type { GameDayPointsSummary } from "../queries/list-game-day-point-summaries";
 import type { GameDayTopPlayer } from "../queries/list-game-day-top-players";
 import type { TransferWindowMode } from "../queries/get-transfer-window";
+import type { PitchPickMeta } from "./build-pitch-points-meta";
 import { FantasyGwHeader } from "./fantasy-gw-header";
 import type { FantasyGwNavOption } from "./fantasy-gw-nav";
 import { FantasyGwTopPlayers } from "./fantasy-gw-top-players";
@@ -29,6 +31,7 @@ type FantasyGwPanelProps = {
   initialTopPlayers: readonly GameDayTopPlayer[];
   summaries?: readonly GameDayPointsSummary[];
   transferWindow?: TransferWindowMode;
+  freeTransfers?: number;
   showEditActions?: boolean;
   showDeadline?: boolean;
   showTopPlayers?: boolean;
@@ -66,6 +69,7 @@ export function FantasyGwPanel(props: FantasyGwPanelProps): React.JSX.Element {
         showEditActions={canEdit}
         showDeadline={Boolean(props.showDeadline)}
         transferWindow={props.transferWindow ?? "open"}
+        freeTransfers={props.freeTransfers ?? 0}
       />
       <GwBody
         hideLive={hideLive}
@@ -85,9 +89,9 @@ export function FantasyGwPanel(props: FantasyGwPanelProps): React.JSX.Element {
 function GwBody(args: {
   hideLive: boolean;
   locked: boolean;
-  formation: Parameters<typeof FantasyPitchView>[0]["formation"];
+  formation: FantasyFormation;
   picks: readonly FantasyPickView[];
-  meta: Parameters<typeof FantasyPitchView>[0]["metaByPlayerId"];
+  meta: ReadonlyMap<string, PitchPickMeta> | undefined;
   showTop: boolean;
   topPending: boolean;
   selectedId: string | null;
@@ -96,7 +100,11 @@ function GwBody(args: {
   if (args.hideLive && !args.locked) return <ScoutingLockedCard />;
   return (
     <>
-      <FantasyPitchView formation={args.formation} picks={args.picks} metaByPlayerId={args.meta} />
+      <FantasyPitchView
+        formation={args.formation}
+        picks={args.picks}
+        {...(args.meta ? { metaByPlayerId: args.meta } : {})}
+      />
       <TopPlayersBlock
         show={args.showTop}
         pending={args.topPending}

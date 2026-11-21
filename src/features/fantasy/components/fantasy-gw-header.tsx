@@ -19,6 +19,7 @@ type FantasyGwHeaderProps = {
   showEditActions: boolean;
   showDeadline: boolean;
   transferWindow: TransferWindowMode;
+  freeTransfers: number;
 };
 
 export function FantasyGwHeader(props: FantasyGwHeaderProps): React.JSX.Element {
@@ -42,12 +43,20 @@ export function FantasyGwHeader(props: FantasyGwHeaderProps): React.JSX.Element 
           {formatFantasyDeadline(deadlineDay)}
         </p>
       ) : null}
-      {props.showEditActions ? <EditActions transferWindow={props.transferWindow} /> : null}
+      {props.showEditActions ? (
+        <EditActions
+          transferWindow={props.transferWindow}
+          freeTransfers={props.freeTransfers}
+        />
+      ) : null}
     </>
   );
 }
 
-function EditActions(args: { transferWindow: TransferWindowMode }): React.JSX.Element {
+function EditActions(args: {
+  transferWindow: TransferWindowMode;
+  freeTransfers: number;
+}): React.JSX.Element {
   if (args.transferWindow === "locked") {
     return (
       <p className="border-2 border-line bg-surface px-3 py-3 text-sm">
@@ -56,9 +65,13 @@ function EditActions(args: { transferWindow: TransferWindowMode }): React.JSX.El
       </p>
     );
   }
+  const label =
+    args.transferWindow === "unlimited"
+      ? fantasyCopy.editSquadUnlimited
+      : fantasyCopy.editSquadWithFree(args.freeTransfers);
   return (
     <ButtonLink href={FANTASY_TRANSFERS_PATH} fullWidth>
-      {fantasyCopy.makeTransfers}
+      {label}
     </ButtonLink>
   );
 }
