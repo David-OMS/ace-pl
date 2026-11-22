@@ -3,6 +3,7 @@ import {
   aggregatePlayerStats,
   countAssistsFromEvents,
   countCleanSheets,
+  filterCompletedMatchScope,
   mergeStatExtras,
   topByMetric,
   type LeaderboardMetric,
@@ -79,26 +80,33 @@ function buildTotals(input: {
   events: readonly EventDb[];
   fixtures: readonly FixtureDb[];
 }): PlayerStatTotals[] {
-  const cleanSheets = cleanSheetsFor(input);
+  const scope = filterCompletedMatchScope({
+    participations: input.appearances,
+    events: input.events,
+    fixtures: input.fixtures,
+  });
+  const cleanSheets = cleanSheetsFor(scope);
   return mergeStatExtras(
     aggregatePlayerStats(
-      input.appearances.map((row) => ({
+      scope.participations.map((row) => ({
         playerId: row.player_id,
         status: row.status,
       })),
-      input.events.map((row) => ({
+      scope.events.map((row) => ({
         eventType: row.event_type,
         playerId: row.player_id,
         quantity: row.quantity,
       })),
     ),
-    countAssistsFromEvents(input.events.map((row) => ({ assistPlayerId: row.assist_player_id }))),
+    countAssistsFromEvents(
+      scope.events.map((row) => ({ assistPlayerId: row.assist_player_id })),
+    ),
     cleanSheets,
   );
 }
 
 function cleanSheetsFor(input: {
-  appearances: readonly AppearanceDb[];
+  participations: readonly AppearanceDb[];
   events: readonly EventDb[];
   fixtures: readonly FixtureDb[];
 }): Map<string, number> {
@@ -109,7 +117,7 @@ function cleanSheetsFor(input: {
       event_type: e.event_type,
       player_id: e.player_id,
     })),
-    input.appearances.map((a) => ({
+    input.participations.map((a) => ({
       fixture_id: a.fixture_id,
       player_id: a.player_id,
       team_id: a.team_id,
@@ -124,7 +132,7 @@ function cleanSheetsFor(input: {
       awayGoals: standingFixtures[i]?.awayGoals ?? 0,
       status: f.status,
     })),
-    input.appearances.map((a) => ({
+    input.participations.map((a) => ({
       fixtureId: a.fixture_id,
       playerId: a.player_id,
       teamId: a.team_id,
