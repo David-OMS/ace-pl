@@ -4,6 +4,7 @@ import { FANTASY_FORMATIONS } from "@/config/fantasy";
 
 const squadPickSchema = z.object({
   playerId: z.uuid(),
+  slot: z.number().int().nonnegative(),
   isBench: z.boolean(),
   isCaptain: z.boolean(),
   isVice: z.boolean(),

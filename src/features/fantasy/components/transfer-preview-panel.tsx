@@ -50,6 +50,7 @@ export function TransferPreviewPanel({
   const fundsOk = beforeFirstDeadline || swaps.length === 0 || preview.ok;
   const squadPayload = picks.map((p) => ({
     playerId: p.playerId,
+    slot: p.slot,
     isBench: p.isBench,
     isCaptain: p.isCaptain,
     isVice: p.isVice,

@@ -8,6 +8,7 @@ import type { PickablePlayer } from "../queries/list-pickable-players";
 
 type SquadPick = {
   playerId: string;
+  slot: number;
   isBench: boolean;
   isCaptain: boolean;
   isVice: boolean;
@@ -29,6 +30,7 @@ export async function persistUnlimitedSquad(args: {
         playerId: pick.playerId,
         position: player.position,
         price: player.price,
+        slot: pick.slot,
         isBench: pick.isBench,
         isCaptain: pick.isCaptain,
         isVice: pick.isVice,

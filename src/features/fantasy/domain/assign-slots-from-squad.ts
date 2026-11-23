@@ -10,11 +10,13 @@ export type SlotAssignPick = {
   isBench: boolean;
   isCaptain: boolean;
   isVice: boolean;
+  /** Client seat order — kept for same-position / bench rearranges. */
+  slot?: number;
 };
 
 export type SlottedPick = SlotAssignPick & { slotKey: string; slot: number };
 
-/** Honour client starter/bench flags when writing picks (unlike reseat). */
+/** Honour client starter/bench flags and seat order when writing picks. */
 export function assignSlotsFromSquad(args: {
   formation: FantasyFormation;
   squadSize: number;
@@ -23,10 +25,11 @@ export function assignSlotsFromSquad(args: {
   const slots = buildPitchSlots(args.formation, args.squadSize);
   if (slots.length === 0) return null;
 
-  const starters = args.picks.filter((p) => !p.isBench);
-  const bench = args.picks.filter((p) => p.isBench);
-  const unusedStarters = [...starters];
-  const unusedBench = [...bench];
+  const bySeat = (a: SlotAssignPick, b: SlotAssignPick): number =>
+    (a.slot ?? Number.MAX_SAFE_INTEGER) - (b.slot ?? Number.MAX_SAFE_INTEGER);
+
+  const unusedStarters = args.picks.filter((p) => !p.isBench).sort(bySeat);
+  const unusedBench = args.picks.filter((p) => p.isBench).sort(bySeat);
   const placed: SlottedPick[] = [];
 
   for (const slot of slots.filter((s) => !s.isBench)) {
