@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 type PlayerAvatarProps = {
   name: string;
   photoUrl?: string | null;
@@ -8,29 +6,33 @@ type PlayerAvatarProps = {
 };
 
 const SIZES = {
-  sm: { box: "size-8", px: 32 },
-  md: { box: "size-10", px: 40 },
-  lg: { box: "size-[84px]", px: 84 },
-  xl: { box: "size-28", px: 112 },
+  sm: "size-8",
+  md: "size-10",
+  lg: "size-[84px]",
+  xl: "size-28",
 } as const;
 
-/** Photo when set; otherwise a blank silhouette. Requests a 2x thumbnail, not the original file. */
+/**
+ * Photos are already cropped to 512px JPEG on upload (Supabase Storage).
+ * Load them direct — no Vercel Image Optimization quota.
+ */
 export function PlayerAvatar({
   name,
   photoUrl,
   size = "md",
   priority = false,
 }: PlayerAvatarProps): React.JSX.Element {
-  const { box, px } = SIZES[size];
+  const box = SIZES[size];
   if (photoUrl) {
     return (
-      <Image
+      // eslint-disable-next-line @next/next/no-img-element -- intentional: skip Vercel image transforms
+      <img
         src={photoUrl}
         alt={name}
-        width={px * 2}
-        height={px * 2}
-        sizes={`${px}px`}
-        priority={priority}
+        width={128}
+        height={128}
+        decoding="async"
+        {...(priority ? { fetchPriority: "high" as const } : { loading: "lazy" as const })}
         className={`${box} shrink-0 object-cover`}
       />
     );
